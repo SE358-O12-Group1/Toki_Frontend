@@ -2,11 +2,10 @@ export interface IFooterProps {
     title?: string;
 }
 
-const Footer = (props: IFooterProps) => {
-    const { title } = props;
+const Footer = () => {
     return (
         <>
-            <h1 className='text-danger text-center'>{title || 'Footer'}</h1>
+            <h1 className='text-danger text-center'>Footer</h1>
         </>
     );
 };

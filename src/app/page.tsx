@@ -1,9 +1,10 @@
 import MainLayout from '@/components/layouts/default';
+import LandingPage from '@/components/pages/LandingPage';
 
 export default function Home() {
     return (
-        <MainLayout>
-            <h1 className='text-danger text-center'>Landing Page</h1>
+        <MainLayout title='TOKI | Landing Page'>
+            <LandingPage />
         </MainLayout>
     );
 }
