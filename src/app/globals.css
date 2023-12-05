@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 :root {
-    --light-gray-background: #edf2f7;
+    --light-gray-background: #eeeeee;
     --light-gray-border: #e2e8f0;
     --dark-blue-color: #2d3748;
     --main-color: #00adb5;
@@ -17,8 +17,7 @@ html,
 body {
     padding: 0;
     margin: 0;
-    font-family: 'Montserrat', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
-        'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-family: 'Iter';
     height: 100%;
 }
 
@@ -29,12 +28,6 @@ a {
 
 * {
     box-sizing: border-box;
-}
-
-#berbix-iframe {
-    display: block;
-    width: 100%;
-    height: 100%;
 }
 
 .markercluster-map {
@@ -50,19 +43,24 @@ a {
 }
 a {
     text-decoration: none !important;
-    &:active {
-        text-decoration: none !important;
-    }
-    &:hover {
-        text-decoration: none !important;
-    }
-    &:visited {
-        text-decoration: none !important;
-    }
-    &:focus {
-        text-decoration: none !important;
-    }
 }
+a:active {
+    text-decoration: none !important;
+}
+a:hover {
+    text-decoration: none !important;
+}
+a:visited {
+    text-decoration: none !important;
+}
+a:focus {
+    text-decoration: none !important;
+}
+
+.background-colored {
+    background-color: --light-gray-background;
+}
+
 .leaflet-marker {
     background: transparent;
     border: none;
@@ -92,17 +90,6 @@ a {
     background: transparent;
     border: none;
 }
-.leaflet-tooltip {
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    white-space: pre-wrap !important;
-    margin-top: 12px;
-    margin-left: 8px;
-    &::before {
-        border-top-color: transparent;
-    }
-}
 .leaflet-left {
     display: none;
 }
@@ -122,52 +109,15 @@ a {
 [class*='react-datepicker__navigation'] {
     top: 4px !important;
 }
-.icon-with-text__wrapper {
-    div {
-        min-width: 24px !important;
-    }
-}
-.button-with-icon__icon--20w {
-    margin-bottom: 0 !important;
-    cursor: pointer;
-    div {
-        min-width: 20px !important;
-    }
-    p {
-        font-weight: 600;
-        font-size: 16px;
-        line-height: 20px;
-        padding-left: 12px;
-        color: --dark-blue-color;
-    }
-}
-.button-with-icon__icon--16w {
-    margin-bottom: 0 !important;
-    cursor: pointer;
-    margin-bottom: 0 !important;
-    cursor: pointer;
-    div {
-        min-width: 16px !important;
-        align-self: center;
-    }
-    p {
-        font-weight: 600;
-        font-size: 16px;
-        line-height: 24px;
-        padding-left: 8px;
-        color: --dark-blue-color;
-    }
-}
+
 .noMarginBottom {
     margin-bottom: 0 !important;
-    > div {
-        align-self: center;
-    }
 }
-.detail-page__menuButton {
-    > span {
-        height: 40px;
-    }
+.noMarginBottom > div {
+    align-self: center;
+}
+.detail-page__menuButton > span {
+    height: 40px;
 }
 .icon-filter-white {
     filter: invert(95%) sepia(99%) saturate(0%) hue-rotate(186deg)
@@ -177,52 +127,12 @@ a {
     filter: invert(16%) sepia(23%) saturate(810%) hue-rotate(179deg)
         brightness(101%) contrast(87%);
 }
-.scrollAble {
-    overflow: auto;
-    box-shadow: 0px 0px 2px 1px gray;
-    width: 100%;
-    border-radius: 12px;
-    padding: 12px;
-    -webkit-border-radius: 12px;
-    -moz-border-radius: 12px;
-    -ms-border-radius: 12px;
-    -o-border-radius: 12px;
-    &::-webkit-scrollbar {
-        width: 2px;
-        height: 2px;
-    }
-    &::-webkit-scrollbar-track {
-        background: #ffffff;
-    }
-    &::-webkit-scrollbar-thumb {
-        &:horizontal {
-            border-radius: 4px;
-            background: #aaaaaa;
-        }
-    }
-}
 .StripeElement {
     width: inherit;
 }
-.hasScrollBar {
-    &::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
-    }
-    &::-webkit-scrollbar-track {
-        background: white;
-        margin-right: 8px;
-    }
-    &::-webkit-scrollbar-thumb {
-        border-radius: 4px;
-        background: rgba(0, 0, 0, 0.36);
-    }
-}
-.hideScrollBar {
-    &::-webkit-scrollbar {
-        width: 0px;
-        height: 0px;
-    }
+.hideScrollBar ::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
 }
 .icon--rotate {
     transform: rotate(180deg) translateY(-2px);
@@ -231,122 +141,32 @@ a {
     -ms-transform: rotate(180deg) translateY(-2px);
     -o-transform: rotate(180deg) translateY(-2px);
 }
-@media only screen and (max-width: 320px) {
-    .chakra-select__wrapper {
-        width: auto !important;
-    }
-    .header-logo {
-        width: 60%;
-    }
-}
 
 #atlas-chat button {
     bottom: 68px !important;
-}
-
-#atlas-chat .positioning.bottom-right {
-    z-index: 1200;
-    bottom: 67px !important;
-    & > .bubble.with-label {
-        background-color: #652b19 !important;
-        height: 40px;
-    }
-}
-@media screen and (max-width: 1199.9px) {
-    .leaflet-container {
-        margin-left: 0;
-        position: absolute !important;
-        z-index: 1000;
-        max-height: calc(100vh - 64px);
-        top: 0;
-    }
-    #atlas-chat .positioning.bottom-right {
-        bottom: 70px !important;
-    }
-}
-
-@media screen and (max-width: 767.9px) {
-    ul[class*='house-detail__carousel'] {
-        > li {
-            padding-left: 16px;
-            transform: translateX(-16px);
-        }
-    }
 }
 
 .skeleton {
     position: absolute !important;
 }
 
-.thead {
-    & > tr > th:last-of-type {
-        padding-left: 0;
-    }
+.thead & > tr > th:last-of-type {
+    padding-left: 0;
 }
 
-.tbody {
-    & > tr {
-        .expand-icon {
-            > span {
-                transform: translateY(2px);
-                -webkit-transform: translateY(2px);
-                -moz-transform: translateY(2px);
-                -ms-transform: translateY(2px);
-                -o-transform: translateY(2px);
-            }
-        }
-        td.white-background-cell {
-            background-color: white !important;
-        }
-        > td:last-of-type {
-            padding-left: 0;
-            padding-top: 10px;
-            padding-bottom: 10px;
-        }
-    }
-    > tr:nth-child(even) {
-        background-color: unset;
-    }
-    > tr:nth-child(4n + 3) {
-        background-color: --light-gray-background;
-        & + tr {
-            background-color: --light-gray-background;
-        }
-    }
-    .expanded,
-    .expanded + tr {
-        background-color: #e6fffa !important;
-    }
+.tbody > tr:nth-child(even) {
+    background-color: unset;
+}
+.tbody > tr:nth-child(4n + 3) {
+    background-color: --light-gray-background;
+}
+.tbody.expanded,
+.tbody.expanded + tr {
+    background-color: #e6fffa !important;
 }
 
 .main-colored {
     background-color: var(--main-color);
-}
-
-.striped {
-    & > tr {
-        .expand-icon {
-            > span {
-                transform: translateY(2px);
-                -webkit-transform: translateY(2px);
-                -moz-transform: translateY(2px);
-                -ms-transform: translateY(2px);
-                -o-transform: translateY(2px);
-            }
-        }
-        > td:last-of-type {
-            padding-left: 0;
-            padding-top: 10px;
-            padding-bottom: 10px;
-        }
-    }
-    > tr:nth-child(even) {
-        background-color: --light-gray-background;
-    }
-    .expanded,
-    .expanded + tr {
-        background-color: #e6fffa !important;
-    }
 }
 
 .is-clickable {
@@ -366,51 +186,6 @@ a {
 
 .react-datepicker__day {
     color: --dark-blue-color !important;
-}
-
-.isMobile {
-    border-radius: 6px !important;
-
-    .react-datepicker__day {
-        width: 40px;
-        line-height: 40px;
-        margin: 4px;
-        height: 40px;
-    }
-
-    .react-datepicker__day-name {
-        width: 40px;
-        line-height: 16px;
-        margin: 4px;
-        height: 16px;
-        font-size: 12px;
-        color: --gray500;
-        font-family: Inter;
-        margin-top: 8px;
-        margin-bottom: 8px;
-    }
-
-    .react-datepicker__header {
-        padding-top: 16px;
-        background: --light-gray-background;
-    }
-
-    .react-datepicker__navigation {
-        margin-top: 6px;
-        .react-datepicker__navigation-icon::before {
-            border-width: 3px 3px 0 0 !important;
-            height: 12px;
-            width: 12px;
-        }
-    }
-
-    .react-datepicker__current-month {
-        font-size: 14px;
-        line-height: 20px;
-        font-family: Inter;
-        color: --gray800;
-        font-weight: 600;
-    }
 }
 
 .react-datepicker__day--outside-month {
@@ -446,19 +221,6 @@ a {
 
 .react-datepicker__day--range-end:hover {
     background: --main-color !important;
-}
-
-.react-datepicker__day--keyboard-selected {
-    background-color: white !important;
-
-    &:hover {
-        background-color: #f0f0f0 !important;
-    }
-
-    &.react-datepicker__day--today {
-        background-color: --main-color !important;
-        color: white !important;
-    }
 }
 
 .react-datepicker__month-text,
@@ -512,57 +274,8 @@ a {
     left: 6px !important;
 }
 
-.marker-cluster-custom {
-    & > span {
-        position: relative;
-        width: 46px;
-        height: 59px;
-        display: block;
-        & > p {
-            position: absolute;
-            font-family: Inter;
-            top: calc(50% - 6px);
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-weight: 500;
-            font-size: 16px;
-            line-height: 24px;
-            color: --dark-blue-color;
-        }
-    }
-}
-
-.date-wrapper {
-    cursor: pointer;
-    transition: 0.3 all;
-    -webkit-transition: 0.3 all;
-    -moz-transition: 0.3 all;
-    -ms-transition: 0.3 all;
-    -o-transition: 0.3 all;
-    &:has(.react-datepicker__tab-loop) {
-        & > div:first-of-type > div > div {
-            box-shadow: 0 0 0 3px rgba(49, 151, 149, 0.6);
-            transition: 0.3 all;
-            -webkit-transition: 0.3 all;
-            -moz-transition: 0.3 all;
-            -ms-transition: 0.3 all;
-            -o-transition: 0.3 all;
-        }
-    }
-}
-
 .date-wrapper > .react-datepicker-wrapper {
     width: inherit;
-}
-
-.chakra-menu__menu-button {
-    & > span:first-of-type {
-        text-overflow: ellipsis;
-        overflow: hidden;
-    }
-    & > .chakra-button__icon {
-        margin: 0;
-    }
 }
 
 .inline-block-icon {
