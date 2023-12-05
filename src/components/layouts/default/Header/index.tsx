@@ -6,7 +6,7 @@ const Header = (props: IHeaderProps) => {
     const { title } = props;
     return (
         <>
-            <h1 className='text-danger text-center'>{title || 'Header'}</h1>
+            <h1 className=' text-center'>{title || 'Header'}</h1>
         </>
     );
 };

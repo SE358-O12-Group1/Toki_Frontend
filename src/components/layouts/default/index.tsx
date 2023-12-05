@@ -16,7 +16,9 @@ export default function MainLayout(props: IMainLayoutProps) {
                 <link rel='icon' href='/favicon_black.png' />
             </Head>
             <Header></Header>
+
             <main>{children}</main>
+
             <Footer></Footer>
         </>
     );
