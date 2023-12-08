@@ -1,9 +1,6 @@
 export interface IFooterProps {
     title?: string;
 }
-import { IoLogoTwitter } from "react-icons/io5";
-import { PiInstagramLogoFill } from "react-icons/pi";
-import { IoLogoGithub } from "react-icons/io";
 import Twitter from "src/app/assets/images/Twitter.png"
 import Instagram from "src/app/assets/images/Instagram.png"
 import Github from "src/app/assets/images/Github.png"
@@ -12,6 +9,7 @@ const Footer = () => {
 
     return (
         <>
+        
         <div className="flex main-colored p-1">
             <div className='offset-1 mb-3 mt-2'>
                 <button type="button" className='btn main-colored text-white' >

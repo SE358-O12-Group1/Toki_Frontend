@@ -1,7 +1,6 @@
 export interface IHeaderProps {
     title?: string;
 }
-import Link from "next/link";
 import Notification from "src/app/assets/images/Notification.png"
 import Question from "src/app/assets/images/QuestionCircle.png"
 import Logo from "src/app/assets/images/Logo.png"
@@ -16,7 +15,7 @@ const Header = (props: IHeaderProps) => {
             
                 <div className='d-flex main-colored p-1 text-black'>
 
-                <button type="button" className='btn offset-1 text-white' >Seller Center</button>
+                <button type="button" className='btn offset-1 text-white' > Seller Center </button>
                 <button type="button" className='btn ms-auto me-5 text-white'> <img src={Notification.src} /> Notification</button>
                 <button type="button" className='btn me-5 text-white'> <img src={Question.src} /> Help</button>
                 <button type="button" className='btn me-1 text-white'> Login </button>
