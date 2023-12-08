@@ -1,7 +1,7 @@
 import Button from '@/components/common/Button';
 import TextBox from '@/components/common/TextBox';
 
-export default async function LoginForm() {
+export default async function SignupForm() {
     return (
         <>
             <div className='mx-5 pe-5'>
@@ -17,32 +17,38 @@ export default async function LoginForm() {
                                 fontWeight: 700
                             }}
                         >
-                            LOGIN
+                            SIGN UP
                         </h2>
                         <div>
-                            <TextBox
-                                required
-                                placeholder='Email/ Phone number/ User name'
-                            ></TextBox>
+                            <TextBox required placeholder='User name'></TextBox>
                             <div className='valid-feedback'>Looks good!</div>
                         </div>
+                        <TextBox
+                            required
+                            placeholder='Email'
+                            type='email'
+                        ></TextBox>
+                        <TextBox
+                            required
+                            placeholder='Phone number'
+                            type='number'
+                        ></TextBox>
                         <TextBox
                             required
                             placeholder='Password'
                             type='password'
                         ></TextBox>
+                        <TextBox
+                            required
+                            placeholder='Confirm password'
+                            type='password'
+                        ></TextBox>
 
                         <div className='col-12 mt-5 text-center'>
                             <Button className='btn btn-primary' type='submit'>
-                                Log in
+                                Sign up
                             </Button>
                         </div>
-                        <p
-                            className='fst-italic mx-auto my-5 text-center'
-                            style={{ color: '#1A88F7' }}
-                        >
-                            Forgot Password?
-                        </p>
                         <div className='row align-items-md-center mt-5'>
                             <div
                                 className='col'
@@ -93,17 +99,6 @@ export default async function LoginForm() {
                             >
                                 Google
                             </div>
-                        </div>
-                        <div className='row justify-content-center my-5'>
-                            <p className='col-md-auto fst-italic text-center'>
-                                New to
-                            </p>
-                            <p
-                                className='col-md-auto fst-italic text-center'
-                                style={{ color: '#1A88F7' }}
-                            >
-                                TOKI?
-                            </p>
                         </div>
                     </form>
                 </div>

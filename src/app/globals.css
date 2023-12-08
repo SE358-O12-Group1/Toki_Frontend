@@ -58,7 +58,11 @@ a:focus {
 }
 
 .background-colored {
-    background-color: --light-gray-background;
+    background-color: --light-gray-background !important;
+}
+
+.full-width-div {
+    width: 100%;
 }
 
 .leaflet-marker {
