@@ -2,8 +2,7 @@ import AuthenticationLayout from '@/components/layouts/AuthenLayout';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'TOKI | Sign Up',
-    icons: '/favicon_black.png'
+    title: 'TOKI | Sign Up'
 };
 
 export default function LoginLayout({
