@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { ReactNode } from 'react';
 import DecorCircle from './components/DecorCircle';
-import logo from 'src/assets/images/web_logo.jpg';
+import logo from 'src/assets/images/Logo.png';
 
 interface IAuthenticationLayoutProps {
     title?: string;
@@ -9,16 +9,22 @@ interface IAuthenticationLayoutProps {
 }
 
 const AuthenticationLayout = (props: IAuthenticationLayoutProps) => {
-    const { children } = props;
-    const decorSpacing = 60;
+    const { title, children } = props;
+    const decorSpacing = 40;
     return (
         <>
-            <div className='p-5'>
+            <Head>
+                <title>{title || 'HomeRoom'}</title>
+                <link rel='icon' href='/favicon_black.png' />
+            </Head>
+            <div className='bg-light full-width-div pt-5'>
                 <div className='row'>
                     <div className='col'>
                         <div
-                            className='row px-5'
+                            className='row'
                             style={{
+                                marginRight: 280,
+                                marginLeft: 40,
                                 marginBottom: 200
                             }}
                         >
@@ -50,20 +56,12 @@ const AuthenticationLayout = (props: IAuthenticationLayoutProps) => {
                                 }}
                             />
                         </div>
-                        <div
-                            className='mt-4'
-                            style={{
-                                position: 'absolute',
-                                left: 0
-                            }}
-                        >
+                        <div>
                             <div
                                 style={{
                                     width: 600,
                                     height: '20px',
-                                    left: 0,
-                                    top: 0,
-                                    position: 'absolute',
+                                    marginTop: `${decorSpacing}px `,
                                     backgroundColor: '#00ADB5',
                                     borderRadius: '0 999px 999px 0'
                                 }}
@@ -72,9 +70,7 @@ const AuthenticationLayout = (props: IAuthenticationLayoutProps) => {
                                 style={{
                                     width: 640,
                                     height: '20px',
-                                    left: 0,
-                                    top: decorSpacing,
-                                    position: 'absolute',
+                                    marginTop: `${decorSpacing}px `,
                                     backgroundColor: '#00ADB5',
                                     borderRadius: '0 999px 999px 0'
                                 }}
@@ -83,9 +79,7 @@ const AuthenticationLayout = (props: IAuthenticationLayoutProps) => {
                                 style={{
                                     width: 680,
                                     height: '20px',
-                                    left: 0,
-                                    top: decorSpacing * 2,
-                                    position: 'absolute',
+                                    marginTop: `${decorSpacing}px `,
                                     backgroundColor: '#00ADB5',
                                     borderRadius: '0 999px 999px 0'
                                 }}
@@ -94,9 +88,7 @@ const AuthenticationLayout = (props: IAuthenticationLayoutProps) => {
                                 style={{
                                     width: 720,
                                     height: '20px',
-                                    left: 0,
-                                    top: decorSpacing * 3,
-                                    position: 'absolute',
+                                    marginTop: `${decorSpacing}px `,
                                     backgroundColor: '#00ADB5',
                                     borderRadius: '0 999px 999px 0'
                                 }}
@@ -105,16 +97,14 @@ const AuthenticationLayout = (props: IAuthenticationLayoutProps) => {
                                 style={{
                                     width: 760,
                                     height: '20px',
-                                    left: 0,
-                                    top: decorSpacing * 4,
-                                    position: 'absolute',
+                                    marginTop: `${decorSpacing}px `,
                                     backgroundColor: '#00ADB5',
                                     borderRadius: '0 999px 999px 0'
                                 }}
                             ></div>
                         </div>
                     </div>
-                    <div className='col main-colored'>
+                    <div className='col'>
                         <main>{children}</main>
                     </div>
                 </div>

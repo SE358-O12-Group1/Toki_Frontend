@@ -5,7 +5,5 @@ export default function LoginLayout({
 }: {
     children: React.ReactNode;
 }) {
-    return (
-        <AuthenticationLayout title='Login'>{children}</AuthenticationLayout>
-    );
+    return <AuthenticationLayout>{children}</AuthenticationLayout>;
 }
