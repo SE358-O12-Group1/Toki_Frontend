@@ -1,7 +1,40 @@
 import Button from '@/components/common/Button';
 import TextBox from '@/components/common/TextBox';
+import { FormEventHandler, useState } from 'react';
 
 export default async function SignupForm() {
+    const [username, setUserName] = useState('');
+    const [phone, setPhone] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [message, setMessage] = useState('');
+
+    let handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+        e.preventDefault();
+        try {
+            let res = await fetch('', {
+                method: 'POST',
+                body: JSON.stringify({
+                    username: username,
+                    phone: phone,
+                    email: email,
+                    password: password
+                })
+            });
+            let resJson = await res.json();
+            if (res.status === 200) {
+                setUserName('');
+                setPhone('');
+                setEmail('');
+                setPassword('');
+                setMessage('User created successfully');
+            } else {
+                setMessage('Some error occured');
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
     return (
         <>
             <div className='mx-5 pe-5'>

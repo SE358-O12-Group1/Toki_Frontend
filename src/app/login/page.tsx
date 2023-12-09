@@ -1,12 +1,41 @@
 import Button from '@/components/common/Button';
 import TextBox from '@/components/common/TextBox';
+import { FormEventHandler, useState } from 'react';
 
 export default async function LoginForm() {
+    const [username, setUserName] = useState('');
+    const [password, setPassword] = useState('');
+    const [message, setMessage] = useState('');
+
+    let handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+        e.preventDefault();
+        try {
+            let res = await fetch('', {
+                method: 'POST',
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                })
+            });
+            let resJson = await res.json();
+            if (res.status === 200) {
+                setUserName('');
+                setPassword('');
+                setMessage('Logged in successfully');
+            } else {
+                setMessage('Some error occured');
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     return (
         <>
             <div className='mx-5 pe-5'>
                 <div className='me-5 pe-5'>
                     <form
+                        onSubmit={handleSubmit}
                         className='needs-validation me-5 pe-5'
                         needs-validation='true'
                     >
@@ -21,12 +50,14 @@ export default async function LoginForm() {
                         </h2>
                         <div>
                             <TextBox
+                                value={username}
                                 required
                                 placeholder='Email/ Phone number/ User name'
                             ></TextBox>
                             <div className='valid-feedback'>Looks good!</div>
                         </div>
                         <TextBox
+                            value={password}
                             required
                             placeholder='Password'
                             type='password'

@@ -1,6 +1,7 @@
 import { FocusEventHandler } from 'react';
 
 export interface ITextboxProps {
+    value?: string;
     type?: string;
     className?: string;
     id?: string;
@@ -13,6 +14,7 @@ export interface ITextboxProps {
 
 export default async function TextBox(props: ITextboxProps) {
     const {
+        value,
         type,
         className,
         id,
@@ -36,6 +38,7 @@ export default async function TextBox(props: ITextboxProps) {
                     }}
                 ></div>
                 <input
+                    value={value}
                     required={required}
                     readOnly={readonly}
                     disabled={disable}
