@@ -2,7 +2,7 @@ import AuthenticationLayout from '@/components/layouts/AuthenLayout';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'TOKI | Login'
+    title: 'TOKI | Sign Up'
 };
 
 export default function LoginLayout({
@@ -10,5 +10,7 @@ export default function LoginLayout({
 }: {
     children: React.ReactNode;
 }) {
-    return <AuthenticationLayout>{children}</AuthenticationLayout>;
+    return (
+        <AuthenticationLayout title='Sign Up'>{children}</AuthenticationLayout>
+    );
 }
