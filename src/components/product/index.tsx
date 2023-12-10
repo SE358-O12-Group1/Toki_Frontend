@@ -48,7 +48,7 @@ export default async function Button(props: IProductProps) {
                 placeholder={placeholder}
                 onClick={onClick}
             >
-                <img style={{width:180,height:160, scale:0.6}} src={Iphone.src}></img>
+                <img className="ms-4" style={{ scale:0.8}} src={Iphone.src}></img>
                 <div className='text-left'>
                     <div className='ms-2 ' style={{fontSize:16}}> iPhone 15 Pro 128GB Chính Hãng VN/A </div>
                     <div className='row d-flex-fluid p-2'>
