@@ -1,11 +1,11 @@
 export interface IHeaderProps {
     title?: string;
 }
-import Notification from 'public/assets/images/Notification.png';
-import Question from 'public/assets/images/QuestionCircle.png';
-import Logo from 'public/assets/images/Logo.png';
-import Search from 'public/assets/images/btnSearch.png';
-import Cart from 'public/assets/images/btnCart.png';
+import Notification from '/public/assets/images/Notification.png';
+import Question from '/public/assets/images/QuestionCircle.png';
+import Logo from '/public/assets/images/Logo.png';
+import Search from '/public/assets/images/btnSearch.png';
+import Cart from '/public/assets/images/btnCart.png';
 import TextBox from '@/components/common/TextBox';
 
 const Header = (props: IHeaderProps) => {
