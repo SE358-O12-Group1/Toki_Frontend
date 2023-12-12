@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { ReactNode } from 'react';
-import DecorCircle from './components/DecorCircle';
-import logo from 'src/assets/images/Logo.png';
+import DecorCircle from '../DecorCircle';
+import logo from 'public/assets/images/Logo.png';
 
 interface IAuthenticationLayoutProps {
     title?: string;
