@@ -1,7 +1,8 @@
-import Head from 'next/head';
 import { ReactNode } from 'react';
 import DecorCircle from '../DecorCircle';
-import logo from 'public/assets/images/Logo.png';
+import logo from '/public/assets/images/Logo.png';
+import Image from 'next/image';
+import DecorLine from '../DecorLine';
 
 interface IAuthenticationLayoutProps {
     title?: string;
@@ -13,21 +14,10 @@ const AuthenticationLayout = (props: IAuthenticationLayoutProps) => {
     const decorSpacing = 40;
     return (
         <>
-            <Head>
-                <title>{title || 'HomeRoom'}</title>
-                <link rel='icon' href='/favicon_black.png' />
-            </Head>
-            <div className='bg-light full-width-div pt-5'>
-                <div className='row'>
-                    <div className='col'>
-                        <div
-                            className='row'
-                            style={{
-                                marginRight: 280,
-                                marginLeft: 40,
-                                marginBottom: 200
-                            }}
-                        >
+            <div className='bg-light container-fluid min-vh-100 pl-0 pt-5'>
+                <div className='row '>
+                    <div className='col px-0'>
+                        <div className='row justify-content-start mb-5 px-5'>
                             <div className='col'>
                                 <DecorCircle></DecorCircle>
                             </div>
@@ -44,67 +34,24 @@ const AuthenticationLayout = (props: IAuthenticationLayoutProps) => {
                                 <DecorCircle></DecorCircle>
                             </div>
                         </div>
-                        <div
-                            style={{
-                                margin: 120
-                            }}
-                        >
+                        <div className='py-4'></div>
+                        <div className='rol mx-5 py-4'>
                             <img
+                                className='img-fluid'
                                 src={logo.src}
-                                style={{
-                                    width: 480
-                                }}
+                                width={'40%'}
                             />
                         </div>
-                        <div>
-                            <div
-                                style={{
-                                    width: 600,
-                                    height: '20px',
-                                    marginTop: `${decorSpacing}px `,
-                                    backgroundColor: '#00ADB5',
-                                    borderRadius: '0 999px 999px 0'
-                                }}
-                            ></div>
-                            <div
-                                style={{
-                                    width: 640,
-                                    height: '20px',
-                                    marginTop: `${decorSpacing}px `,
-                                    backgroundColor: '#00ADB5',
-                                    borderRadius: '0 999px 999px 0'
-                                }}
-                            ></div>
-                            <div
-                                style={{
-                                    width: 680,
-                                    height: '20px',
-                                    marginTop: `${decorSpacing}px `,
-                                    backgroundColor: '#00ADB5',
-                                    borderRadius: '0 999px 999px 0'
-                                }}
-                            ></div>
-                            <div
-                                style={{
-                                    width: 720,
-                                    height: '20px',
-                                    marginTop: `${decorSpacing}px `,
-                                    backgroundColor: '#00ADB5',
-                                    borderRadius: '0 999px 999px 0'
-                                }}
-                            ></div>
-                            <div
-                                style={{
-                                    width: 760,
-                                    height: '20px',
-                                    marginTop: `${decorSpacing}px `,
-                                    backgroundColor: '#00ADB5',
-                                    borderRadius: '0 999px 999px 0'
-                                }}
-                            ></div>
+                        <div className='py-4'></div>
+                        <div className='mt-5'>
+                            <DecorLine width={'60%'} marginTop={decorSpacing} />
+                            <DecorLine width={'66%'} marginTop={decorSpacing} />
+                            <DecorLine width={'72%'} marginTop={decorSpacing} />
+                            <DecorLine width={'78%'} marginTop={decorSpacing} />
+                            <DecorLine width={'84%'} marginTop={decorSpacing} />
                         </div>
                     </div>
-                    <div className='col'>
+                    <div className='col-sm py-auto px-0'>
                         <main>{children}</main>
                     </div>
                 </div>

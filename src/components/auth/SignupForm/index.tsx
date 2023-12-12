@@ -56,21 +56,31 @@ export default async function SignupForm() {
                             SIGN UP
                         </h2>
                         <div>
-                            <TextBox required placeholder='User name'></TextBox>
+                            <TextBox
+                                required
+                                onChange={(e) => setUserName(e.target.value)}
+                                value={username}
+                                placeholder='User name'
+                            ></TextBox>
                             <div className='valid-feedback'>Looks good!</div>
                         </div>
                         <TextBox
                             required
+                            onChange={(e) => setUserName(e.target.value)}
                             placeholder='Email'
                             type='email'
                         ></TextBox>
                         <TextBox
                             required
+                            onChange={(e) => setPhone(e.target.value)}
+                            value={phone}
                             placeholder='Phone number'
                             type='number'
                         ></TextBox>
                         <TextBox
                             required
+                            onChange={(e) => setPassword(e.target.value)}
+                            value={password}
                             placeholder='Password'
                             type='password'
                         ></TextBox>
@@ -89,7 +99,6 @@ export default async function SignupForm() {
                             <div
                                 className='col'
                                 style={{
-                                    width: 200,
                                     height: 0,
                                     border: '1px #D2D1D1 solid'
                                 }}
@@ -106,35 +115,10 @@ export default async function SignupForm() {
                             <div
                                 className='col'
                                 style={{
-                                    width: 200,
                                     height: 0,
                                     border: '1px #D2D1D1 solid'
                                 }}
                             ></div>
-                        </div>
-                        <div
-                            className='row col-md-auto align-items-md-center mx-auto my-5 p-2 text-center'
-                            style={{
-                                width: 180,
-                                border: '1px #D2D1D1 solid',
-                                borderRadius: 4
-                            }}
-                        >
-                            <img
-                                className='col'
-                                style={{
-                                    width: 40
-                                }}
-                                src='https://www.deliverlogic.com/wp-content/uploads/2021/04/google-logo-png-webinar-optimizing-for-success-google-business-webinar-13.png'
-                            />
-                            <div
-                                className='col'
-                                style={{
-                                    color: 'black'
-                                }}
-                            >
-                                Google
-                            </div>
                         </div>
 
                         <div className='row justify-content-center my-5'>

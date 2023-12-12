@@ -1,9 +1,9 @@
 export interface IFooterProps {
     title?: string;
 }
-import Twitter from 'public/assets/images/Twitter.png';
-import Instagram from 'public/assets/images/Instagram.png';
-import Github from 'public/assets/images/Github.png';
+import Twitter from '/public/assets/images/Twitter.png';
+import Instagram from '/public/assets/images/Instagram.png';
+import Github from '/public/assets/images/Github.png';
 import Link from 'next/link';
 const Footer = () => {
     return (
