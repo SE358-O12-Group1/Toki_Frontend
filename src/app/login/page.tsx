@@ -1,33 +1,36 @@
+'use client';
+
 import Button from '@/components/common/Button';
 import TextBox from '@/components/common/TextBox';
+import Link from 'next/link';
 import { FormEventHandler, useState } from 'react';
 
-export default async function LoginForm() {
+export default function LoginForm() {
     const [username, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
 
-    let handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+    let handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
-        try {
-            let res = await fetch('', {
-                method: 'POST',
-                body: JSON.stringify({
-                    username: username,
-                    password: password
-                })
-            });
-            let resJson = await res.json();
-            if (res.status === 200) {
-                setUserName('');
-                setPassword('');
-                setMessage('Logged in successfully');
-            } else {
-                setMessage('Some error occured');
-            }
-        } catch (err) {
-            console.log(err);
-        }
+        // try {
+        //     let res = fetch('', {
+        //         method: 'POST',
+        //         body: JSON.stringify({
+        //             username: username,
+        //             password: password
+        //         })
+        //     });
+        //     let resJson = res.json();
+        //     if (res.status === 200) {
+        //         setUserName('');
+        //         setPassword('');
+        //         setMessage('Logged in successfully');
+        //     } else {
+        //         setMessage('Some error occured');
+        //     }
+        // } catch (err) {
+        //     console.log(err);
+        // }
     };
 
     return (
@@ -127,14 +130,15 @@ export default async function LoginForm() {
                         </div>
                         <div className='row justify-content-center my-5'>
                             <p className='col-md-auto fst-italic text-center'>
-                                New to
+                                New to TOKI?
                             </p>
-                            <p
+                            <Link
+                                href='/signup'
                                 className='col-md-auto fst-italic text-center'
                                 style={{ color: '#1A88F7' }}
                             >
-                                TOKI?
-                            </p>
+                                Sign up!
+                            </Link>
                         </div>
                     </form>
                 </div>

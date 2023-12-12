@@ -1,5 +1,8 @@
+'use client';
+
 import Button from '@/components/common/Button';
 import TextBox from '@/components/common/TextBox';
+import Link from 'next/link';
 import { FormEventHandler, useState } from 'react';
 
 export default async function SignupForm() {
@@ -132,6 +135,19 @@ export default async function SignupForm() {
                             >
                                 Google
                             </div>
+                        </div>
+
+                        <div className='row justify-content-center my-5'>
+                            <p className='col-md-auto fst-italic text-center'>
+                                Already have an account?
+                            </p>
+                            <Link
+                                href='/login'
+                                className='col-md-auto fst-italic text-center'
+                                style={{ color: '#1A88F7' }}
+                            >
+                                Log in!
+                            </Link>
                         </div>
                     </form>
                 </div>
