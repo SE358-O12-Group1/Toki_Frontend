@@ -6,7 +6,7 @@ const DecorCircle = () => {
             style={{
                 width: 90,
                 height: 90,
-                position: 'absolute'
+                position: 'relative'
             }}
         >
             <div
