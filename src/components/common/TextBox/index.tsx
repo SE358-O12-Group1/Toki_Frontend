@@ -10,6 +10,7 @@ export interface ITextboxProps {
     disable?: boolean;
     required?: boolean;
     onBlur?: FocusEventHandler<HTMLInputElement>;
+    onChange?: FocusEventHandler<HTMLInputElement>;
 }
 
 export default async function TextBox(props: ITextboxProps) {
@@ -22,7 +23,8 @@ export default async function TextBox(props: ITextboxProps) {
         readonly,
         disable,
         required,
-        onBlur
+        onBlur,
+        onChange
     } = props;
     return (
         <>
@@ -56,6 +58,7 @@ export default async function TextBox(props: ITextboxProps) {
                     className={className + 'form-control full-width-div'}
                     placeholder={placeholder}
                     onBlur={onBlur}
+                    onChange={onChange}
                 ></input>
             </div>
         </>

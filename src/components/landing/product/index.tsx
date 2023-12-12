@@ -1,5 +1,5 @@
-import Iphone from 'public/assets/images/Iphone.png';
-import Rating from 'public/assets/images/Rating.png';
+import Iphone from '/public/assets/images/Iphone.png';
+import Rating from '/public/assets/images/Rating.png';
 import { MouseEventHandler, ReactNode } from 'react';
 
 export interface IProductProps {

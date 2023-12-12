@@ -17,11 +17,11 @@ export default function LoginForm() {
 
     return (
         <>
-            <div className='mx-5 pe-5'>
-                <div className='me-5 pe-5'>
+            <div className='mx-5'>
+                <div className='me-5'>
                     <form
                         onSubmit={handleSubmit}
-                        className='needs-validation me-5 pe-5'
+                        className='needs-validation me-5'
                         needs-validation='true'
                     >
                         <h2
@@ -37,6 +37,7 @@ export default function LoginForm() {
                             <TextBox
                                 value={username}
                                 required
+                                onChange={(e) => setUserName(e.target.value)}
                                 placeholder='Email/ Phone number/ User name'
                             ></TextBox>
                             <div className='valid-feedback'>Looks good!</div>
@@ -44,6 +45,7 @@ export default function LoginForm() {
                         <TextBox
                             value={password}
                             required
+                            onChange={(e) => setPassword(e.target.value)}
                             placeholder='Password'
                             type='password'
                         ></TextBox>
@@ -63,7 +65,6 @@ export default function LoginForm() {
                             <div
                                 className='col'
                                 style={{
-                                    width: 200,
                                     height: 0,
                                     border: '1px #D2D1D1 solid'
                                 }}
@@ -80,35 +81,10 @@ export default function LoginForm() {
                             <div
                                 className='col'
                                 style={{
-                                    width: 200,
                                     height: 0,
                                     border: '1px #D2D1D1 solid'
                                 }}
                             ></div>
-                        </div>
-                        <div
-                            className='row col-md-auto align-items-md-center mx-auto my-5 p-2 text-center'
-                            style={{
-                                width: 180,
-                                border: '1px #D2D1D1 solid',
-                                borderRadius: 4
-                            }}
-                        >
-                            <img
-                                className='col'
-                                style={{
-                                    width: 40
-                                }}
-                                src='https://www.deliverlogic.com/wp-content/uploads/2021/04/google-logo-png-webinar-optimizing-for-success-google-business-webinar-13.png'
-                            />
-                            <div
-                                className='col'
-                                style={{
-                                    color: 'black'
-                                }}
-                            >
-                                Google
-                            </div>
                         </div>
                         <div className='row justify-content-center my-5'>
                             <p className='col-md-auto fst-italic text-center'>
