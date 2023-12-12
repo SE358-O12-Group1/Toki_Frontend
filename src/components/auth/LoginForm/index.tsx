@@ -12,25 +12,7 @@ export default function LoginForm() {
 
     let handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
-        // try {
-        //     let res = fetch('', {
-        //         method: 'POST',
-        //         body: JSON.stringify({
-        //             username: username,
-        //             password: password
-        //         })
-        //     });
-        //     let resJson = res.json();
-        //     if (res.status === 200) {
-        //         setUserName('');
-        //         setPassword('');
-        //         setMessage('Logged in successfully');
-        //     } else {
-        //         setMessage('Some error occured');
-        //     }
-        // } catch (err) {
-        //     console.log(err);
-        // }
+        //TODO: call sign up api
     };
 
     return (

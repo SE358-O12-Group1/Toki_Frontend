@@ -1,11 +1,11 @@
-import AuthenticationLayout from '@/components/layouts/AuthenLayout';
+import AuthenticationLayout from '@/components/auth/AuthenLayout';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'TOKI | Login'
+    title: 'TOKI | Authenticate'
 };
 
-export default function LoginLayout({
+export default function AuthLayout({
     children
 }: {
     children: React.ReactNode;
