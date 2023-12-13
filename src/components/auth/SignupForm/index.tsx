@@ -1,13 +1,90 @@
 'use client';
 
+import Link from 'next/link';
+import { useMutation } from 'react-query';
+import { useRouter } from 'next/navigation';
+import { FormEvent, useState } from 'react';
+
+// components
 import Button from '@/components/common/Button';
 import TextBox from '@/components/common/TextBox';
-import Link from 'next/link';
-import { FormEvent, FormEventHandler, useState } from 'react';
+
+// apis
+import { useAppDispatch } from '@/redux/hook';
+import authApi from '@/apis/auth.api';
+import { signup } from '@/redux/slices/auth.slice';
+
+type FormSignupType = {
+    email: string;
+    phone: string;
+    password: string;
+    confirmPassword: string;
+};
+
+const intitalFormSignup: FormSignupType = {
+    email: '',
+    phone: '',
+    password: '',
+    confirmPassword: ''
+};
 
 export default function SignupForm() {
+    const dispatch = useAppDispatch();
+
+    const router = useRouter();
+
+    const [formSignup, setFormSignup] =
+        useState<FormSignupType>(intitalFormSignup);
+
+    const { email, phone, password, confirmPassword } = formSignup;
+
+    const signupMutation = useMutation({
+        mutationFn: (body: FormSignupType) => authApi.signup(body)
+    });
+
+    const { isError, error, isSuccess, data, isLoading } = signupMutation;
+
+    // Handle change
+    const handleChangeEmail = (e: FormEvent<HTMLInputElement>) => {
+        setFormSignup({ ...formSignup, email: e.currentTarget.value });
+    };
+
+    const handleChangePassword = (e: FormEvent<HTMLInputElement>) => {
+        setFormSignup({ ...formSignup, password: e.currentTarget.value });
+    };
+
+    const handleChangeConfirmPassword = (e: FormEvent<HTMLInputElement>) => {
+        setFormSignup({
+            ...formSignup,
+            confirmPassword: e.currentTarget.value
+        });
+    };
+
+    // Handle submit
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        signupMutation.mutate(formSignup, {
+            onSuccess: (res) => {
+                const {
+                    user,
+                    tokens: { accessToken, refreshToken }
+                } = res.data.data;
+
+                dispatch(
+                    signup({
+                        user,
+                        accessToken,
+                        refreshToken
+                    })
+                );
+
+                router.push('/');
+            },
+            onError: (error: any) => {
+                console.log(error?.response?.data);
+            }
+        });
     };
 
     return (
@@ -15,6 +92,7 @@ export default function SignupForm() {
             <div className='mx-5 pe-5'>
                 <div className='me-5 pe-5'>
                     <form
+                        onSubmit={handleSubmit}
                         className='needs-validation me-5 pe-5'
                         needs-validation='true'
                     >
@@ -27,44 +105,42 @@ export default function SignupForm() {
                         >
                             SIGN UP
                         </h2>
+
+                        {/* Form Signup */}
                         <div>
                             <TextBox
                                 required
-                                // onChange={(e) => setUserName(e.target.value)}
-                                // value={username}
-                                placeholder='User name'
-                            ></TextBox>
-                            <div className='valid-feedback'>Looks good!</div>
+                                onChange={handleChangeEmail}
+                                value={email}
+                                placeholder='Email'
+                                type='email'
+                            />
+                            <TextBox
+                                required
+                                onChange={handleChangePassword}
+                                value={password}
+                                placeholder='Password'
+                                type='password'
+                            />
+                            <TextBox
+                                required
+                                onChange={handleChangeConfirmPassword}
+                                value={confirmPassword}
+                                placeholder='Confirm password'
+                                type='password'
+                            />
                         </div>
-                        <TextBox
-                            required
-                            // onChange={(e) => setUserName(e.target.value)}
-                            placeholder='Email'
-                            type='email'
-                        ></TextBox>
-                        <TextBox
-                            required
-                            // onChange={(e) => setPhone(e.target.value)}
-                            // value={phone}
-                            placeholder='Phone number'
-                            type='number'
-                        ></TextBox>
-                        <TextBox
-                            required
-                            // onChange={(e) => setPassword(e.target.value)}
-                            // value={password}
-                            placeholder='Password'
-                            type='password'
-                        ></TextBox>
-                        <TextBox
-                            required
-                            placeholder='Confirm password'
-                            type='password'
-                        ></TextBox>
+
+                        {/* Error message */}
+                        <span style={{ color: 'red' }}>
+                            {isError &&
+                                (error as any).response.data.message +
+                                    '. Please try again!'}
+                        </span>
 
                         <div className='col-12 mt-5 text-center'>
                             <Button className='btn btn-primary' type='submit'>
-                                Sign up
+                                {isLoading ? 'Loading...' : 'Sign up'}
                             </Button>
                         </div>
                         <div className='row align-items-md-center mt-5'>
