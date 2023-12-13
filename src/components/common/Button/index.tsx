@@ -12,7 +12,7 @@ export interface ITextboxProps {
     onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
-export default async function Button(props: ITextboxProps) {
+export default function Button(props: ITextboxProps) {
     const {
         className,
         id,
