@@ -1,18 +1,81 @@
 'use client';
 
+import authApi from '@/apis/auth.api';
 import Button from '@/components/common/Button';
 import TextBox from '@/components/common/TextBox';
+import { useAppDispatch, useAppSelector } from '@/redux/hook';
+import { login } from '@/redux/slices/auth.slice';
+import { AxiosError } from 'axios';
 import Link from 'next/link';
-import { FormEventHandler, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { FocusEvent, FormEvent, useEffect, useState } from 'react';
+import { useMutation } from 'react-query';
+
+type FormLoginType = {
+    email: string;
+    password: string;
+};
+
+const intitalFormLogin: FormLoginType = {
+    email: '',
+    password: ''
+};
 
 export default function LoginForm() {
-    const [username, setUserName] = useState('');
-    const [password, setPassword] = useState('');
-    const [message, setMessage] = useState('');
+    const dispatch = useAppDispatch();
+    const { user, accessToken, refreshToken } = useAppSelector(
+        (state) => state.auth
+    );
 
-    let handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    const router = useRouter();
+
+    const [formLogin, setFormLogin] = useState<FormLoginType>(intitalFormLogin);
+
+    const { email, password } = formLogin;
+
+    const loginMutation = useMutation({
+        mutationFn: (body: FormLoginType) => authApi.login(body)
+    });
+
+    const { isError, error, isSuccess, data, isLoading } = loginMutation;
+
+    useEffect(() => {
+        console.log({ user, accessToken, refreshToken, error });
+    }, [user, accessToken, refreshToken, error]);
+
+    // Handle change
+    const handleChangeEmail = (e: FocusEvent<HTMLInputElement, Element>) => {
+        setFormLogin({ ...formLogin, email: e.currentTarget.value });
+    };
+
+    const handleChangePassword = (e: FocusEvent<HTMLInputElement, Element>) => {
+        setFormLogin({ ...formLogin, password: e.currentTarget.value });
+    };
+
+    // Handle submit
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        //TODO: call sign up api
+        loginMutation.mutate(formLogin, {
+            onSuccess: (res) => {
+                const {
+                    user,
+                    tokens: { accessToken, refreshToken }
+                } = res.data.data;
+
+                dispatch(
+                    login({
+                        user,
+                        accessToken,
+                        refreshToken
+                    })
+                );
+
+                router.push('/');
+            },
+            onError: (error: any) => {
+                console.log(error?.response?.data);
+            }
+        });
     };
 
     return (
@@ -35,9 +98,9 @@ export default function LoginForm() {
                         </h2>
                         <div>
                             <TextBox
-                                value={username}
+                                value={email}
                                 required
-                                onChange={(e) => setUserName(e.target.value)}
+                                onChange={handleChangeEmail}
                                 placeholder='Email/ Phone number/ User name'
                             ></TextBox>
                             <div className='valid-feedback'>Looks good!</div>
@@ -45,14 +108,19 @@ export default function LoginForm() {
                         <TextBox
                             value={password}
                             required
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={handleChangePassword}
                             placeholder='Password'
                             type='password'
                         ></TextBox>
 
+                        {/* Error message */}
+                        <span style={{ color: 'red' }}>
+                            {isError && (error as any).response.data.message}
+                        </span>
+
                         <div className='col-12 mt-5 text-center'>
                             <Button className='btn btn-primary' type='submit'>
-                                Log in
+                                {isLoading ? 'Loading...' : 'Submit'}
                             </Button>
                         </div>
                         <p
