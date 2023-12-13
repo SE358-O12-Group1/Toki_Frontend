@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import InputNumber, { InputNumberProps } from '../InputNumber';
+import InputNumber, { InputNumberProps } from './InputNumber';
 
-interface QuantityControllerProps extends InputNumberProps {
+interface QuantityIncrementerProps extends InputNumberProps {
     max?: number;
     onIncrease?: (value: number) => void;
     onDecrease?: (value: number) => void;
@@ -11,7 +11,7 @@ interface QuantityControllerProps extends InputNumberProps {
     value?: number;
 }
 
-export default function QuantityController({
+export default function QuantityIncrementer({
     max,
     onIncrease,
     onDecrease,
@@ -20,7 +20,7 @@ export default function QuantityController({
     classNameWrapper = 'ml-10',
     value,
     ...rest
-}: QuantityControllerProps) {
+}: QuantityIncrementerProps) {
     const [localValue, setLocalValue] = useState<number>(Number(value || 1));
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
