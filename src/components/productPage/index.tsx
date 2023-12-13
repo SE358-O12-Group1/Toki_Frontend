@@ -9,7 +9,10 @@ import {
     rateSale
 } from '@/utils/utils';
 import { IProduct, mockProduct } from './mockData';
-import QuantityController from '../common/QuantityController';
+import QuantityIncrementer from './components/QuantityIncrementer';
+import ProductRating from './components/ProductRatings';
+
+import ShopIcon from '/public/assets/images/shop_icon.png';
 
 export interface ProductDetailProps {
     productId: string | number;
@@ -17,10 +20,18 @@ export interface ProductDetailProps {
 export default function ProductDetailPage(props: ProductDetailProps) {
     const { productId } = props;
     const [buyCount, setBuyCount] = useState(1);
+    const [selectedChip, setSelectedChip] = useState('');
+
+    const handleChipClick = (chipValue: string) => {
+        setSelectedChip(chipValue);
+        // Do something with the selected value
+    };
 
     const [currentIndexImages, setCurrentIndexImages] = useState([0, 5]);
     const [activeImage, setActiveImage] = useState('');
+
     const product = mockProduct;
+
     const imageRef = useRef<HTMLImageElement>(null);
     const currentImages = useMemo(
         () => (product ? product?.images.slice(...currentIndexImages) : []),
@@ -72,11 +83,6 @@ export default function ProductDetailPage(props: ProductDetailProps) {
         const rect = event.currentTarget.getBoundingClientRect();
         const image = imageRef.current as HTMLImageElement;
         const { naturalHeight, naturalWidth } = image;
-        // Cách 1: Lấy offsetX, offsetY đơn giản khi chúng ta đã xử lý được bubble event
-        // Dùng css pointer-events-none
-        // const { offsetX, offsetY } = event.nativeEvent;
-
-        // Cách 2: Lấy offsetX, offsetY khi chúng ta không xử lý được bubble event
         const offsetX = event.pageX - (rect.x + window.scrollX);
         const offsetY = event.pageY - (rect.y + window.scrollY);
 
@@ -97,25 +103,7 @@ export default function ProductDetailPage(props: ProductDetailProps) {
         setBuyCount(value);
     };
 
-    const addToCart = () => {
-        // addToCartMutation.mutate(
-        //     { buy_count: buyCount, product_id: product?._id as string },
-        //     {
-        //         onSuccess: (data) => {
-        //             queryClient.invalidateQueries({
-        //                 queryKey: [
-        //                     'purchases',
-        //                     { status: purchasesStatus.inCart }
-        //                 ]
-        //             });
-        //             toast.success(data.data.message, {
-        //                 position: 'top-center',
-        //                 autoClose: 1500
-        //             });
-        //         }
-        //     }
-        // );
-    };
+    const addToCart = () => {};
 
     const buyNow = async () => {};
 
@@ -126,12 +114,12 @@ export default function ProductDetailPage(props: ProductDetailProps) {
     return (
         <>
             <div className='bg-gray-200 py-6'>
-                <div className='container'>
-                    <div className='bg-white p-4 shadow'>
+                <div className='container '>
+                    <div className='rounded-md bg-white p-4 shadow'>
                         <div className='grid grid-cols-12 gap-9'>
                             <div className='col-span-5'>
                                 <div
-                                    className='relative w-full cursor-zoom-in overflow-hidden pt-[100%] shadow'
+                                    className='relative w-full cursor-zoom-in overflow-hidden rounded-md pt-[100%] shadow'
                                     onMouseMove={handleZoom}
                                     onMouseLeave={handleRemoveZoom}
                                 >
@@ -175,10 +163,10 @@ export default function ProductDetailPage(props: ProductDetailProps) {
                                                 <img
                                                     src={img}
                                                     alt={product.name}
-                                                    className='absolute left-0 top-0 h-full w-full cursor-pointer bg-white object-cover'
+                                                    className='absolute left-0 top-0 h-full w-full cursor-pointer rounded-md bg-white  object-cover'
                                                 />
                                                 {isActive && (
-                                                    <div className='border-orange absolute inset-0 border-2' />
+                                                    <div className='border-main absolute inset-0 rounded-md border-2' />
                                                 )}
                                             </div>
                                         );
@@ -203,76 +191,119 @@ export default function ProductDetailPage(props: ProductDetailProps) {
                                         </svg>
                                     </button>
                                 </div>
+                                <div className='grid grid-cols-3 items-center justify-start p-4'>
+                                    <div className='col-span-1 px-5'>
+                                        <img
+                                            // Do mình ko có avt người dùng hay của shop nên chỗ nè để cái ảnh shop như này luôn
+                                            src={ShopIcon.src}
+                                            alt={product.seller.name}
+                                            className='bg-white object-cover'
+                                        />
+                                    </div>
+                                    <div className='col-span-2'>
+                                        <div className='font-medium capitalize'>
+                                            {product.seller.name}
+                                        </div>
+                                        <span className=''>
+                                            {product.seller.email}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                             <div className='col-span-7'>
                                 <h1 className='text-xl font-medium uppercase'>
                                     {product.name}
                                 </h1>
                                 <div className='mt-8 flex items-center'>
-                                    {/* <div className='flex items-center'>
-                                        <span className='border-b-orange text-orange mr-1 border-b'>
-                                            {product.rating}
+                                    <div className='flex items-center'>
+                                        <span className='border-b-yellow mr-1 border-b'>
+                                            {product.ratings}
                                         </span>
                                         <ProductRating
-                                            rating={product.rating}
-                                            activeClassname='fill-orange text-orange h-4 w-4'
+                                            rating={product.ratings || 0}
+                                            activeClassname='fill-yellow text-yellow h-4 w-4'
                                             nonActiveClassname='fill-gray-300 text-gray-300 h-4 w-4'
                                         />
-                                    </div> */}
+                                    </div>
                                     <div className='mx-4 h-4 w-[1px] bg-gray-300'></div>
                                     <div>
                                         <span>
                                             {formatNumberToSocialStyle(
                                                 product.sold_quantity
-                                            )}
-                                        </span>
-                                        <span className='ml-1 text-gray-500'>
-                                            {'product detail.sold'}
+                                            )}{' '}
+                                            SOLD
                                         </span>
                                     </div>
                                 </div>
 
-                                <div className='mt-8 flex items-center bg-gray-50 px-5 py-4'>
-                                    <div className='text-gray-500 line-through'>
-                                        ₫{formatCurrency(product.price)}
+                                <div className='text-main ml-3 mt-6 text-3xl font-medium'>
+                                    ₫{formatCurrency(product.price)}
+                                </div>
+                                {product.normalPrice && (
+                                    <div className='mt-6 flex items-center'>
+                                        <div className='bg-main text-yellow ml-4 rounded-sm px-1 py-[2px] text-xs font-semibold uppercase'>
+                                            {'-'}
+                                            {rateSale(
+                                                product.normalPrice,
+                                                product.price
+                                            )}
+                                        </div>
+                                        <div className='ml-3 text-gray-500 line-through'>
+                                            ₫
+                                            {formatCurrency(
+                                                product.normalPrice!
+                                            )}
+                                        </div>
                                     </div>
-                                    <div className='text-orange ml-3 text-3xl font-medium'>
-                                        ₫{formatCurrency(product.price)}
+                                )}
+
+                                <div className='mt-8 flex items-center'>
+                                    <div className='mr-10 font-medium capitalize'>
+                                        {'Variants'}
                                     </div>
-                                    <div className='bg-orange ml-4 rounded-sm px-1 py-[2px] text-xs font-semibold uppercase text-white'>
-                                        {rateSale(product.price, product.price)}{' '}
-                                        {'product detail.off'}
+                                    <div className='flex'>
+                                        {product.variants?.map((chip) => (
+                                            <div
+                                                key={chip}
+                                                className={`radio-button hover:bg-main/5 mr-2 flex h-12 items-center justify-center rounded-md px-4 capitalize ${
+                                                    selectedChip === chip
+                                                        ? 'border-main'
+                                                        : 'border'
+                                                }`}
+                                                onClick={() =>
+                                                    handleChipClick(chip)
+                                                }
+                                            >
+                                                {chip}
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
 
                                 <div className='mt-8 flex items-center'>
-                                    <div className='capitalize text-gray-500'>
-                                        {'product detail.quantity'}
+                                    <div className='font-medium capitalize'>
+                                        {'Quantity'}
                                     </div>
-                                    <QuantityController
+                                    <QuantityIncrementer
                                         onDecrease={handleBuyCountChange}
                                         onIncrease={handleBuyCountChange}
                                         onType={handleBuyCountChange}
                                         value={buyCount}
                                         max={product.quantity}
                                     />
-                                    <div className='ml-6 text-sm text-gray-500'>
-                                        {product.quantity}{' '}
-                                        {'product detail.pieces available'}
-                                    </div>
                                 </div>
 
                                 <div className='mt-8 flex items-center'>
                                     <button
                                         onClick={addToCart}
-                                        className='border-orange bg-orange/10 text-orange hover:bg-orange/5 flex h-12 items-center justify-center rounded-sm border px-5 capitalize shadow-sm'
+                                        className='border-main text-main hover:bg-main/5 flex h-12 items-center justify-center rounded-md px-5 capitalize shadow-sm'
                                     >
                                         <svg
                                             enableBackground='new 0 0 15 15'
                                             viewBox='0 0 15 15'
                                             x={0}
                                             y={0}
-                                            className='stroke-orange text-orange mr-[10px] h-5 w-5 fill-current'
+                                            className='stroke-main text-main mr-[10px] h-5 w-5 fill-current'
                                         >
                                             <g>
                                                 <g>
@@ -316,13 +347,13 @@ export default function ProductDetailPage(props: ProductDetailProps) {
                                                 />
                                             </g>
                                         </svg>
-                                        {'product detail.add to cart'}
+                                        {'Add to cart'}
                                     </button>
                                     <button
-                                        className='fkex bg-orange hover:bg-orange/90 ml-4 h-12 min-w-[5rem] items-center justify-center rounded-sm px-5 capitalize text-white shadow-sm outline-none'
+                                        className='fkex bg-main hover:bg-yellow/90 ml-4 h-12 min-w-[5rem] items-center justify-center rounded-md px-5 capitalize text-white shadow-sm outline-none'
                                         onClick={buyNow}
                                     >
-                                        {'product detail.buy now'}
+                                        {'Buy now'}
                                     </button>
                                 </div>
                             </div>
@@ -331,12 +362,12 @@ export default function ProductDetailPage(props: ProductDetailProps) {
                 </div>
 
                 <div className='mt-8'>
-                    <div className='container'>
-                        <div className='mt-8 bg-white p-4 shadow'>
-                            <div className='rounded bg-gray-50 p-4 text-lg capitalize text-slate-700'>
-                                {'product detail.product description'}
+                    <div className='container '>
+                        <div className='mt-8 rounded-md bg-white p-4  shadow'>
+                            <div className='p-4 text-lg font-medium capitalize text-slate-700'>
+                                {'Description'}
                             </div>
-                            <div className='mx-4 mb-4 mt-12 text-sm leading-loose'>
+                            <div className='mx-4 mb-4 text-sm leading-loose'>
                                 <div
                                     dangerouslySetInnerHTML={{
                                         __html: DOMPurify.sanitize(
@@ -352,7 +383,7 @@ export default function ProductDetailPage(props: ProductDetailProps) {
                 <div className='mt-8'>
                     <div className='container'>
                         <div className='uppercase text-gray-400'>
-                            {'product detail.you may also like'}
+                            {'Related products'}
                         </div>
                         {product.relatedProducts && (
                             <div className='mt-6 grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'>
