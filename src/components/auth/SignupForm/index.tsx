@@ -3,41 +3,13 @@
 import Button from '@/components/common/Button';
 import TextBox from '@/components/common/TextBox';
 import Link from 'next/link';
-import { FormEventHandler, useState } from 'react';
+import { FormEvent, FormEventHandler, useState } from 'react';
 
-export default async function SignupForm() {
-    const [username, setUserName] = useState('');
-    const [phone, setPhone] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [message, setMessage] = useState('');
-
-    let handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+export default function SignupForm() {
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        try {
-            let res = await fetch('', {
-                method: 'POST',
-                body: JSON.stringify({
-                    username: username,
-                    phone: phone,
-                    email: email,
-                    password: password
-                })
-            });
-            let resJson = await res.json();
-            if (res.status === 200) {
-                setUserName('');
-                setPhone('');
-                setEmail('');
-                setPassword('');
-                setMessage('User created successfully');
-            } else {
-                setMessage('Some error occured');
-            }
-        } catch (err) {
-            console.log(err);
-        }
     };
+
     return (
         <>
             <div className='mx-5 pe-5'>
@@ -58,29 +30,29 @@ export default async function SignupForm() {
                         <div>
                             <TextBox
                                 required
-                                onChange={(e) => setUserName(e.target.value)}
-                                value={username}
+                                // onChange={(e) => setUserName(e.target.value)}
+                                // value={username}
                                 placeholder='User name'
                             ></TextBox>
                             <div className='valid-feedback'>Looks good!</div>
                         </div>
                         <TextBox
                             required
-                            onChange={(e) => setUserName(e.target.value)}
+                            // onChange={(e) => setUserName(e.target.value)}
                             placeholder='Email'
                             type='email'
                         ></TextBox>
                         <TextBox
                             required
-                            onChange={(e) => setPhone(e.target.value)}
-                            value={phone}
+                            // onChange={(e) => setPhone(e.target.value)}
+                            // value={phone}
                             placeholder='Phone number'
                             type='number'
                         ></TextBox>
                         <TextBox
                             required
-                            onChange={(e) => setPassword(e.target.value)}
-                            value={password}
+                            // onChange={(e) => setPassword(e.target.value)}
+                            // value={password}
                             placeholder='Password'
                             type='password'
                         ></TextBox>
