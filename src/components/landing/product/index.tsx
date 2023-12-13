@@ -13,7 +13,7 @@ export interface IProductProps {
     onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
-export default async function Button(props: IProductProps) {
+export default function Button(props: IProductProps) {
     const {
         className,
         id,

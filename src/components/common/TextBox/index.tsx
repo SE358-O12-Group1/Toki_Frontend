@@ -13,7 +13,7 @@ export interface ITextboxProps {
     onChange?: FocusEventHandler<HTMLInputElement>;
 }
 
-export default async function TextBox(props: ITextboxProps) {
+export default function TextBox(props: ITextboxProps) {
     const {
         value,
         type,
