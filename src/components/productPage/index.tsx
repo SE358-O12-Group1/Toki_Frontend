@@ -237,7 +237,7 @@ export default function ProductDetailPage(props: ProductDetailProps) {
                                 </div>
 
                                 <div className='text-main ml-3 mt-6 text-3xl font-medium'>
-                                    ₫{formatCurrency(product.price)}
+                                    {formatCurrency(product.price)} ₫
                                 </div>
                                 {product.normalPrice && (
                                     <div className='mt-6 flex items-center'>
@@ -249,10 +249,10 @@ export default function ProductDetailPage(props: ProductDetailProps) {
                                             )}
                                         </div>
                                         <div className='ml-3 text-gray-500 line-through'>
-                                            ₫
                                             {formatCurrency(
                                                 product.normalPrice!
-                                            )}
+                                            )}{' '}
+                                            ₫
                                         </div>
                                     </div>
                                 )}
