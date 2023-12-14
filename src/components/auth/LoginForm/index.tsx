@@ -96,7 +96,7 @@ export default function LoginForm() {
                         >
                             LOGIN
                         </h2>
-                        <div>
+                        <div className='mb-3'>
                             <TextBox
                                 value={email}
                                 required

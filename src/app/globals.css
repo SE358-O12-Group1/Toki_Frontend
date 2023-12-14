@@ -1137,6 +1137,10 @@ video {
     line-height: 1rem;
 }
 
+.font-light {
+    font-weight: 300;
+}
+
 .font-medium {
     font-weight: 500;
 }
@@ -1185,6 +1189,11 @@ video {
 .text-yellow {
     --tw-text-opacity: 1;
     color: rgb(255 214 0 / var(--tw-text-opacity));
+}
+
+.text-normal {
+    --tw-text-opacity: 1;
+    color: rgb(0 0 0 / var(--tw-text-opacity));
 }
 
 .text-main {

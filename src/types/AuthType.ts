@@ -1,7 +1,12 @@
 import UserType from './UserType';
 
+export type UserAuthType = Pick<
+    UserType,
+    '_id' | 'name' | 'email' | 'avatar' | 'role'
+> | null;
+
 type AuthType = {
-    user: Pick<UserType, '_id' | 'name' | 'email' | 'avatar' | 'role'> | null;
+    user: UserAuthType;
     accessToken: string;
     refreshToken: string;
 };

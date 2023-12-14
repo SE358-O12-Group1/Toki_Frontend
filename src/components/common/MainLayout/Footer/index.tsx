@@ -8,8 +8,8 @@ import Link from 'next/link';
 const Footer = () => {
     return (
         <>
-            <div className='main-colored flex p-1'>
-                <div className='offset-1 mb-3 mt-2'>
+            <div className='main-colored p-4'>
+                <div className='offset-1 mt-2'>
                     <button
                         type='button'
                         className='btn main-colored text-white'
@@ -31,21 +31,18 @@ const Footer = () => {
                 </div>
 
                 <div className='main-colored  offset-1 d-flex mb-2 text-left'>
-                    © 2023 TOKI. All Rights Reserved.
-                    <div>
+                    <span className='text-yellow'>
+                        © 2023 TOKI. All Rights Reserved.
+                    </span>
+                    <Link href='/' className='text-yellow me-1 ms-2'>
                         {' '}
-                        <Link href='/' className='me-1 ms-2 text-white'>
-                            {' '}
-                            Terms of Service{' '}
-                        </Link>
-                    </div>
-                    |
-                    <div>
-                        <Link href='/' className='ms-1 text-white'>
-                            {' '}
-                            Privacy Policy{' '}
-                        </Link>
-                    </div>
+                        Terms of Service{' '}
+                    </Link>
+                    <span className='text-yellow'>|</span>
+                    <Link href='/' className='text-yellow ms-1'>
+                        {' '}
+                        Privacy Policy{' '}
+                    </Link>
                 </div>
             </div>
         </>
