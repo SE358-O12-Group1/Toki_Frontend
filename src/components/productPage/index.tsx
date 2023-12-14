@@ -1,8 +1,7 @@
 'use client';
 
 import DOMPurify from 'isomorphic-dompurify';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import Product from '../landing/product';
+import { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import {
     formatCurrency,
     formatNumberToSocialStyle,
@@ -13,6 +12,7 @@ import QuantityIncrementer from './components/QuantityIncrementer';
 import ProductRating from './components/ProductRatings';
 
 import ShopIcon from '/public/assets/images/shop_icon.png';
+import ProductCard from '../landing/product';
 
 export interface ProductDetailProps {
     productId: string | number;
@@ -380,27 +380,83 @@ export default function ProductDetailPage(props: ProductDetailProps) {
                     </div>
                 </div>
 
-                <div className='mt-8'>
-                    <div className='container'>
-                        <div className='uppercase text-gray-400'>
-                            {'Related products'}
-                        </div>
-                        {product.relatedProducts && (
-                            <div className='mt-6 grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'>
-                                {product.relatedProducts.map((product) => (
-                                    <div
-                                        className='col-span-1'
-                                        key={product._id}
-                                    >
-                                        {/* <Product product={product} /> */}
-                                        <div>{product.name}</div>
-                                    </div>
-                                ))}
+                {product.relatedProducts ? (
+                    <div className='mt-8'>
+                        <div className='container'>
+                            <div className='uppercase text-gray-400'>
+                                {'Related products'}
                             </div>
-                        )}
+                            {getProductGrid(product.relatedProducts!)}
+                        </div>
                     </div>
-                </div>
+                ) : (
+                    <></>
+                )}
             </div>
         </>
     );
+
+    function getProductGrid(products: IProduct[]) {
+        let result: ReactNode[] = [];
+        let index = 0;
+        const len = products.length;
+        while (index < len) {
+            result.push(
+                <div className='row mb-2' key={index}>
+                    <div className='col'>
+                        {index < len ? (
+                            <ProductCard
+                                minHeight={'100%'}
+                                product={products[index]}
+                            ></ProductCard>
+                        ) : (
+                            <></>
+                        )}
+                    </div>
+                    <div className='col'>
+                        {index + 1 < len ? (
+                            <ProductCard
+                                minHeight={'100%'}
+                                product={products[index + 1]}
+                            ></ProductCard>
+                        ) : (
+                            <></>
+                        )}
+                    </div>
+                    <div className='col'>
+                        {index + 2 < len ? (
+                            <ProductCard
+                                minHeight={'100%'}
+                                product={products[index + 2]}
+                            ></ProductCard>
+                        ) : (
+                            <></>
+                        )}
+                    </div>
+                    <div className='col'>
+                        {index + 3 < len ? (
+                            <ProductCard
+                                minHeight={'100%'}
+                                product={products[index + 3]}
+                            ></ProductCard>
+                        ) : (
+                            <></>
+                        )}
+                    </div>
+                    <div className='col'>
+                        {index + 4 < len ? (
+                            <ProductCard
+                                minHeight={'100%'}
+                                product={products[index + 4]}
+                            ></ProductCard>
+                        ) : (
+                            <></>
+                        )}
+                    </div>
+                </div>
+            );
+            index += 5;
+        }
+        return result;
+    }
 }
