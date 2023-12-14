@@ -2,6 +2,7 @@ import axios, { AxiosInstance } from 'axios';
 
 // constants
 import { BASE_API_URL } from '@/constants/api';
+import { getAccessTokenFromLS } from './auth';
 
 export class Http {
     instance: AxiosInstance;
@@ -14,6 +15,21 @@ export class Http {
                 'Content-Type': 'application/json'
             }
         });
+
+        this.instance.interceptors.request.use(
+            async (config) => {
+                const accessToken = await getAccessTokenFromLS();
+                console.log('accessToken', accessToken);
+                if (accessToken && config.headers) {
+                    config.headers.authorization = 'Bearer ' + accessToken;
+                    return config;
+                }
+                return config;
+            },
+            (error) => {
+                return Promise.reject(error);
+            }
+        );
     }
 }
 
