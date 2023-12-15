@@ -143,6 +143,13 @@ export const mockProduct: IProduct = {
     variants: ['Bìa cứng', 'Bìa mềm', 'Bản đặc biệt']
 };
 
+export const mockUser: IUSer = {
+    name: 'Nhà sách Bán sách',
+    email: 'com.example@ddsdsd.com',
+    imageUrl:
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_jgho-PgO5rtMOErauKhhRLlb8vsl5cof3RBLf1o1jw&s'
+};
+
 export const mockProducts = [
     mockProduct,
     mockProduct2,
@@ -156,4 +163,5 @@ export interface IUSer {
     name: string;
     email: string;
     password?: string;
+    imageUrl?: string;
 }

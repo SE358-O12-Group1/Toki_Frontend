@@ -402,7 +402,7 @@ export default function ProductDetailPage(props: ProductDetailProps) {
         const len = products.length;
         while (index < len) {
             result.push(
-                <div className='row mb-2' key={index}>
+                <div className='row mb-3' key={index}>
                     <div className='col'>
                         {index < len ? (
                             <ProductCard

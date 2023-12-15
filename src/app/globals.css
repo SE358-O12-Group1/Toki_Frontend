@@ -743,6 +743,10 @@ video {
     margin-right: 0.25rem;
 }
 
+.mr-10 {
+    margin-right: 2.5rem;
+}
+
 .mr-\[10px\] {
     margin-right: 10px;
 }
@@ -1063,6 +1067,11 @@ video {
 .px-5 {
     padding-left: 1.25rem;
     padding-right: 1.25rem;
+}
+
+.mx-10 {
+    margin-left: 2.5rem;
+    margin-right: 2.5rem;
 }
 
 .py-4 {

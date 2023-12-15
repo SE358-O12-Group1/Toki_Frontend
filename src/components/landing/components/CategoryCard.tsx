@@ -7,7 +7,7 @@ export interface ICategoryCardProps {
 export default function CategoryCard(props: ICategoryCardProps) {
     const { category } = props;
     return (
-        <button type='button' className='btn' style={{ minWidth: 280 }}>
+        <button type='button' className='btn' style={{ width: '100%' }}>
             <div className='ms-1 flex items-center'>
                 <div className='d-flex '>
                     <img

@@ -17,7 +17,7 @@ export default function LandingPage(props: ILandingPageProps) {
         const len = products.length;
         while (index < len) {
             result.push(
-                <div className='row mb-2' key={index}>
+                <div className='row mb-4' key={index}>
                     <div className='col'>
                         {index < len ? (
                             <ProductCard
