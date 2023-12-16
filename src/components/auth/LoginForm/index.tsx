@@ -1,15 +1,18 @@
 'use client';
 
-import authApi from '@/apis/auth.api';
+import Link from 'next/link';
+import { useMutation } from 'react-query';
+import { useRouter } from 'next/navigation';
+import { FocusEvent, FormEvent, useState } from 'react';
+
+// components
 import Button from '@/components/common/Button';
 import TextBox from '@/components/common/TextBox';
-import { useAppDispatch, useAppSelector } from '@/redux/hook';
+
+// apis
+import authApi from '@/apis/auth.api';
+import { useAppDispatch } from '@/redux/hook';
 import { login } from '@/redux/slices/auth.slice';
-import { AxiosError } from 'axios';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { FocusEvent, FormEvent, useEffect, useState } from 'react';
-import { useMutation } from 'react-query';
 
 type FormLoginType = {
     email: string;
@@ -23,9 +26,6 @@ const intitalFormLogin: FormLoginType = {
 
 export default function LoginForm() {
     const dispatch = useAppDispatch();
-    const { user, accessToken, refreshToken } = useAppSelector(
-        (state) => state.auth
-    );
 
     const router = useRouter();
 
@@ -39,10 +39,6 @@ export default function LoginForm() {
 
     const { isError, error, isSuccess, data, isLoading } = loginMutation;
 
-    useEffect(() => {
-        console.log({ user, accessToken, refreshToken, error });
-    }, [user, accessToken, refreshToken, error]);
-
     // Handle change
     const handleChangeEmail = (e: FocusEvent<HTMLInputElement, Element>) => {
         setFormLogin({ ...formLogin, email: e.currentTarget.value });
@@ -55,6 +51,7 @@ export default function LoginForm() {
     // Handle submit
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
         loginMutation.mutate(formLogin, {
             onSuccess: (res) => {
                 const {
@@ -115,7 +112,9 @@ export default function LoginForm() {
 
                         {/* Error message */}
                         <span style={{ color: 'red' }}>
-                            {isError && (error as any).response.data.message}
+                            {isError &&
+                                (error as any).response.data.message +
+                                    '. Please try again!'}
                         </span>
 
                         <div className='col-12 mt-5 text-center'>

@@ -13,12 +13,19 @@ import ProductRating from './components/ProductRatings';
 
 import ShopIcon from '/public/assets/images/shop_icon.png';
 import ProductCard from '../landing/product';
+import { useParams } from 'next/navigation';
+import { useQuery } from 'react-query';
+import productApi from '@/apis/product.api';
+import { useAppDispatch, useAppSelector } from '@/redux/hook';
+import { setDetailProduct } from '@/redux/slices/product.slice';
 
-export interface ProductDetailProps {
-    productId: string | number;
-}
-export default function ProductDetailPage(props: ProductDetailProps) {
-    const { productId } = props;
+export default function ProductDetailPage() {
+    const { id: productId } = useParams();
+
+    const dispatch = useAppDispatch();
+
+    const { detailProduct } = useAppSelector((state) => state.product);
+
     const [buyCount, setBuyCount] = useState(1);
     const [selectedChip, setSelectedChip] = useState('');
 
@@ -30,13 +37,32 @@ export default function ProductDetailPage(props: ProductDetailProps) {
     const [currentIndexImages, setCurrentIndexImages] = useState([0, 5]);
     const [activeImage, setActiveImage] = useState('');
 
-    const product = mockProduct;
+    // const product = mockProduct;
+
+    const detailProductQuery = useQuery({
+        queryFn: () => productApi.getProductById(productId as string)
+    });
+
+    const { data, isSuccess, isLoading, error } = detailProductQuery;
 
     const imageRef = useRef<HTMLImageElement>(null);
+
     const currentImages = useMemo(
-        () => (product ? product?.images.slice(...currentIndexImages) : []),
-        [product, currentIndexImages]
+        () =>
+            detailProduct
+                ? detailProduct.images.slice(...currentIndexImages)
+                : [],
+        [detailProduct, currentIndexImages]
     );
+
+    useEffect(() => {
+        if (isSuccess) {
+            dispatch(setDetailProduct(data.data.data));
+            console.log(detailProduct);
+        } else {
+            console.log(error);
+        }
+    }, [data, isSuccess, error, dispatch, detailProduct]);
 
     // const queryConfig: ProductListConfig = {
     //     limit: '20',
@@ -56,13 +82,17 @@ export default function ProductDetailPage(props: ProductDetailProps) {
     // const addToCartMutation = useMutation(purchaseApi.addToCart);
 
     useEffect(() => {
-        if (product && product.images.length > 0) {
-            setActiveImage(product.images[0]);
+        if (detailProduct && detailProduct.images.length > 0) {
+            setActiveImage(detailProduct.images[0]);
         }
-    }, [product]);
+    }, [detailProduct]);
+
+    useEffect(() => {
+        // console.log(productId);
+    }, [productId]);
 
     const next = () => {
-        if (currentIndexImages[1] < (product as IProduct).images.length) {
+        if (currentIndexImages[1] < detailProduct.images.length) {
             setCurrentIndexImages((prev) => [prev[0] + 1, prev[1] + 1]);
         }
     };
@@ -107,10 +137,6 @@ export default function ProductDetailPage(props: ProductDetailProps) {
 
     const buyNow = async () => {};
 
-    if (!product) {
-        return null;
-    }
-
     return (
         <>
             <div className='bg-gray-200 py-6'>
@@ -125,7 +151,7 @@ export default function ProductDetailPage(props: ProductDetailProps) {
                                 >
                                     <img
                                         src={activeImage}
-                                        alt={product.name}
+                                        alt={detailProduct.name}
                                         className='absolute left-0 top-0 h-full w-full bg-white object-cover'
                                         ref={imageRef}
                                     />
@@ -150,7 +176,7 @@ export default function ProductDetailPage(props: ProductDetailProps) {
                                             />
                                         </svg>
                                     </button>
-                                    {currentImages.map((img) => {
+                                    {currentImages.map((img: any) => {
                                         const isActive = img === activeImage;
                                         return (
                                             <div
@@ -162,7 +188,7 @@ export default function ProductDetailPage(props: ProductDetailProps) {
                                             >
                                                 <img
                                                     src={img}
-                                                    alt={product.name}
+                                                    alt={detailProduct.name}
                                                     className='absolute left-0 top-0 h-full w-full cursor-pointer rounded-md bg-white  object-cover'
                                                 />
                                                 {isActive && (
@@ -195,32 +221,35 @@ export default function ProductDetailPage(props: ProductDetailProps) {
                                     <div className='col-span-1 px-5'>
                                         <img
                                             // Do mình ko có avt người dùng hay của shop nên chỗ nè để cái ảnh shop như này luôn
-                                            src={ShopIcon.src}
-                                            alt={product.seller.name}
+                                            src={
+                                                detailProduct.seller?.avatar ||
+                                                ShopIcon.src
+                                            }
+                                            alt={detailProduct.seller?.name}
                                             className='bg-white object-cover'
                                         />
                                     </div>
                                     <div className='col-span-2'>
                                         <div className='font-medium capitalize'>
-                                            {product.seller.name}
+                                            {detailProduct.seller.name}
                                         </div>
                                         <span className=''>
-                                            {product.seller.email}
+                                            {detailProduct.seller.email}
                                         </span>
                                     </div>
                                 </div>
                             </div>
                             <div className='col-span-7'>
                                 <h1 className='text-xl font-medium uppercase'>
-                                    {product.name}
+                                    {detailProduct.name}
                                 </h1>
                                 <div className='mt-8 flex items-center'>
                                     <div className='flex items-center'>
                                         <span className='border-b-yellow mr-1 border-b'>
-                                            {product.ratings}
+                                            {detailProduct.rating}
                                         </span>
                                         <ProductRating
-                                            rating={product.ratings || 0}
+                                            rating={detailProduct.rating || 0}
                                             activeClassname='fill-yellow text-yellow h-4 w-4'
                                             nonActiveClassname='fill-gray-300 text-gray-300 h-4 w-4'
                                         />
@@ -229,7 +258,7 @@ export default function ProductDetailPage(props: ProductDetailProps) {
                                     <div>
                                         <span>
                                             {formatNumberToSocialStyle(
-                                                product.sold_quantity
+                                                detailProduct.sold_quantity
                                             )}{' '}
                                             SOLD
                                         </span>
@@ -237,20 +266,20 @@ export default function ProductDetailPage(props: ProductDetailProps) {
                                 </div>
 
                                 <div className='text-main ml-3 mt-6 text-3xl font-medium'>
-                                    {formatCurrency(product.price)} ₫
+                                    {formatCurrency(detailProduct.price)} ₫
                                 </div>
-                                {product.normalPrice && (
+                                {detailProduct.normalPrice && (
                                     <div className='mt-6 flex items-center'>
                                         <div className='bg-main text-yellow ml-4 rounded-sm px-1 py-[2px] text-xs font-semibold uppercase'>
                                             {'-'}
                                             {rateSale(
-                                                product.normalPrice,
-                                                product.price
+                                                detailProduct.normalPrice,
+                                                detailProduct.price
                                             )}
                                         </div>
                                         <div className='ml-3 text-gray-500 line-through'>
                                             {formatCurrency(
-                                                product.normalPrice!
+                                                detailProduct.normalPrice!
                                             )}{' '}
                                             ₫
                                         </div>
@@ -262,7 +291,7 @@ export default function ProductDetailPage(props: ProductDetailProps) {
                                         {'Variants'}
                                     </div>
                                     <div className='flex'>
-                                        {product.variants?.map((chip) => (
+                                        {detailProduct.variants?.map((chip) => (
                                             <div
                                                 key={chip}
                                                 className={`radio-button hover:bg-main/5 mr-2 flex h-12 items-center justify-center rounded-md px-4 capitalize ${
@@ -289,7 +318,7 @@ export default function ProductDetailPage(props: ProductDetailProps) {
                                         onIncrease={handleBuyCountChange}
                                         onType={handleBuyCountChange}
                                         value={buyCount}
-                                        max={product.quantity}
+                                        max={detailProduct.quantity}
                                     />
                                 </div>
 
@@ -371,7 +400,7 @@ export default function ProductDetailPage(props: ProductDetailProps) {
                                 <div
                                     dangerouslySetInnerHTML={{
                                         __html: DOMPurify.sanitize(
-                                            product.description
+                                            detailProduct.description
                                         )
                                     }}
                                 />
