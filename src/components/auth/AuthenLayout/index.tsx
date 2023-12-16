@@ -14,10 +14,10 @@ const AuthenticationLayout = (props: IAuthenticationLayoutProps) => {
     const decorSpacing = 40;
     return (
         <>
-            <div className='bg-light container-fluid min-vh-100 pl-0 pt-5'>
+            <div className='bg-light container-fluid h-full pl-0 pt-5'>
                 <div className='row '>
                     <div className='col px-0'>
-                        <div className='row justify-content-start mb-5 px-5'>
+                        <div className='row justify-content-start mb-auto pl-5 pr-10'>
                             <div className='col'>
                                 <DecorCircle></DecorCircle>
                             </div>
@@ -34,16 +34,16 @@ const AuthenticationLayout = (props: IAuthenticationLayoutProps) => {
                                 <DecorCircle></DecorCircle>
                             </div>
                         </div>
-                        <div className='py-4'></div>
-                        <div className='rol mx-5 py-4'>
+                        {/* <div className='py-4'></div> */}
+                        <div className='m-10 py-9'>
                             <img
                                 className='img-fluid'
                                 src={logo.src}
                                 width={'40%'}
                             />
                         </div>
-                        <div className='py-4'></div>
-                        <div className='mt-5'>
+                        {/* <div className='py-4'></div> */}
+                        <div className='mt-auto'>
                             <DecorLine width={'60%'} marginTop={decorSpacing} />
                             <DecorLine width={'66%'} marginTop={decorSpacing} />
                             <DecorLine width={'72%'} marginTop={decorSpacing} />

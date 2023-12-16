@@ -1,8 +1,7 @@
 'use client';
 
 import DOMPurify from 'isomorphic-dompurify';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import Product from '../landing/product';
+import { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import {
     formatCurrency,
     formatNumberToSocialStyle,
@@ -13,6 +12,7 @@ import QuantityIncrementer from './components/QuantityIncrementer';
 import ProductRating from './components/ProductRatings';
 
 import ShopIcon from '/public/assets/images/shop_icon.png';
+import ProductCard from '../landing/product';
 import { useParams } from 'next/navigation';
 import { useQuery } from 'react-query';
 import productApi from '@/apis/product.api';
@@ -266,7 +266,7 @@ export default function ProductDetailPage() {
                                 </div>
 
                                 <div className='text-main ml-3 mt-6 text-3xl font-medium'>
-                                    ₫{formatCurrency(detailProduct.price)}
+                                    {formatCurrency(detailProduct.price)} ₫
                                 </div>
                                 {detailProduct.normalPrice && (
                                     <div className='mt-6 flex items-center'>
@@ -278,10 +278,10 @@ export default function ProductDetailPage() {
                                             )}
                                         </div>
                                         <div className='ml-3 text-gray-500 line-through'>
-                                            ₫
                                             {formatCurrency(
-                                                detailProduct.normalPrice
-                                            )}
+                                                detailProduct.normalPrice!
+                                            )}{' '}
+                                            ₫
                                         </div>
                                     </div>
                                 )}
@@ -409,27 +409,83 @@ export default function ProductDetailPage() {
                     </div>
                 </div>
 
-                <div className='mt-8'>
-                    <div className='container'>
-                        <div className='uppercase text-gray-400'>
-                            {'Related products'}
-                        </div>
-                        {/* {product.relatedProducts && (
-                            <div className='mt-6 grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'>
-                                {product.relatedProducts.map((product) => (
-                                    <div
-                                        className='col-span-1'
-                                        key={product._id}
-                                    >
-                                        <Product product={product} />
-                                        <div>{product.name}</div>
-                                    </div>
-                                ))}
+                {product.relatedProducts ? (
+                    <div className='mt-8'>
+                        <div className='container'>
+                            <div className='uppercase text-gray-400'>
+                                {'Related products'}
                             </div>
-                        )} */}
+                            {getProductGrid(product.relatedProducts!)}
+                        </div>
                     </div>
-                </div>
+                ) : (
+                    <></>
+                )}
             </div>
         </>
     );
+
+    function getProductGrid(products: IProduct[]) {
+        let result: ReactNode[] = [];
+        let index = 0;
+        const len = products.length;
+        while (index < len) {
+            result.push(
+                <div className='row mb-3' key={index}>
+                    <div className='col'>
+                        {index < len ? (
+                            <ProductCard
+                                minHeight={'100%'}
+                                product={products[index]}
+                            ></ProductCard>
+                        ) : (
+                            <></>
+                        )}
+                    </div>
+                    <div className='col'>
+                        {index + 1 < len ? (
+                            <ProductCard
+                                minHeight={'100%'}
+                                product={products[index + 1]}
+                            ></ProductCard>
+                        ) : (
+                            <></>
+                        )}
+                    </div>
+                    <div className='col'>
+                        {index + 2 < len ? (
+                            <ProductCard
+                                minHeight={'100%'}
+                                product={products[index + 2]}
+                            ></ProductCard>
+                        ) : (
+                            <></>
+                        )}
+                    </div>
+                    <div className='col'>
+                        {index + 3 < len ? (
+                            <ProductCard
+                                minHeight={'100%'}
+                                product={products[index + 3]}
+                            ></ProductCard>
+                        ) : (
+                            <></>
+                        )}
+                    </div>
+                    <div className='col'>
+                        {index + 4 < len ? (
+                            <ProductCard
+                                minHeight={'100%'}
+                                product={products[index + 4]}
+                            ></ProductCard>
+                        ) : (
+                            <></>
+                        )}
+                    </div>
+                </div>
+            );
+            index += 5;
+        }
+        return result;
+    }
 }

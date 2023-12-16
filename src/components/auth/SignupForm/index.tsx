@@ -89,11 +89,11 @@ export default function SignupForm() {
 
     return (
         <>
-            <div className='mx-5 pe-5'>
-                <div className='me-5 pe-5'>
+            <div className='mx-5'>
+                <div className='me-5'>
                     <form
                         onSubmit={handleSubmit}
-                        className='needs-validation me-5 pe-5'
+                        className='needs-validation me-5'
                         needs-validation='true'
                     >
                         <h2
@@ -115,6 +115,7 @@ export default function SignupForm() {
                                 placeholder='Email'
                                 type='email'
                             />
+                            <div className='mb-3'></div>
                             <TextBox
                                 required
                                 onChange={handleChangePassword}
@@ -122,6 +123,7 @@ export default function SignupForm() {
                                 placeholder='Password'
                                 type='password'
                             />
+                            <div className='mb-3'></div>
                             <TextBox
                                 required
                                 onChange={handleChangeConfirmPassword}
