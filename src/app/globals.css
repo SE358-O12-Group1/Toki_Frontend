@@ -743,6 +743,10 @@ video {
     margin-right: 0.25rem;
 }
 
+.mr-10 {
+    margin-right: 2.5rem;
+}
+
 .mr-\[10px\] {
     margin-right: 10px;
 }
@@ -1065,6 +1069,11 @@ video {
     padding-right: 1.25rem;
 }
 
+.mx-10 {
+    margin-left: 2.5rem;
+    margin-right: 2.5rem;
+}
+
 .py-4 {
     padding-top: 1rem;
     padding-bottom: 1rem;
@@ -1086,6 +1095,10 @@ video {
 
 .pl-0 {
     padding-left: 0px;
+}
+
+.pr-10 {
+    padding-left: 2.5rem;
 }
 
 .pt-2 {
@@ -1137,6 +1150,10 @@ video {
     line-height: 1rem;
 }
 
+.font-light {
+    font-weight: 300;
+}
+
 .font-medium {
     font-weight: 500;
 }
@@ -1185,6 +1202,11 @@ video {
 .text-yellow {
     --tw-text-opacity: 1;
     color: rgb(255 214 0 / var(--tw-text-opacity));
+}
+
+.text-normal {
+    --tw-text-opacity: 1;
+    color: rgb(0 0 0 / var(--tw-text-opacity));
 }
 
 .text-main {

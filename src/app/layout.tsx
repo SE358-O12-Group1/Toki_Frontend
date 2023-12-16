@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 
 import './globals.css';
 import store from '@/redux/store';
+import { Metadata } from 'next';
 
 const inter = Inter({ subsets: ['latin'] });
 

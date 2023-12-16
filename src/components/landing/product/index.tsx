@@ -1,94 +1,71 @@
-import Iphone from '/public/assets/images/Iphone.png';
+import ProductRating from '@/components/productPage/components/ProductRatings';
+import { IProduct } from '@/components/productPage/mockData';
+import {
+    formatCurrency,
+    formatNumberToSocialStyle,
+    rateSale
+} from '@/utils/utils';
+import Link from 'next/link';
 import Rating from '/public/assets/images/Rating.png';
-import { MouseEventHandler, ReactNode } from 'react';
 
-export interface IProductProps {
-    className?: string;
-    id?: string;
-    placeholder?: string;
-    disable?: boolean;
-    required?: boolean;
-    children?: ReactNode;
-    backgroundColor?: string;
-    onClick?: MouseEventHandler<HTMLButtonElement>;
+export interface IProductCardProps {
+    product: IProduct;
+    minHeight?: number | string;
 }
 
-export default function Button(props: IProductProps) {
-    const {
-        className,
-        id,
-        placeholder,
-        disable,
-        children,
-        backgroundColor,
-        onClick
-    } = props;
+export default function ProductCard(props: IProductCardProps) {
+    const { product, minHeight } = props;
     return (
         <>
-            <div>
-                <button
-                    disabled={disable}
-                    id={id}
-                    style={{
-                        borderWidth: 1,
-                        backgroundColor: backgroundColor || '#FFFFFF',
-                        borderRadius: 5,
-                        padding: 2,
-                        width: 205,
-                        color: '#000000',
-                        textAlign: 'left',
-                        marginBottom: 25
-                    }}
-                    className={className + 'form-control'}
-                    placeholder={placeholder}
-                    onClick={onClick}
+            <Link href={'/products/' + product._id}>
+                <div
+                    className='text-normal rounded-md border bg-white p-4'
+                    style={{ minHeight: minHeight }}
                 >
-                    <img
-                        className='ms-4'
-                        style={{ scale: 0.8 }}
-                        src={Iphone.src}
-                    ></img>
+                    <img style={{ scale: 0.8 }} src={product.images[0]}></img>
                     <div className='text-left'>
-                        <div className='ms-2 ' style={{ fontSize: 16 }}>
-                            {' '}
-                            iPhone 15 Pro 128GB Chính Hãng VN/A{' '}
-                        </div>
-                        <div className='row d-flex-fluid p-2'>
-                            <div className='col-3 me-1'>
-                                <img className='mb-2' src={Rating.src}></img>
+                        <div className='text-lg'>{product.name}</div>
+                        <div className='flex items-center'>
+                            <div className='flex items-center'>
+                                <ProductRating
+                                    rating={product.ratings || 0}
+                                    activeClassname='fill-yellow text-yellow h-4 w-4'
+                                    nonActiveClassname='fill-gray-300 text-gray-300 h-4 w-4'
+                                />
                             </div>
-                            <div className='col' style={{ fontSize: 12 }}>
-                                {' '}
-                                | 12k sold
-                            </div>
-                        </div>
-                        <h5 className='ms-2 ' style={{ fontSize: 18 }}>
-                            26.200.000 đ
-                        </h5>
-                        <div className='row d-flex'>
-                            <div
-                                className='col-3 main-colored ms-4'
-                                style={{ fontWeight: 500 }}
-                            >
-                                <div className='-ms-4 text-center'>-10%</div>
-                            </div>
-                            <div className='col ' style={{ fontSize: 12 }}>
-                                {' '}
-                                28.999.000 đ
+                            <div className='mx-4 h-4 w-[1px] bg-gray-300'></div>
+                            <div className='text-sm font-light text-gray-400'>
+                                <span>
+                                    {formatNumberToSocialStyle(
+                                        product.sold_quantity
+                                    )}{' '}
+                                    sold
+                                </span>
                             </div>
                         </div>
-                        <div
-                            className='me-2 text-end'
-                            style={{ fontSize: 10, fontWeight: 300 }}
-                        >
-                            {' '}
-                            Tp Hồ Chí Minh
+                        <div className='text-main text-xl font-medium'>
+                            {formatCurrency(product.price)} ₫
+                        </div>
+                        {product.normalPrice && (
+                            <div className='flex items-center'>
+                                <div className='bg-main text-yellow rounded-sm px-1 py-[2px] text-xs font-semibold uppercase'>
+                                    {'-'}
+                                    {rateSale(
+                                        product.normalPrice,
+                                        product.price
+                                    )}
+                                </div>
+                                <div className='ml-3 font-light text-gray-400 line-through'>
+                                    {formatCurrency(product.normalPrice!)} ₫
+                                </div>
+                            </div>
+                        )}
+                        <div className='me-2 text-end text-sm font-light text-gray-400'>
+                            {product.seller.name}
                         </div>
                     </div>
-                </button>
-
-                {children}
-            </div>
+                </div>
+            </Link>
         </>
     );
 }
