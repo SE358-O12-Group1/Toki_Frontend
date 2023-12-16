@@ -41,7 +41,7 @@ export default function UserProfilePage(props: IUserProfilePage) {
                                 src={profile.src}
                             />
                             <img
-                                style={{ scale: 1.3, marginTop: 80 }}
+                                style={{ scale: 1.3, marginTop: 50 }}
                                 src={order.src}
                             />
                         </div>
@@ -82,13 +82,12 @@ export default function UserProfilePage(props: IUserProfilePage) {
                                     className='mb-2'
                                     style={{ color: '#777777' }}
                                 >
-                                    Address
-                                </div>
-                                <div
-                                    className='mb-2'
-                                    style={{ color: '#777777' }}
-                                >
-                                    Change Password
+                                    <Link
+                                        href='/userprofile/changepassword'
+                                        style={{ color: '#777777' }}
+                                    >
+                                        Change Password
+                                    </Link>
                                 </div>
                                 <div
                                     style={{
@@ -134,16 +133,20 @@ export default function UserProfilePage(props: IUserProfilePage) {
                                 </div>
                             </div>
                             <div
-                                className='col-2    '
+                                className='col-2'
                                 style={{
                                     display: 'flex',
                                     flexDirection: 'column',
                                     alignItems: 'center',
                                     marginLeft: 80,
-                                    marginTop: 75
+                                    marginTop: 110
                                 }}
                             >
-                                <img className='mb-4' src={bigCircle.src} />
+                                <img
+                                    className='mb-4'
+                                    src={bigCircle.src}
+                                    style={{ scale: 1.2 }}
+                                />
                                 <Button
                                     size='large'
                                     variant='outlined'
@@ -151,7 +154,7 @@ export default function UserProfilePage(props: IUserProfilePage) {
                                         textTransform: 'none',
                                         color: 'black',
                                         borderColor: '#D2D1D1',
-                                        marginTop: 10
+                                        marginTop: 20
                                     }}
                                 >
                                     New photo
@@ -171,6 +174,7 @@ export default function UserProfilePage(props: IUserProfilePage) {
                                     <div className='mb-4'>Name</div>
                                     <div className='mb-4'>Email</div>
                                     <div className='mb-4'>Phone Number</div>
+                                    <div className='mb-4'>Address</div>
                                 </div>
                             </div>
                             <div className='col'>
@@ -185,6 +189,15 @@ export default function UserProfilePage(props: IUserProfilePage) {
                                             marginTop: 15,
                                             fontSize: 20,
                                             textTransform: 'none'
+                                        }}
+                                    >
+                                        {' '}
+                                    </TextField>
+                                    <TextField
+                                        size='medium'
+                                        style={{
+                                            width: '100',
+                                            marginTop: 25
                                         }}
                                     >
                                         {' '}
