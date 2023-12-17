@@ -10,7 +10,6 @@ import {
 import { IProduct, mockProduct } from './mockData';
 import QuantityIncrementer from './components/QuantityIncrementer';
 import ProductRating from './components/ProductRatings';
-
 import ShopIcon from '/public/assets/images/shop_icon.png';
 import ProductCard from '../landing/product';
 import { useParams } from 'next/navigation';
@@ -63,21 +62,6 @@ export default function ProductDetailPage() {
             console.log(error);
         }
     }, [data, isSuccess, error, dispatch, detailProduct]);
-
-    // const queryConfig: ProductListConfig = {
-    //     limit: '20',
-    //     page: '1',
-    //     category: product?.category._id
-    // };
-
-    // const { data: productsData } = useQuery({
-    //     queryKey: ['products', queryConfig],
-    //     queryFn: () => {
-    //         return productApi.getProducts(queryConfig);
-    //     },
-    //     enabled: Boolean(product),
-    //     staleTime: 3 * 60 * 1000
-    // });
 
     // const addToCartMutation = useMutation(purchaseApi.addToCart);
 
@@ -409,7 +393,7 @@ export default function ProductDetailPage() {
                     </div>
                 </div>
 
-                {product.relatedProducts ? (
+                {/* {product.relatedProducts ? (
                     <div className='mt-8'>
                         <div className='container'>
                             <div className='uppercase text-gray-400'>
@@ -420,7 +404,7 @@ export default function ProductDetailPage() {
                     </div>
                 ) : (
                     <></>
-                )}
+                )} */}
             </div>
         </>
     );
