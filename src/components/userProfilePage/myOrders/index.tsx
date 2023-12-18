@@ -111,7 +111,12 @@ export default function UserProfilePage(props: IMyOrdersForm) {
                                     className='mb-2'
                                     style={{ color: '#777777' }}
                                 >
-                                    Change Password
+                                    <Link
+                                        href='/userprofile/changepassword'
+                                        style={{ color: '#777777' }}
+                                    >
+                                        Change Password
+                                    </Link>
                                 </div>
                                 <div
                                     style={{
