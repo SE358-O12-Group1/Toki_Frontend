@@ -95,7 +95,12 @@ export default function UserProfilePage(props: IUserProfilePage) {
                                         marginTop: 25
                                     }}
                                 >
-                                    My Orders
+                                    <Link
+                                        href='/userprofile/myorders'
+                                        style={{ color: '#777777' }}
+                                    >
+                                        My Orders
+                                    </Link>
                                 </div>
                             </div>
                         </div>

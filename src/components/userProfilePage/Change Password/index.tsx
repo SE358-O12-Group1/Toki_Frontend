@@ -117,7 +117,12 @@ export default function UserProfilePage(props: IChangePasswordForm) {
                                         marginTop: 25
                                     }}
                                 >
-                                    My Orders
+                                    <Link
+                                        href='/userprofile/myorders'
+                                        style={{ color: '#777777' }}
+                                    >
+                                        My Orders
+                                    </Link>
                                 </div>
                             </div>
                         </div>
@@ -195,7 +200,7 @@ export default function UserProfilePage(props: IChangePasswordForm) {
                                     }}
                                 >
                                     <FormControl
-                                        sx={{ m: 1, width: '25ch' }}
+                                        sx={{ m: 1, width: '100' }}
                                         variant='outlined'
                                     >
                                         <OutlinedInput
@@ -229,7 +234,7 @@ export default function UserProfilePage(props: IChangePasswordForm) {
                                     </FormControl>
 
                                     <FormControl
-                                        sx={{ m: 1, width: '25ch' }}
+                                        sx={{ m: 1, width: '100' }}
                                         variant='outlined'
                                     >
                                         <OutlinedInput
@@ -263,7 +268,7 @@ export default function UserProfilePage(props: IChangePasswordForm) {
                                     </FormControl>
 
                                     <FormControl
-                                        sx={{ m: 1, width: '25ch' }}
+                                        sx={{ m: 1, width: '100' }}
                                         variant='outlined'
                                     >
                                         <OutlinedInput
