@@ -15,9 +15,9 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-export interface IUserProfilePage {}
+export interface IChangePasswordForm {}
 
-export default function UserProfilePage(props: IUserProfilePage) {
+export default function UserProfilePage(props: IChangePasswordForm) {
     const [showCurrentPassword, setShowCurrentPassword] = React.useState(false);
     const [showNewPassword, setShowNewPassword] = React.useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
