@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function Home() {
     return (
-        <MainLayout title='TOKI | Landing Page'>
+        <MainLayout>
             <LandingPage />
         </MainLayout>
     );

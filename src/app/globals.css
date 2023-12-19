@@ -1170,6 +1170,11 @@ video {
     text-transform: capitalize;
 }
 
+.accent-main {
+    accent-color: var(--main-color);
+    fill: var(--light-gray-background);
+}
+
 .leading-loose {
     line-height: 2;
 }
