@@ -19,9 +19,11 @@ const Header = (props: IHeaderProps) => {
     return (
         <>
             <div className='d-flex main-colored p-1'>
-                <Link className='offset-1 my-auto text-white' href={''}>
-                    Seller Center
-                </Link>
+                {isSeller && (
+                    <Link className='offset-1 my-auto text-white' href={''}>
+                        Seller Center
+                    </Link>
+                )}
                 <Link
                     className='me-1 me-5 ms-auto  flex items-center text-white'
                     href={''}
