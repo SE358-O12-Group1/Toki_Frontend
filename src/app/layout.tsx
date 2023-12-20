@@ -6,8 +6,8 @@ import { Provider } from 'react-redux';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import './globals.css';
-import store from '@/redux/store';
-import { Metadata } from 'next';
+import store, { persistor } from '@/redux/store';
+import { PersistGate } from 'redux-persist/integration/react';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -29,7 +29,11 @@ export default function RootLayout({
         <html lang='en'>
             <body className={inter.className}>
                 <QueryClientProvider client={queryClient}>
-                    <Provider store={store}>{children}</Provider>
+                    <Provider store={store}>
+                        <PersistGate persistor={persistor}>
+                            {children}
+                        </PersistGate>
+                    </Provider>
                 </QueryClientProvider>
             </body>
         </html>

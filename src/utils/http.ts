@@ -19,7 +19,6 @@ export class Http {
         this.instance.interceptors.request.use(
             async (config) => {
                 const accessToken = await getAccessTokenFromLS();
-                console.log('accessToken', accessToken);
                 if (accessToken && config.headers) {
                     config.headers.authorization = 'Bearer ' + accessToken;
                     return config;
