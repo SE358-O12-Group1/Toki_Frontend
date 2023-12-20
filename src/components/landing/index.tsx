@@ -1,69 +1,53 @@
-import { ReactNode } from 'react';
-import { IProduct, mockProducts } from '../productPage/mockData';
-import CategoryCard from './components/CategoryCard';
-import { ICategory, mockCategories } from './mockData';
-import ProductCard from './product';
+'use client';
+
+import { useQueries } from 'react-query';
+import { ReactNode, useEffect } from 'react';
+
 import Bank from '/public/assets/images/Bank.png';
 
-export interface ILandingPageProps {}
+// components
+import ProductCard from './product';
+import CategoryCard from './components/CategoryCard';
 
-export default function LandingPage(props: ILandingPageProps) {
-    const categories: ICategory[] = mockCategories;
-    const products: IProduct[] = mockProducts;
+// types
+import ProductType from '@/types/ProductType';
+import CategoryType from '@/types/CategoryType';
 
-    function getProductGrid(products: IProduct[]) {
-        let result: ReactNode[] = [];
-        let index = 0;
-        const len = products.length;
-        while (index < len) {
-            result.push(
-                <div className='row mb-4' key={index}>
-                    <div className='col'>
-                        {index < len ? (
-                            <ProductCard
-                                minHeight={'100%'}
-                                product={products[index]}
-                            ></ProductCard>
-                        ) : (
-                            <></>
-                        )}
-                    </div>
-                    <div className='col'>
-                        {index + 1 < len ? (
-                            <ProductCard
-                                minHeight={'100%'}
-                                product={products[index + 1]}
-                            ></ProductCard>
-                        ) : (
-                            <></>
-                        )}
-                    </div>
-                    <div className='col'>
-                        {index + 2 < len ? (
-                            <ProductCard
-                                minHeight={'100%'}
-                                product={products[index + 2]}
-                            ></ProductCard>
-                        ) : (
-                            <></>
-                        )}
-                    </div>
-                    <div className='col'>
-                        {index + 3 < len ? (
-                            <ProductCard
-                                minHeight={'100%'}
-                                product={products[index + 3]}
-                            ></ProductCard>
-                        ) : (
-                            <></>
-                        )}
-                    </div>
-                </div>
-            );
-            index += 4;
+// apis
+import categoryApi from '@/apis/category.api';
+import productApi from '@/apis/product.api';
+import { setProducts } from '@/redux/slices/product.slice';
+import { useAppDispatch, useAppSelector } from '@/redux/hook';
+
+export default function LandingPage() {
+    const dispatch = useAppDispatch();
+
+    const { products } = useAppSelector((state) => state.product);
+
+    const [
+        { data: categoryData },
+        { data: productData, isSuccess: isGetAllProductsSuccess }
+    ] = useQueries([
+        {
+            queryKey: 'categories',
+            queryFn: () => categoryApi.getAllCategories()
+        },
+        {
+            queryKey: 'products',
+            queryFn: () => productApi.getAllProducts()
         }
-        return result;
-    }
+    ]);
+
+    const categories: CategoryType[] = categoryData?.data.data;
+    // const products: ProductType[] = productData?.data.data;
+
+    useEffect(() => {
+        console.log(products);
+        if (isGetAllProductsSuccess) {
+            dispatch(setProducts(productData?.data.data));
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [productData, products]);
 
     return (
         <>
@@ -73,12 +57,10 @@ export default function LandingPage(props: ILandingPageProps) {
                         <div className=' font-weight-bold mt-3  text-center'>
                             CATEGORY
                         </div>
-                        {categories.map((cate) => (
-                            <CategoryCard
-                                category={cate}
-                                key={cate._id || cate.name}
-                            ></CategoryCard>
-                        ))}
+                        {categories &&
+                            categories.map((category, index) => (
+                                <CategoryCard key={index} category={category} />
+                            ))}
                     </div>
 
                     <div className='col offset-1 ms-5 mt-3 rounded-md border bg-white shadow-md'>
@@ -101,9 +83,63 @@ export default function LandingPage(props: ILandingPageProps) {
                 </div>
 
                 <div className='col-span-9 mb-5 me-5 px-5'>
-                    {getProductGrid(products)}
+                    {products && getProductGrid(products)}
                 </div>
             </div>
         </>
     );
+}
+
+function getProductGrid(products: ProductType[]) {
+    let result: ReactNode[] = [];
+    let index = 0;
+    const len = products.length;
+    while (index < len) {
+        result.push(
+            <div className='row mb-4' key={index}>
+                <div className='col'>
+                    {index < len ? (
+                        <ProductCard
+                            minHeight={'100%'}
+                            product={products[index]}
+                        ></ProductCard>
+                    ) : (
+                        <></>
+                    )}
+                </div>
+                <div className='col'>
+                    {index + 1 < len ? (
+                        <ProductCard
+                            minHeight={'100%'}
+                            product={products[index + 1]}
+                        ></ProductCard>
+                    ) : (
+                        <></>
+                    )}
+                </div>
+                <div className='col'>
+                    {index + 2 < len ? (
+                        <ProductCard
+                            minHeight={'100%'}
+                            product={products[index + 2]}
+                        ></ProductCard>
+                    ) : (
+                        <></>
+                    )}
+                </div>
+                <div className='col'>
+                    {index + 3 < len ? (
+                        <ProductCard
+                            minHeight={'100%'}
+                            product={products[index + 3]}
+                        ></ProductCard>
+                    ) : (
+                        <></>
+                    )}
+                </div>
+            </div>
+        );
+        index += 4;
+    }
+    return result;
 }

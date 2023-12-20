@@ -1,21 +1,24 @@
-export interface IHeaderProps {
-    title?: string;
-}
+'use client';
+
+import Link from 'next/link';
+
+// assets
 import Notification from '/public/assets/images/Notification.png';
 import Question from '/public/assets/images/QuestionCircle.png';
 import Logo from '/public/assets/images/Logo.png';
 import Search from '/public/assets/images/btnSearch.png';
 import Cart from '/public/assets/images/btnCart.png';
+
+// components
 import TextBox from '@/components/common/TextBox';
-import Link from 'next/link';
-import { mockUser } from '@/components/productPage/mockData';
 import CircleAvatar from '@/components/landing/components/CircleAvatar';
 
-const Header = (props: IHeaderProps) => {
-    const { title } = props;
-    const user = mockUser;
-    const isLoggedIn = true;
-    const isSeller = false;
+// redux
+import { useAppSelector } from '@/redux/hook';
+
+const Header = () => {
+    const { user } = useAppSelector((state) => state.auth);
+
     return (
         <>
             <div className='d-flex main-colored p-1'>
@@ -32,7 +35,7 @@ const Header = (props: IHeaderProps) => {
                     <img src={Question.src} className='me-1' />
                     <span>Help</span>
                 </Link>
-                {isLoggedIn ? (
+                {user ? (
                     <>
                         <Link
                             className='me-5 flex items-center text-white'
@@ -40,7 +43,7 @@ const Header = (props: IHeaderProps) => {
                         >
                             <CircleAvatar
                                 className='ml-5 mr-3'
-                                src={user.imageUrl ?? avatarPlaceholder}
+                                src={user.avatar || avatarPlaceholder}
                                 alt={user.name}
                                 size={8}
                             ></CircleAvatar>

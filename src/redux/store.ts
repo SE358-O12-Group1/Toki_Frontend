@@ -1,19 +1,56 @@
-import { configureStore } from '@reduxjs/toolkit';
+import storage from 'redux-persist/lib/storage';
+import {
+    persistReducer,
+    persistStore,
+    FLUSH,
+    REHYDRATE,
+    PAUSE,
+    PERSIST,
+    PURGE,
+    REGISTER
+} from 'redux-persist';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
 // reducers
 import authReducer from './slices/auth.slice';
 import userReducer from './slices/user.slice';
 import productReducer from './slices/product.slice';
 
+const persistConfig = {
+    key: 'root',
+    storage,
+    version: 1,
+    whitelist: ['auth', 'product']
+};
+
+const reducer = combineReducers({
+    auth: authReducer,
+    user: userReducer,
+    product: productReducer
+});
+
+const persistedReducer = persistReducer(persistConfig, reducer);
+
 const store = configureStore({
-    reducer: {
-        auth: authReducer,
-        user: userReducer,
-        product: productReducer
-    }
+    reducer: persistedReducer,
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: {
+                ignoredActions: [
+                    FLUSH,
+                    REHYDRATE,
+                    PAUSE,
+                    PERSIST,
+                    PURGE,
+                    REGISTER
+                ]
+            }
+        })
 });
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+
+export const persistor = persistStore(store);
 
 export default store;

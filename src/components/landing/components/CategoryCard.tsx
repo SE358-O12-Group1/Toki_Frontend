@@ -1,7 +1,7 @@
-import { ICategory } from '../mockData';
+import CategoryType from '@/types/CategoryType';
 
 export interface ICategoryCardProps {
-    category: ICategory;
+    category: CategoryType;
 }
 
 export default function CategoryCard(props: ICategoryCardProps) {
@@ -11,7 +11,10 @@ export default function CategoryCard(props: ICategoryCardProps) {
             <div className='ms-1 flex items-center'>
                 <div className='d-flex '>
                     <img
-                        src={category.imageURL}
+                        src={
+                            category.image ||
+                            'https://sieuthikhan.com/images/thumbs/default-image_450.png'
+                        }
                         alt={category.name}
                         width={32}
                     />

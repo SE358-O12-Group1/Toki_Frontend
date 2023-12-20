@@ -2,29 +2,30 @@
 
 import DOMPurify from 'isomorphic-dompurify';
 import { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+
 import {
     formatCurrency,
     formatNumberToSocialStyle,
     rateSale
 } from '@/utils/utils';
-import { IProduct, mockProduct } from './mockData';
-import QuantityIncrementer from './components/QuantityIncrementer';
+
+// components
+import ProductCard from '../landing/product';
 import ProductRating from './components/ProductRatings';
+import QuantityIncrementer from './components/QuantityIncrementer';
 
 import ShopIcon from '/public/assets/images/shop_icon.png';
-import ProductCard from '../landing/product';
-import { useParams } from 'next/navigation';
-import { useQuery } from 'react-query';
-import productApi from '@/apis/product.api';
-import { useAppDispatch, useAppSelector } from '@/redux/hook';
-import { setDetailProduct } from '@/redux/slices/product.slice';
+
+// redux
+import { useAppSelector } from '@/redux/hook';
+
+// apis
+import ProductType from '@/types/ProductType';
 
 export default function ProductDetailPage() {
-    const { id: productId } = useParams();
-
-    const dispatch = useAppDispatch();
-
-    const { detailProduct } = useAppSelector((state) => state.product);
+    const { detailProduct, relatedProducts, products } = useAppSelector(
+        (state) => state.product
+    );
 
     const [buyCount, setBuyCount] = useState(1);
     const [selectedChip, setSelectedChip] = useState('');
@@ -37,14 +38,6 @@ export default function ProductDetailPage() {
     const [currentIndexImages, setCurrentIndexImages] = useState([0, 5]);
     const [activeImage, setActiveImage] = useState('');
 
-    // const product = mockProduct;
-
-    const detailProductQuery = useQuery({
-        queryFn: () => productApi.getProductById(productId as string)
-    });
-
-    const { data, isSuccess, isLoading, error } = detailProductQuery;
-
     const imageRef = useRef<HTMLImageElement>(null);
 
     const currentImages = useMemo(
@@ -56,40 +49,15 @@ export default function ProductDetailPage() {
     );
 
     useEffect(() => {
-        if (isSuccess) {
-            dispatch(setDetailProduct(data.data.data));
-            console.log(detailProduct);
-        } else {
-            console.log(error);
-        }
-    }, [data, isSuccess, error, dispatch, detailProduct]);
-
-    // const queryConfig: ProductListConfig = {
-    //     limit: '20',
-    //     page: '1',
-    //     category: product?.category._id
-    // };
-
-    // const { data: productsData } = useQuery({
-    //     queryKey: ['products', queryConfig],
-    //     queryFn: () => {
-    //         return productApi.getProducts(queryConfig);
-    //     },
-    //     enabled: Boolean(product),
-    //     staleTime: 3 * 60 * 1000
-    // });
-
-    // const addToCartMutation = useMutation(purchaseApi.addToCart);
-
-    useEffect(() => {
         if (detailProduct && detailProduct.images.length > 0) {
             setActiveImage(detailProduct.images[0]);
         }
     }, [detailProduct]);
 
     useEffect(() => {
-        // console.log(productId);
-    }, [productId]);
+        console.log('relatedProducts', relatedProducts);
+        console.log('products', products);
+    }, [relatedProducts, products]);
 
     const next = () => {
         if (currentIndexImages[1] < detailProduct.images.length) {
@@ -409,13 +377,13 @@ export default function ProductDetailPage() {
                     </div>
                 </div>
 
-                {product.relatedProducts ? (
+                {relatedProducts ? (
                     <div className='mt-8'>
                         <div className='container'>
                             <div className='uppercase text-gray-400'>
                                 {'Related products'}
                             </div>
-                            {getProductGrid(product.relatedProducts!)}
+                            {getProductGrid(relatedProducts)}
                         </div>
                     </div>
                 ) : (
@@ -424,68 +392,68 @@ export default function ProductDetailPage() {
             </div>
         </>
     );
+}
 
-    function getProductGrid(products: IProduct[]) {
-        let result: ReactNode[] = [];
-        let index = 0;
-        const len = products.length;
-        while (index < len) {
-            result.push(
-                <div className='row mb-3' key={index}>
-                    <div className='col'>
-                        {index < len ? (
-                            <ProductCard
-                                minHeight={'100%'}
-                                product={products[index]}
-                            ></ProductCard>
-                        ) : (
-                            <></>
-                        )}
-                    </div>
-                    <div className='col'>
-                        {index + 1 < len ? (
-                            <ProductCard
-                                minHeight={'100%'}
-                                product={products[index + 1]}
-                            ></ProductCard>
-                        ) : (
-                            <></>
-                        )}
-                    </div>
-                    <div className='col'>
-                        {index + 2 < len ? (
-                            <ProductCard
-                                minHeight={'100%'}
-                                product={products[index + 2]}
-                            ></ProductCard>
-                        ) : (
-                            <></>
-                        )}
-                    </div>
-                    <div className='col'>
-                        {index + 3 < len ? (
-                            <ProductCard
-                                minHeight={'100%'}
-                                product={products[index + 3]}
-                            ></ProductCard>
-                        ) : (
-                            <></>
-                        )}
-                    </div>
-                    <div className='col'>
-                        {index + 4 < len ? (
-                            <ProductCard
-                                minHeight={'100%'}
-                                product={products[index + 4]}
-                            ></ProductCard>
-                        ) : (
-                            <></>
-                        )}
-                    </div>
+function getProductGrid(products: ProductType[]) {
+    let result: ReactNode[] = [];
+    let index = 0;
+    const len = products.length;
+    while (index < len) {
+        result.push(
+            <div className='row mb-3' key={index}>
+                <div className='col'>
+                    {index < len ? (
+                        <ProductCard
+                            minHeight={'100%'}
+                            product={products[index]}
+                        />
+                    ) : (
+                        <></>
+                    )}
                 </div>
-            );
-            index += 5;
-        }
-        return result;
+                <div className='col'>
+                    {index + 1 < len ? (
+                        <ProductCard
+                            minHeight={'100%'}
+                            product={products[index + 1]}
+                        />
+                    ) : (
+                        <></>
+                    )}
+                </div>
+                <div className='col'>
+                    {index + 2 < len ? (
+                        <ProductCard
+                            minHeight={'100%'}
+                            product={products[index + 2]}
+                        />
+                    ) : (
+                        <></>
+                    )}
+                </div>
+                <div className='col'>
+                    {index + 3 < len ? (
+                        <ProductCard
+                            minHeight={'100%'}
+                            product={products[index + 3]}
+                        />
+                    ) : (
+                        <></>
+                    )}
+                </div>
+                <div className='col'>
+                    {index + 4 < len ? (
+                        <ProductCard
+                            minHeight={'100%'}
+                            product={products[index + 4]}
+                        />
+                    ) : (
+                        <></>
+                    )}
+                </div>
+            </div>
+        );
+        index += 5;
     }
+    return result;
 }
