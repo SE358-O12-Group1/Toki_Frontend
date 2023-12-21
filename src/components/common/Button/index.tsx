@@ -34,7 +34,9 @@ export default function Button(props: ITextboxProps) {
                     padding: 12,
                     color: '#FFFFFF'
                 }}
-                className={className + 'form-control full-width-div'}
+                className={
+                    className + 'form-control flex items-center justify-center'
+                }
                 placeholder={placeholder}
                 onClick={onClick}
             >
