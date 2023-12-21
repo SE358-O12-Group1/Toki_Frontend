@@ -18,20 +18,23 @@ export interface IProductInCart {
     _id: string;
     product: IProduct;
     quantity: number;
+    variantId?: number;
 }
 
 export const mockUser: IUSer = {
     name: 'Nhà sách Bán sách',
     email: 'com.example@ddsdsd.com',
     imageUrl:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_jgho-PgO5rtMOErauKhhRLlb8vsl5cof3RBLf1o1jw&s'
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_jgho-PgO5rtMOErauKhhRLlb8vsl5cof3RBLf1o1jw&s',
+    _id: '1'
 };
 
 export const mockUser2: IUSer = {
     name: 'Nhà sách Bán sách 2',
     email: 'com.example@ddsdsd.com',
     imageUrl:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_jgho-PgO5rtMOErauKhhRLlb8vsl5cof3RBLf1o1jw&s'
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_jgho-PgO5rtMOErauKhhRLlb8vsl5cof3RBLf1o1jw&s',
+    _id: '2'
 };
 
 export const mockProduct2: IProduct = {
@@ -156,6 +159,7 @@ export const mockProducts = [
 ];
 
 export interface IUSer {
+    _id: string;
     name: string;
     email: string;
     password?: string;
@@ -166,21 +170,25 @@ export const mockCartProducts: IProductInCart[] = [
     {
         _id: '1',
         product: mockProduct,
-        quantity: 3
+        quantity: 3,
+        variantId: 0
     },
     {
         _id: '2',
         product: mockProduct2,
-        quantity: 1
+        quantity: 1,
+        variantId: 0
     },
     {
         _id: '3',
         product: mockProduct3,
-        quantity: 2
+        quantity: 2,
+        variantId: 1
     },
     {
         _id: '4',
         product: mockProduct4,
+        variantId: 0,
         quantity: 3
     }
 ];

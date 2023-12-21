@@ -10,6 +10,7 @@ import TextBox from '@/components/common/TextBox';
 import Link from 'next/link';
 import { mockUser } from '@/components/productPage/mockData';
 import CircleAvatar from '@/components/landing/components/CircleAvatar';
+import { avatarPlaceholder } from '@/constants/common';
 
 const Header = (props: IHeaderProps) => {
     const { title } = props;
@@ -75,7 +76,8 @@ const Header = (props: IHeaderProps) => {
                     </button>
                 </div>
                 <div className='ml-10 mr-5'>
-                    <button
+                    <Link
+                        href={'/cart'}
                         type='button'
                         className='btn position-relative me-5 ms-5 mt-4'
                     >
@@ -86,7 +88,7 @@ const Header = (props: IHeaderProps) => {
                                 unread messages
                             </span>
                         </span>
-                    </button>
+                    </Link>
                 </div>
             </div>
         </>
