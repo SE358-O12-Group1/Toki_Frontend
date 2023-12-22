@@ -1113,6 +1113,12 @@ video {
     padding-top: 100%;
 }
 
+.dashed-divider {
+    border-top: 1px dashed #000000a6;
+    margin: 20px 0;
+    width: 100%;
+}
+
 .text-left {
     text-align: left;
 }
@@ -1123,6 +1129,11 @@ video {
 
 .text-end {
     text-align: end;
+}
+
+.text-exl {
+    font-size: 2.525rem;
+    line-height: 2.75rem;
 }
 
 .text-3xl {
@@ -1160,6 +1171,10 @@ video {
 
 .font-semibold {
     font-weight: 600;
+}
+
+.font-bold {
+    font-weight: 800;
 }
 
 .uppercase {
