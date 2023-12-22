@@ -2,21 +2,24 @@
 
 import DOMPurify from 'isomorphic-dompurify';
 import { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+
 import {
     formatCurrency,
     formatNumberToSocialStyle,
     rateSale
 } from '@/utils/utils';
-import { IProduct, mockProduct } from './mockData';
+
+// components
+import ProductCard from '../landing/product';
 import QuantityIncrementer from './components/QuantityIncrementer';
 import ProductRating from './components/ProductRatings';
 import ShopIcon from '/public/assets/images/shop_icon.png';
-import ProductCard from '../landing/product';
-import { useParams } from 'next/navigation';
-import { useQuery } from 'react-query';
-import productApi from '@/apis/product.api';
+
+// redux
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
-import { setDetailProduct } from '@/redux/slices/product.slice';
+
+// apis
+import ProductType from '@/types/ProductType';
 
 export default function ProductDetailPage() {
     const { id: productId } = useParams();
@@ -24,7 +27,9 @@ export default function ProductDetailPage() {
 
     const dispatch = useAppDispatch();
 
-    const { detailProduct } = useAppSelector((state) => state.product);
+    const { detailProduct, relatedProducts, products } = useAppSelector(
+        (state) => state.product
+    );
 
     const [buyCount, setBuyCount] = useState(1);
     const [selectedChip, setSelectedChip] = useState('');
@@ -36,14 +41,6 @@ export default function ProductDetailPage() {
 
     const [currentIndexImages, setCurrentIndexImages] = useState([0, 5]);
     const [activeImage, setActiveImage] = useState('');
-
-    // const product = mockProduct;
-
-    const detailProductQuery = useQuery({
-        queryFn: () => productApi.getProductById(productId as string)
-    });
-
-    const { data, isSuccess, isLoading, error } = detailProductQuery;
 
     const imageRef = useRef<HTMLImageElement>(null);
 
@@ -73,8 +70,9 @@ export default function ProductDetailPage() {
     }, [detailProduct]);
 
     useEffect(() => {
-        // console.log(productId);
-    }, [productId]);
+        console.log('relatedProducts', relatedProducts);
+        console.log('products', products);
+    }, [relatedProducts, products]);
 
     const next = () => {
         if (currentIndexImages[1] < detailProduct.images.length) {
@@ -394,83 +392,83 @@ export default function ProductDetailPage() {
                     </div>
                 </div>
 
-                {/* {product.relatedProducts ? (
+                {relatedProducts ? (
                     <div className='mt-8'>
                         <div className='container'>
                             <div className='uppercase text-gray-400'>
                                 {'Related products'}
                             </div>
-                            {getProductGrid(product.relatedProducts!)}
+                            {getProductGrid(relatedProducts)}
                         </div>
                     </div>
                 ) : (
                     <></>
-                )} */}
+                )}
             </div>
         </>
     );
+}
 
-    function getProductGrid(products: IProduct[]) {
-        let result: ReactNode[] = [];
-        let index = 0;
-        const len = products.length;
-        while (index < len) {
-            result.push(
-                <div className='row mb-3' key={index}>
-                    <div className='col'>
-                        {index < len ? (
-                            <ProductCard
-                                minHeight={'100%'}
-                                product={products[index]}
-                            ></ProductCard>
-                        ) : (
-                            <></>
-                        )}
-                    </div>
-                    <div className='col'>
-                        {index + 1 < len ? (
-                            <ProductCard
-                                minHeight={'100%'}
-                                product={products[index + 1]}
-                            ></ProductCard>
-                        ) : (
-                            <></>
-                        )}
-                    </div>
-                    <div className='col'>
-                        {index + 2 < len ? (
-                            <ProductCard
-                                minHeight={'100%'}
-                                product={products[index + 2]}
-                            ></ProductCard>
-                        ) : (
-                            <></>
-                        )}
-                    </div>
-                    <div className='col'>
-                        {index + 3 < len ? (
-                            <ProductCard
-                                minHeight={'100%'}
-                                product={products[index + 3]}
-                            ></ProductCard>
-                        ) : (
-                            <></>
-                        )}
-                    </div>
-                    <div className='col'>
-                        {index + 4 < len ? (
-                            <ProductCard
-                                minHeight={'100%'}
-                                product={products[index + 4]}
-                            ></ProductCard>
-                        ) : (
-                            <></>
-                        )}
-                    </div>
+function getProductGrid(products: ProductType[]) {
+    let result: ReactNode[] = [];
+    let index = 0;
+    const len = products.length;
+    while (index < len) {
+        result.push(
+            <div className='row mb-3' key={index}>
+                <div className='col'>
+                    {index < len ? (
+                        <ProductCard
+                            minHeight={'100%'}
+                            product={products[index]}
+                        />
+                    ) : (
+                        <></>
+                    )}
                 </div>
-            );
-            index += 5;
-        }
-        return result;
+                <div className='col'>
+                    {index + 1 < len ? (
+                        <ProductCard
+                            minHeight={'100%'}
+                            product={products[index + 1]}
+                        />
+                    ) : (
+                        <></>
+                    )}
+                </div>
+                <div className='col'>
+                    {index + 2 < len ? (
+                        <ProductCard
+                            minHeight={'100%'}
+                            product={products[index + 2]}
+                        />
+                    ) : (
+                        <></>
+                    )}
+                </div>
+                <div className='col'>
+                    {index + 3 < len ? (
+                        <ProductCard
+                            minHeight={'100%'}
+                            product={products[index + 3]}
+                        />
+                    ) : (
+                        <></>
+                    )}
+                </div>
+                <div className='col'>
+                    {index + 4 < len ? (
+                        <ProductCard
+                            minHeight={'100%'}
+                            product={products[index + 4]}
+                        />
+                    ) : (
+                        <></>
+                    )}
+                </div>
+            </div>
+        );
+        index += 5;
     }
+    return result;
 }

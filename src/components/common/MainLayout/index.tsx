@@ -1,19 +1,18 @@
 import { ReactNode } from 'react';
+
 import Footer from './Footer';
 import Header from './Header';
 
 interface IMainLayoutProps {
-    children?: ReactNode;
+    children: ReactNode;
 }
-export default function MainLayout(props: IMainLayoutProps) {
-    const { children } = props;
+
+export default function MainLayout({ children }: IMainLayoutProps) {
     return (
         <>
-            <Header></Header>
-
-            <main>{children}</main>
-
-            <Footer></Footer>
+            <Header />
+            {children}
+            <Footer />
         </>
     );
 }
