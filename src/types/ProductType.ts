@@ -1,17 +1,14 @@
+import CategoryType, { initialCategory } from './CategoryType';
+
 type SellerType = {
-    id: string;
+    _id: string;
     name: string;
     email: string;
     avatar: string;
 };
 
-type CategoryType = {
-    id: string;
-    name: string;
-};
-
 type ProductType = {
-    id: string;
+    _id: string;
     name: string;
     seller: SellerType;
     description: string;
@@ -26,10 +23,10 @@ type ProductType = {
 };
 
 export const initialProduct: ProductType = {
-    id: '',
+    _id: '',
     name: '',
     seller: {
-        id: '',
+        _id: '',
         name: '',
         email: '',
         avatar: ''
@@ -39,10 +36,7 @@ export const initialProduct: ProductType = {
     normalPrice: 0,
     rating: 0,
     images: [],
-    category: {
-        id: '',
-        name: ''
-    },
+    category: initialCategory,
     sold_quantity: 0,
     variants: [],
     quantity: 0

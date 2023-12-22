@@ -1,10 +1,13 @@
-import ProductDetailPage from '@/components/productPage';
-import { Metadata } from 'next';
+'use client';
 
-export const metadata: Metadata = {
-    title: 'TOKI | Product'
-};
+import { useEffect } from 'react';
+
+import ProductDetailPage from '@/components/productPage';
 
 export default function ProductPage() {
+    useEffect(() => {
+        document.title = 'TOKI | Product Detail';
+    }, []);
+
     return <ProductDetailPage />;
 }

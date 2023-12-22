@@ -13,12 +13,15 @@ import { formatCurrency, generateNameId, rateSale } from '@/utils/utils';
 import { IconButton } from '@mui/material';
 import { produce } from 'immer';
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import trashIcon from '/public/assets/images/trash.png';
 import DropdownButton from '@/components/common/DropdownButton';
 import { useRouter } from 'next/navigation';
 
 export default function CartDetail() {
+    useEffect(() => {
+        document.title = 'TOKI | Cart';
+    }, []);
     const productsInCart = mockCartProducts;
 
     /// mockCartProducts là danh sách, mỗi phần tử gồm

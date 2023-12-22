@@ -8,9 +8,12 @@ import { formatCurrency, generateNameId } from '@/utils/utils';
 import Link from 'next/link';
 import TextBox from '@/components/common/TextBox';
 import Button from '@/components/common/Button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function CartCheckout() {
+    useEffect(() => {
+        document.title = 'TOKI | Checkout';
+    }, []);
     const handlePlaceOrder = () => {
         //TODO
     };
