@@ -20,6 +20,7 @@ import { setDetailProduct } from '@/redux/slices/product.slice';
 
 export default function ProductDetailPage() {
     const { id: productId } = useParams();
+    console.log(productId);
 
     const dispatch = useAppDispatch();
 

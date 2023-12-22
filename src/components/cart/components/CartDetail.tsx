@@ -8,7 +8,7 @@ import {
     mockCartProducts,
     mockProducts
 } from '@/components/productPage/mockData';
-import { avatarPlaceholder } from '@/constants/common';
+import { avatarPlaceholder, emptyCart } from '@/constants/common';
 import { formatCurrency, generateNameId, rateSale } from '@/utils/utils';
 import { IconButton } from '@mui/material';
 import { produce } from 'immer';
@@ -16,9 +16,21 @@ import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import trashIcon from '/public/assets/images/trash.png';
 import DropdownButton from '@/components/common/DropdownButton';
+import { useRouter } from 'next/navigation';
 
 export default function CartDetail() {
     const productsInCart = mockCartProducts;
+
+    /// mockCartProducts là danh sách, mỗi phần tử gồm
+    ///     thông tin sản phẩm
+    ///     số lượng
+    ///     variants
+
+    /// Cái ông Long cần làm là lấy được cái dữ liệu trên rồi gán vô *productsInCart* với 1 trong 2 cái này:
+    //      lưu lại số lượng và variant khi chỉnh sửa cart để nhưng lần vào sau thông tin vẫn được lưu
+    //      không lưu, mỗi lần vào cart thì variant nếu có sẽ là variant đầu tiên, số lượng là 1
+    // Khi user làm này kia xong rồi thì họ chọn checkout, chuyển sang trang checkout, trang đó lấy thẳng thông tin từ trang này qua, không cần đọc từ db (Xem hàm handlePlaceOrder)
+
     const [productsCheck, setProductsCheck] = useState(
         productsInCart.map((e) => {
             return {
@@ -27,11 +39,19 @@ export default function CartDetail() {
             };
         })
     );
-
     const checkedPurchases: IProductInCart[] = useMemo(() => {
         const result: IProductInCart[] = [];
         productsCheck.forEach((product) => {
             if (product.checked) result.push(product.cartProduct);
+        });
+        return result;
+    }, [productsCheck]);
+
+    const selectedVariants: number[] = useMemo(() => {
+        const result: number[] = [];
+        productsCheck.forEach((product) => {
+            if (product.checked)
+                result.push(product.cartProduct.variantId || 0);
         });
         return result;
     }, [productsCheck]);
@@ -45,7 +65,6 @@ export default function CartDetail() {
     const totalCheckedPurchasePrice = useMemo(
         () =>
             checkedPurchases.reduce((result, current) => {
-                console.log('HELOOOOOO');
                 return result + current.product.price * current.quantity;
             }, 0),
         [checkedPurchases]
@@ -99,18 +118,36 @@ export default function CartDetail() {
 
     const handleDelete = (purchaseIndex: number) => () => {
         //TODO
-        setProductsCheck(productsCheck.slice(purchaseIndex, 1));
+        const temp = [
+            ...productsCheck.slice(0, purchaseIndex),
+            ...productsCheck.slice(purchaseIndex + 1)
+        ];
+        setProductsCheck(temp);
     };
-
-    const handleDeleteManyPurchases = () => {
-        //TODO
-        // const purchasesIds = checkedPurchases.map((purchase) => purchase._id);
-        // deletePurchasesMutation.mutate(purchasesIds);
-        setProductsCheck([]);
-    };
+    const router = useRouter();
 
     const handlePlaceOrder = () => {
-        //TODO
+        const checkoutList = checkedPurchases.map((purchase, index) => {
+            return {
+                product: {
+                    id: purchase.product._id,
+                    name: purchase.product.name,
+                    price: purchase.product.price,
+                    image: purchase.product.images[0]
+                },
+                seller: {
+                    id: purchase.product.seller._id,
+                    name: purchase.product.seller.name
+                },
+                quantity: purchase.quantity,
+                variantIndex: productsCheck[index].cartProduct.variantId,
+                variantName:
+                    purchase.product.variants &&
+                    purchase.product.variants[selectedVariants[index] || 0]
+            };
+        });
+        const encodedObject = encodeURIComponent(JSON.stringify(checkoutList));
+        router.push(`/cart/checkout?data=${encodedObject}`);
         console.log(checkedPurchases);
     };
 
@@ -135,18 +172,17 @@ export default function CartDetail() {
                 });
             }
         });
-        console.log(productGroups);
         return productGroups;
     };
 
     return (
-        <div className='bg-neutral-100 py-4'>
+        <div className='min-h-[70vh] bg-neutral-100 py-4'>
             <div className='container'>
                 {productsCheck && productsCheck.length > 0 ? (
                     <>
                         <div className='overflow-auto'>
                             <div className='min-w-[1000px]'>
-                                <div className='grid grid-cols-12 rounded-sm bg-white py-4 pl-5 pr-3 text-sm capitalize text-gray-500 shadow'>
+                                <div className='grid grid-cols-12 rounded-sm bg-white py-4 pl-5 pr-3 text-sm capitalize text-gray-500'>
                                     <div className='col-span-6'>
                                         <div className='flex items-center'>
                                             <div className='flex flex-shrink-0 items-center justify-center pr-3'>
@@ -157,9 +193,14 @@ export default function CartDetail() {
                                                     onChange={handleCheckAll}
                                                 />
                                             </div>
-                                            <div className='flex-grow text-black'>
-                                                {'Select All'}
-                                            </div>
+
+                                            <button
+                                                className='border-none bg-none'
+                                                onClick={handleCheckAll}
+                                            >
+                                                {'Select All'} (
+                                                {productsCheck.length})
+                                            </button>
                                         </div>
                                     </div>
                                     <div className='col-span-6'>
@@ -194,7 +235,7 @@ export default function CartDetail() {
                                                 </div>
                                                 {productsShop.products.length >
                                                     0 && (
-                                                    <div className='rounded-sm bg-white p-3 shadow'>
+                                                    <div className='rounded-sm bg-white p-3'>
                                                         {productsShop.products.map(
                                                             (
                                                                 product,
@@ -299,9 +340,9 @@ export default function CartDetail() {
                                                                                             .cartProduct
                                                                                             .product
                                                                                             .variants && (
-                                                                                            <div className='text-left'>
-                                                                                                <div>
-                                                                                                    Variant:
+                                                                                            <div className='flex text-left'>
+                                                                                                <div className='mr-1'>
+                                                                                                    Variants:
                                                                                                 </div>
                                                                                                 <DropdownButton
                                                                                                     items={
@@ -327,6 +368,14 @@ export default function CartDetail() {
                                                                                                                 0
                                                                                                         ]
                                                                                                     }
+                                                                                                    onSelect={function (
+                                                                                                        selectedItem: number
+                                                                                                    ): void {
+                                                                                                        selectedVariants[
+                                                                                                            product
+                                                                                                        ] =
+                                                                                                            selectedItem;
+                                                                                                    }}
                                                                                                 ></DropdownButton>
                                                                                             </div>
                                                                                         )}
@@ -462,9 +511,9 @@ export default function CartDetail() {
                                                                             <div className='col-span-1'>
                                                                                 <IconButton
                                                                                     onClick={handleDelete(
-                                                                                        index
+                                                                                        product
                                                                                     )}
-                                                                                    className='hover:text-orange bg-none text-black transition-colors'
+                                                                                    className='hover:text-main bg-none text-black transition-colors'
                                                                                 >
                                                                                     <img
                                                                                         src={
@@ -522,6 +571,7 @@ export default function CartDetail() {
                                 <Button
                                     className='h-10 w-52 bg-red-500 p-4 text-sm uppercase text-white'
                                     onClick={handlePlaceOrder}
+                                    disable={checkedPurchasesCount <= 0}
                                 >
                                     {'Check out'}
                                 </Button>
@@ -531,18 +581,18 @@ export default function CartDetail() {
                 ) : (
                     <div className='w-full py-14 text-center'>
                         <img
-                            src={avatarPlaceholder}
+                            src={emptyCart}
                             alt='No purchase'
                             className='inline-block h-24 w-24'
                         />
                         <div className='mt-5 font-bold leading-4 text-gray-500'>
-                            {'cart body.empty cart'}
+                            {'Empty Cart'}
                         </div>
                         <Link
                             href={'/'}
-                            className='bg-orange hover:bg-orange/80 mt-5 inline-block rounded-sm px-12 py-2 uppercase text-white transition-all'
+                            className='bg-main hover:bg-main/80 mt-5 inline-block rounded-2xl px-12 py-2 uppercase text-white transition-all'
                         >
-                            {'cart body.go shopping'}
+                            {'Go shopping'}
                         </Link>
                     </div>
                 )}
