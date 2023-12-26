@@ -51,7 +51,7 @@ export default function LandingPage() {
 
     return (
         <>
-            <div className='grid grid-cols-12 bg-gray-200 px-5 py-3'>
+            <div className='grid min-h-[70vh] grid-cols-12 bg-gray-200 px-5 py-3'>
                 <div className='col-span-3 mb-5'>
                     <div className='col offset-1 ms-5 rounded-md border bg-white shadow-md'>
                         <div className=' font-weight-bold mt-3  text-center'>
@@ -81,10 +81,15 @@ export default function LandingPage() {
                         <div />
                     </div>
                 </div>
-
-                <div className='col-span-9 mb-5 me-5 px-5'>
-                    {products && getProductGrid(products)}
-                </div>
+                {products && products.length > 0 ? (
+                    <div className='col-span-9 mb-5 me-5 px-5'>
+                        {getProductGrid(products)}
+                    </div>
+                ) : (
+                    <div className='container col-span-9 mb-5 me-5 px-5 text-center'>
+                        Danh sách sản phẩm trống
+                    </div>
+                )}
             </div>
         </>
     );

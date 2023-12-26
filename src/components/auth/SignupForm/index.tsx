@@ -141,7 +141,10 @@ export default function SignupForm() {
                         </span>
 
                         <div className='col-12 mt-5 text-center'>
-                            <Button className='btn btn-primary' type='submit'>
+                            <Button
+                                className='btn btn-primary full-width-div'
+                                type='submit'
+                            >
                                 {isLoading ? 'Loading...' : 'Sign up'}
                             </Button>
                         </div>

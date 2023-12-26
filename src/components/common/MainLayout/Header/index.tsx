@@ -19,6 +19,7 @@ import { useAppSelector } from '@/redux/hook';
 
 const Header = () => {
     const { user } = useAppSelector((state) => state.auth);
+    const isSeller = user?.role === 'seller';
 
     return (
         <>

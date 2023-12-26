@@ -14,7 +14,7 @@ const AuthenticationLayout = (props: IAuthenticationLayoutProps) => {
     const decorSpacing = 40;
     return (
         <>
-            <div className='bg-light container-fluid h-full pl-0 pt-5'>
+            <div className='bg-light container-fluid min-h-[100vh] pl-0 pt-5'>
                 <div className='row '>
                     <div className='col px-0'>
                         <div className='row justify-content-start mb-auto pl-5 pr-10'>
@@ -35,7 +35,7 @@ const AuthenticationLayout = (props: IAuthenticationLayoutProps) => {
                             </div>
                         </div>
                         {/* <div className='py-4'></div> */}
-                        <div className='m-10 py-9'>
+                        <div className='mx-10 my-auto py-9'>
                             <img
                                 className='img-fluid'
                                 src={logo.src}

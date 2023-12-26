@@ -38,7 +38,6 @@ export default function UserProfilePage(props: IMyOrdersForm) {
     };
     return (
         <>
-            <Header></Header>
             <div className='row mt-3' style={{ backgroundColor: '#E2E2E2' }}>
                 <div className='row' style={{ marginTop: 30 }}>
                     <div
@@ -101,7 +100,7 @@ export default function UserProfilePage(props: IMyOrdersForm) {
                                     style={{ color: '#777777' }}
                                 >
                                     <Link
-                                        href='/userprofile'
+                                        href='/user/profile'
                                         style={{ color: '#777777' }}
                                     >
                                         Profile
@@ -112,7 +111,7 @@ export default function UserProfilePage(props: IMyOrdersForm) {
                                     style={{ color: '#777777' }}
                                 >
                                     <Link
-                                        href='/userprofile/changepassword'
+                                        href='/user/changepassword'
                                         style={{ color: '#777777' }}
                                     >
                                         Change Password
