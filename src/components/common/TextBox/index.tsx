@@ -28,7 +28,7 @@ export default function TextBox(props: ITextboxProps) {
     } = props;
     return (
         <>
-            <div className='form-control p-0' style={{}}>
+            <div className={'form-control p-0 ' + className} style={{}}>
                 <div
                     className='inputGroupPrepend'
                     style={{

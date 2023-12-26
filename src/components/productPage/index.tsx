@@ -11,18 +11,22 @@ import {
 
 // components
 import ProductCard from '../landing/product';
-import ProductRating from './components/ProductRatings';
 import QuantityIncrementer from './components/QuantityIncrementer';
-
+import ProductRating from './components/ProductRatings';
 import ShopIcon from '/public/assets/images/shop_icon.png';
 
 // redux
-import { useAppSelector } from '@/redux/hook';
+import { useAppDispatch, useAppSelector } from '@/redux/hook';
 
 // apis
 import ProductType from '@/types/ProductType';
 
 export default function ProductDetailPage() {
+    const { id: productId } = useParams();
+    console.log(productId);
+
+    const dispatch = useAppDispatch();
+
     const { detailProduct, relatedProducts, products } = useAppSelector(
         (state) => state.product
     );
@@ -47,6 +51,17 @@ export default function ProductDetailPage() {
                 : [],
         [detailProduct, currentIndexImages]
     );
+
+    useEffect(() => {
+        if (isSuccess) {
+            dispatch(setDetailProduct(data.data.data));
+            console.log(detailProduct);
+        } else {
+            console.log(error);
+        }
+    }, [data, isSuccess, error, dispatch, detailProduct]);
+
+    // const addToCartMutation = useMutation(purchaseApi.addToCart);
 
     useEffect(() => {
         if (detailProduct && detailProduct.images.length > 0) {

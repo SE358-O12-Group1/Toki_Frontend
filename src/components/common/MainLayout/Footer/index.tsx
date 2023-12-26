@@ -8,7 +8,7 @@ import Link from 'next/link';
 const Footer = () => {
     return (
         <>
-            <div className='main-colored p-4'>
+            <div className='main-colored sub p-4'>
                 <div className='offset-1 mt-2'>
                     <button
                         type='button'

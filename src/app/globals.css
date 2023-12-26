@@ -1113,6 +1113,12 @@ video {
     padding-top: 100%;
 }
 
+.dashed-divider {
+    border-top: 1px dashed #000000a6;
+    margin: 20px 0;
+    width: 100%;
+}
+
 .text-left {
     text-align: left;
 }
@@ -1123,6 +1129,11 @@ video {
 
 .text-end {
     text-align: end;
+}
+
+.text-exl {
+    font-size: 2.525rem;
+    line-height: 2.75rem;
 }
 
 .text-3xl {
@@ -1162,12 +1173,21 @@ video {
     font-weight: 600;
 }
 
+.font-bold {
+    font-weight: 800;
+}
+
 .uppercase {
     text-transform: uppercase;
 }
 
 .capitalize {
     text-transform: capitalize;
+}
+
+.accent-main {
+    accent-color: var(--main-color);
+    fill: var(--light-gray-background);
 }
 
 .leading-loose {
@@ -1588,4 +1608,39 @@ a:focus {
 
 .radio-button:hover {
     cursor: pointer;
+}
+
+/* Add this to your styles or import it from a stylesheet */
+.dropdown-container {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-button {
+    color: var(--gray500);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-content {
+    display: block;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    z-index: 1;
+    margin-top: 5px;
+}
+
+.dropdown-content p {
+    padding: 10px;
+    margin: 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.dropdown-button svg {
+    margin-left: 5px;
 }
