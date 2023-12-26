@@ -28,13 +28,17 @@ export default function Button(props: ITextboxProps) {
                 disabled={disable}
                 id={id}
                 style={{
-                    backgroundColor: backgroundColor || '#00ADB5',
+                    backgroundColor: !disable
+                        ? backgroundColor || '#00ADB5'
+                        : '#BDBDBD',
                     outline: '0px',
                     borderRadius: 60,
                     padding: 12,
                     color: '#FFFFFF'
                 }}
-                className={className + 'form-control full-width-div'}
+                className={
+                    className + 'form-control flex items-center justify-center'
+                }
                 placeholder={placeholder}
                 onClick={onClick}
             >

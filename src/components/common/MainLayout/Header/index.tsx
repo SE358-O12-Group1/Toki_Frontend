@@ -12,6 +12,7 @@ import Cart from '/public/assets/images/btnCart.png';
 // components
 import TextBox from '@/components/common/TextBox';
 import CircleAvatar from '@/components/landing/components/CircleAvatar';
+import { avatarPlaceholder } from '@/constants/common';
 
 // redux
 import { useAppSelector } from '@/redux/hook';
@@ -22,9 +23,11 @@ const Header = () => {
     return (
         <>
             <div className='d-flex main-colored p-1'>
-                <Link className='offset-1 my-auto text-white' href={''}>
-                    Seller Center
-                </Link>
+                {isSeller && (
+                    <Link className='offset-1 my-auto text-white' href={''}>
+                        Seller Center
+                    </Link>
+                )}
                 <Link
                     className='me-1 me-5 ms-auto  flex items-center text-white'
                     href={''}
@@ -76,7 +79,8 @@ const Header = () => {
                     </button>
                 </div>
                 <div className='ml-10 mr-5'>
-                    <button
+                    <Link
+                        href={'/cart'}
                         type='button'
                         className='btn position-relative me-5 ms-5 mt-4'
                     >
@@ -87,7 +91,7 @@ const Header = () => {
                                 unread messages
                             </span>
                         </span>
-                    </button>
+                    </Link>
                 </div>
             </div>
         </>
