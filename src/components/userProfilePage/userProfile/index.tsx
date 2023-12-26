@@ -14,7 +14,6 @@ export interface IUserProfilePage {}
 export default function UserProfilePage(props: IUserProfilePage) {
     return (
         <>
-            <Header></Header>
             <div className='row mt-3' style={{ backgroundColor: '#E2E2E2' }}>
                 <div className='row' style={{ marginTop: 30 }}>
                     <div
@@ -83,7 +82,7 @@ export default function UserProfilePage(props: IUserProfilePage) {
                                     style={{ color: '#777777' }}
                                 >
                                     <Link
-                                        href='/userprofile/changepassword'
+                                        href='/user/changepassword'
                                         style={{ color: '#777777' }}
                                     >
                                         Change Password
@@ -96,7 +95,7 @@ export default function UserProfilePage(props: IUserProfilePage) {
                                     }}
                                 >
                                     <Link
-                                        href='/userprofile/myorders'
+                                        href='/user/history'
                                         style={{ color: '#777777' }}
                                     >
                                         My Orders
