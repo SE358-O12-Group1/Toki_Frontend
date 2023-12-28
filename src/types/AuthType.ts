@@ -1,8 +1,3 @@
-import {
-    getAccessTokenFromLS,
-    getRefreshTokenFromLS,
-    getUserFromLS
-} from '@/utils/auth';
 import UserType from './UserType';
 
 export type UserAuthType = Pick<

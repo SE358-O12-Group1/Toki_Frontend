@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useEffect } from 'react';
 
 // assets
 import Notification from '/public/assets/images/Notification.png';
@@ -19,6 +20,12 @@ import { useAppSelector } from '@/redux/hook';
 
 const Header = () => {
     const { user } = useAppSelector((state) => state.auth);
+    const { cart } = useAppSelector((state) => state.cart);
+
+    useEffect(() => {
+        console.log(cart);
+    }, [cart]);
+
     const isSeller = user?.role === 'seller';
 
     return (
@@ -86,12 +93,11 @@ const Header = () => {
                         className='btn position-relative me-5 ms-5 mt-4'
                     >
                         <img src={Cart.src} />
-                        <span className='position-absolute start-100 translate-middle badge rounded-pill bg-danger top-0'>
-                            +99
-                            <span className='visually-hidden'>
-                                unread messages
+                        {cart.length > 0 && (
+                            <span className='position-absolute start-100 translate-middle badge rounded-pill bg-danger top-0'>
+                                {cart.length}
                             </span>
-                        </span>
+                        )}
                     </Link>
                 </div>
             </div>
