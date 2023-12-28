@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { toast } from 'react-toastify';
 import { useMutation } from 'react-query';
 import { useRouter } from 'next/navigation';
 import { FocusEvent, FormEvent, useState } from 'react';
@@ -13,6 +14,9 @@ import TextBox from '@/components/common/TextBox';
 import authApi from '@/apis/auth.api';
 import { useAppDispatch } from '@/redux/hook';
 import { login } from '@/redux/slices/auth.slice';
+
+// constants
+import { toastMessages, toastOptions } from '@/constants/toast';
 
 type FormLoginType = {
     email: string;
@@ -54,6 +58,8 @@ export default function LoginForm() {
 
         loginMutation.mutate(formLogin, {
             onSuccess: (res) => {
+                toast.success(toastMessages.login, toastOptions);
+
                 const {
                     user,
                     tokens: { accessToken, refreshToken }
