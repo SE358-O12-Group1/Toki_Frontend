@@ -1,70 +1,66 @@
 'use client';
+
+import { produce } from 'immer';
+import { IconButton } from '@mui/material';
+import { useRouter } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
+
+// Components
 import Button from '@/components/common/Button';
 import QuantityIncrementer from '@/components/productPage/components/QuantityIncrementer';
-import {
-    IProduct,
-    IProductInCart,
-    IUSer,
-    mockCartProducts,
-    mockProducts
-} from '@/components/productPage/mockData';
-import { avatarPlaceholder, emptyCart } from '@/constants/common';
-import { formatCurrency, generateNameId, rateSale } from '@/utils/utils';
-import { IconButton } from '@mui/material';
-import { produce } from 'immer';
-import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import EmptyCart from './EmptyCart';
+
+// Utils
+import { formatCurrency } from '@/utils/utils';
 import trashIcon from '/public/assets/images/trash.png';
-import DropdownButton from '@/components/common/DropdownButton';
-import { useRouter } from 'next/navigation';
+
+// Types
+import { CartItemType } from '@/types/CartType';
+import ProductType, { SellerType } from '@/types/ProductType';
+
+// Redux
+import { useAppDispatch, useAppSelector } from '@/redux/hook';
+import { setCartItem, deleteFromCart } from '@/redux/slices/cart.slice';
+import {
+    getRelatedProducts,
+    setDetailProduct
+} from '@/redux/slices/product.slice';
+import { toast } from 'react-toastify';
+import { toastMessages, toastOptions } from '@/constants/toast';
 
 export default function CartDetail() {
     useEffect(() => {
         document.title = 'TOKI | Cart';
     }, []);
-    const productsInCart = mockCartProducts;
 
-    /// mockCartProducts là danh sách, mỗi phần tử gồm
-    ///     thông tin sản phẩm
-    ///     số lượng
-    ///     variants
+    const router = useRouter();
 
-    /// Cái ông Long cần làm là lấy được cái dữ liệu trên rồi gán vô *productsInCart* với 1 trong 2 cái này:
-    //      lưu lại số lượng và variant khi chỉnh sửa cart để nhưng lần vào sau thông tin vẫn được lưu
-    //      không lưu, mỗi lần vào cart thì variant nếu có sẽ là variant đầu tiên, số lượng là 1
-    // Khi user làm này kia xong rồi thì họ chọn checkout, chuyển sang trang checkout, trang đó lấy thẳng thông tin từ trang này qua, không cần đọc từ db (Xem hàm handlePlaceOrder)
+    const dispatch = useAppDispatch();
+
+    const { cart } = useAppSelector((state) => state.cart);
 
     const [productsCheck, setProductsCheck] = useState(
-        productsInCart.map((e) => {
+        cart.map((e) => {
             return {
                 cartProduct: e,
-                checked: false
+                checked: e.checked
             };
         })
     );
-    const checkedPurchases: IProductInCart[] = useMemo(() => {
-        const result: IProductInCart[] = [];
+
+    const checkedPurchases: CartItemType[] = useMemo(() => {
+        const result: CartItemType[] = [];
         productsCheck.forEach((product) => {
             if (product.checked) result.push(product.cartProduct);
         });
         return result;
     }, [productsCheck]);
 
-    const selectedVariants: number[] = useMemo(() => {
-        const result: number[] = [];
-        productsCheck.forEach((product) => {
-            if (product.checked)
-                result.push(product.cartProduct.variantId || 0);
-        });
-        return result;
-    }, [productsCheck]);
-
-    const checkedPurchasesCount = checkedPurchases.length;
-
     const isAllChecked: boolean = useMemo(
         () => productsCheck.every((purchase) => purchase.checked),
         [productsCheck]
     );
+
     const totalCheckedPurchasePrice = useMemo(
         () =>
             checkedPurchases.reduce((result, current) => {
@@ -81,6 +77,12 @@ export default function CartDetail() {
                     draft[purchaseIndex].checked = event.target.checked;
                 })
             );
+            dispatch(
+                setCartItem({
+                    ...cart[purchaseIndex],
+                    checked: event.target.checked
+                })
+            );
         };
 
     const handleCheckAll = () => {
@@ -90,6 +92,14 @@ export default function CartDetail() {
                 checked: !isAllChecked
             }))
         );
+        cart.forEach((purchase) => {
+            dispatch(
+                setCartItem({
+                    ...purchase,
+                    checked: !isAllChecked
+                })
+            );
+        });
     };
 
     const handleTypeQuantity = (purchaseIndex: number) => (value: number) => {
@@ -106,28 +116,29 @@ export default function CartDetail() {
         enable: boolean
     ) => {
         if (enable) {
-            // const purchase = productsCheck[purchaseIndex];
-            // updatePurchaseMutation.mutate({
-            //     product_id: purchase.product._id,
-            //     buy_count: value
-            // });
             setProductsCheck(
                 produce((draft) => {
                     draft[purchaseIndex].cartProduct.quantity = value;
+                })
+            );
+            dispatch(
+                setCartItem({
+                    ...cart[purchaseIndex],
+                    quantity: value
                 })
             );
         }
     };
 
     const handleDelete = (purchaseIndex: number) => () => {
-        //TODO
+        toast.success(toastMessages.deleteFromCart, toastOptions);
         const temp = [
             ...productsCheck.slice(0, purchaseIndex),
             ...productsCheck.slice(purchaseIndex + 1)
         ];
         setProductsCheck(temp);
+        dispatch(deleteFromCart(cart[purchaseIndex].product._id));
     };
-    const router = useRouter();
 
     const handlePlaceOrder = () => {
         const checkoutList = checkedPurchases.map((purchase, index) => {
@@ -142,11 +153,11 @@ export default function CartDetail() {
                     id: purchase.product.seller._id,
                     name: purchase.product.seller.name
                 },
-                quantity: purchase.quantity,
-                variantIndex: productsCheck[index].cartProduct.variantId,
-                variantName:
-                    purchase.product.variants &&
-                    purchase.product.variants[selectedVariants[index] || 0]
+                quantity: purchase.quantity
+                // variantIndex: productsCheck[index].cartProduct.variantId,
+                // variantName:
+                //     purchase.product.variants &&
+                //     purchase.product.variants[selectedVariants[index] || 0]
             };
         });
         const encodedObject = encodeURIComponent(JSON.stringify(checkoutList));
@@ -156,18 +167,25 @@ export default function CartDetail() {
 
     const groupProductsByShops = () => {
         interface IProductGroup {
-            seller: IUSer;
+            seller: SellerType;
             products: number[];
         }
+
         const productGroups: IProductGroup[] = [];
+
         productsCheck.forEach((product, index) => {
             var temp = -1;
+
             productGroups.forEach((group, groupIndex) => {
-                if (group.seller == product.cartProduct.product.seller) {
+                console.log(group.seller, product.cartProduct.product.seller);
+                if (
+                    group.seller._id === product.cartProduct.product.seller._id
+                ) {
                     temp = groupIndex;
                     productGroups[groupIndex].products.push(index);
                 }
             });
+
             if (temp === -1) {
                 productGroups.push({
                     seller: product.cartProduct.product.seller,
@@ -178,6 +196,12 @@ export default function CartDetail() {
         return productGroups;
     };
 
+    const handleClickProduct = (product: ProductType) => {
+        dispatch(setDetailProduct(product));
+        dispatch(getRelatedProducts(product.category._id));
+        router.push(`/products/${product._id}`);
+    };
+
     return (
         <div className='min-h-[70vh] bg-neutral-100 py-4'>
             <div className='container'>
@@ -185,6 +209,7 @@ export default function CartDetail() {
                     <>
                         <div className='overflow-auto'>
                             <div className='min-w-[1000px]'>
+                                {/* Heading */}
                                 <div className='grid grid-cols-12 rounded-sm bg-white py-4 pl-5 pr-3 text-sm capitalize text-gray-500'>
                                     <div className='col-span-6'>
                                         <div className='flex items-center'>
@@ -224,10 +249,10 @@ export default function CartDetail() {
                                     </div>
                                 </div>
 
-                                {groupProductsByShops().map((productsShop) => {
-                                    return (
-                                        <>
-                                            <div key={productsShop.seller._id}>
+                                {groupProductsByShops().map(
+                                    (productsShop, index) => {
+                                        return (
+                                            <div key={index}>
                                                 <div className='mt-3 flex bg-white py-4 pl-5 pr-3 capitalize text-white'>
                                                     <div className='bg-main rounded-xl px-4 py-2'>
                                                         {
@@ -242,16 +267,10 @@ export default function CartDetail() {
                                                         {productsShop.products.map(
                                                             (
                                                                 product,
-                                                                index: number
+                                                                index
                                                             ) => (
                                                                 <div
-                                                                    key={
-                                                                        productsCheck[
-                                                                            product
-                                                                        ]
-                                                                            .cartProduct
-                                                                            ._id
-                                                                    }
+                                                                    key={index}
                                                                     className='grid grid-cols-12 items-center rounded-sm border border-gray-200 bg-white py-3 pl-4 text-center text-sm text-gray-500 first:mt-0'
                                                                 >
                                                                     <div className='col-span-6'>
@@ -273,21 +292,17 @@ export default function CartDetail() {
                                                                             </div>
                                                                             <div className='flex-grow'>
                                                                                 <div className='flex'>
-                                                                                    <Link
+                                                                                    <div
                                                                                         className='h-20 w-20 flex-shrink-0'
-                                                                                        href={`${'/'}${generateNameId(
-                                                                                            {
-                                                                                                name: productsCheck[
+                                                                                        onClick={() =>
+                                                                                            handleClickProduct(
+                                                                                                productsCheck[
                                                                                                     product
                                                                                                 ]
                                                                                                     .cartProduct
                                                                                                     .product
-                                                                                                    .name,
-                                                                                                id: productsCheck[
-                                                                                                    product
-                                                                                                ].cartProduct._id.toString()
-                                                                                            }
-                                                                                        )}`}
+                                                                                            )
+                                                                                        }
                                                                                     >
                                                                                         <img
                                                                                             alt={
@@ -307,26 +322,19 @@ export default function CartDetail() {
                                                                                                     .images[0]
                                                                                             }
                                                                                         />
-                                                                                    </Link>
+                                                                                    </div>
                                                                                     <div className='my-auto p-2'>
-                                                                                        <Link
-                                                                                            href={`${'/'}${generateNameId(
-                                                                                                {
-                                                                                                    name: productsCheck[
-                                                                                                        product
-                                                                                                    ]
-                                                                                                        .cartProduct
-                                                                                                        .product
-                                                                                                        .name,
-                                                                                                    id: productsCheck[
-                                                                                                        product
-                                                                                                    ]
-                                                                                                        .cartProduct
-                                                                                                        .product
-                                                                                                        ._id
-                                                                                                }
-                                                                                            )}`}
+                                                                                        <div
                                                                                             className='my-auto line-clamp-2 text-left font-semibold text-black'
+                                                                                            onClick={() =>
+                                                                                                handleClickProduct(
+                                                                                                    productsCheck[
+                                                                                                        product
+                                                                                                    ]
+                                                                                                        .cartProduct
+                                                                                                        .product
+                                                                                                )
+                                                                                            }
                                                                                         >
                                                                                             {
                                                                                                 productsCheck[
@@ -336,50 +344,38 @@ export default function CartDetail() {
                                                                                                     .product
                                                                                                     .name
                                                                                             }
-                                                                                        </Link>
+                                                                                        </div>
                                                                                         {productsCheck[
                                                                                             product
                                                                                         ]
                                                                                             .cartProduct
                                                                                             .product
                                                                                             .variants && (
-                                                                                            <div className='flex text-left'>
-                                                                                                <div className='mr-1'>
-                                                                                                    Variants:
-                                                                                                </div>
-                                                                                                <DropdownButton
-                                                                                                    items={
-                                                                                                        productsCheck[
-                                                                                                            product
-                                                                                                        ]
-                                                                                                            .cartProduct
-                                                                                                            .product
-                                                                                                            .variants!
-                                                                                                    }
-                                                                                                    value={
-                                                                                                        productsCheck[
-                                                                                                            product
-                                                                                                        ]
-                                                                                                            .cartProduct
-                                                                                                            .product
-                                                                                                            .variants![
-                                                                                                            productsCheck[
-                                                                                                                product
-                                                                                                            ]
-                                                                                                                .cartProduct
-                                                                                                                .variantId ||
-                                                                                                                0
-                                                                                                        ]
-                                                                                                    }
-                                                                                                    onSelect={function (
-                                                                                                        selectedItem: number
-                                                                                                    ): void {
-                                                                                                        selectedVariants[
-                                                                                                            product
-                                                                                                        ] =
-                                                                                                            selectedItem;
-                                                                                                    }}
-                                                                                                ></DropdownButton>
+                                                                                            <div className='mt-2 flex text-left'>
+                                                                                                {productsCheck[
+                                                                                                    product
+                                                                                                ]
+                                                                                                    .cartProduct
+                                                                                                    .variants &&
+                                                                                                    productsCheck[
+                                                                                                        product
+                                                                                                    ].cartProduct.variants?.map(
+                                                                                                        (
+                                                                                                            variant,
+                                                                                                            index
+                                                                                                        ) => (
+                                                                                                            <div
+                                                                                                                key={
+                                                                                                                    index
+                                                                                                                }
+                                                                                                                className='mr-2 rounded-full bg-gray-200 px-2 py-1 text-xs'
+                                                                                                            >
+                                                                                                                {
+                                                                                                                    variant
+                                                                                                                }
+                                                                                                            </div>
+                                                                                                        )
+                                                                                                    )}
                                                                                             </div>
                                                                                         )}
                                                                                     </div>
@@ -484,7 +480,7 @@ export default function CartDetail() {
                                                                                                         .product
                                                                                                         .quantity &&
                                                                                                 value !==
-                                                                                                    productsInCart[
+                                                                                                    cart[
                                                                                                         index
                                                                                                     ]
                                                                                                         .quantity
@@ -534,11 +530,12 @@ export default function CartDetail() {
                                                     </div>
                                                 )}
                                             </div>
-                                        </>
-                                    );
-                                })}
+                                        );
+                                    }
+                                )}
                             </div>
                         </div>
+
                         <div className='sticky bottom-0 z-10 mt-3 flex justify-between rounded-sm border border-gray-100 bg-white px-5 py-4 shadow'>
                             <div className='flex items-center'>
                                 <div className='flex flex-shrink-0 items-center justify-center pr-3'>
@@ -565,7 +562,7 @@ export default function CartDetail() {
                                     }}
                                 >
                                     {'Item(s): '}
-                                    {checkedPurchasesCount}
+                                    {checkedPurchases.length}
                                 </div>
                                 <div className='ml-10 mr-4'>{'Total:'}</div>
                                 <div className='text-main mr-4 text-xl'>
@@ -574,7 +571,7 @@ export default function CartDetail() {
                                 <Button
                                     className='h-10 w-52 bg-red-500 p-4 text-sm uppercase text-white'
                                     onClick={handlePlaceOrder}
-                                    disable={checkedPurchasesCount <= 0}
+                                    disable={checkedPurchases.length <= 0}
                                 >
                                     {'Check out'}
                                 </Button>
@@ -582,22 +579,7 @@ export default function CartDetail() {
                         </div>
                     </>
                 ) : (
-                    <div className='w-full py-14 text-center'>
-                        <img
-                            src={emptyCart}
-                            alt='No purchase'
-                            className='inline-block h-24 w-24'
-                        />
-                        <div className='mt-5 font-bold leading-4 text-gray-500'>
-                            {'Empty Cart'}
-                        </div>
-                        <Link
-                            href={'/'}
-                            className='bg-main hover:bg-main/80 mt-5 inline-block rounded-2xl px-12 py-2 uppercase text-white transition-all'
-                        >
-                            {'Go shopping'}
-                        </Link>
-                    </div>
+                    <EmptyCart />
                 )}
             </div>
         </div>
