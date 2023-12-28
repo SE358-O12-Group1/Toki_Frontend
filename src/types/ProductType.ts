@@ -7,6 +7,10 @@ type SellerType = {
     avatar: string;
 };
 
+type VariantType = {
+    [key: string]: string[];
+};
+
 type ProductType = {
     _id: string;
     name: string;
@@ -18,7 +22,7 @@ type ProductType = {
     images: string[];
     category: CategoryType;
     sold_quantity: number;
-    variants: string[];
+    variants: VariantType;
     quantity: number;
 };
 
@@ -38,7 +42,7 @@ export const initialProduct: ProductType = {
     images: [],
     category: initialCategory,
     sold_quantity: 0,
-    variants: [],
+    variants: {},
     quantity: 0
 };
 
