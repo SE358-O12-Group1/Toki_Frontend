@@ -1,16 +1,28 @@
+'use client';
+
+import Link from 'next/link';
+
+// assets
 import Notification from '/public/assets/images/Notification.png';
 import Question from '/public/assets/images/QuestionCircle.png';
 import Logo from '/public/assets/images/Logo.png';
 import Search from '/public/assets/images/btnSearch.png';
+
+// components
 import TextBox from '@/components/common/TextBox';
-import Link from 'next/link';
-import { mockUser } from '@/components/productPage/mockData';
 import CircleAvatar from '@/components/landing/components/CircleAvatar';
+
+// constants
 import { avatarPlaceholder } from '@/constants/common';
 
+// hooks
+import { useAppSelector } from '@/redux/hook';
+
 const CartHeader = () => {
-    const user = mockUser;
-    const isSeller = true;
+    const { user } = useAppSelector((state) => state.auth);
+
+    const isSeller = user?.role === 'seller';
+
     return (
         <>
             <div className='d-flex main-colored p-1'>
@@ -32,11 +44,11 @@ const CartHeader = () => {
                 <Link className='me-5 flex items-center text-white' href={'/'}>
                     <CircleAvatar
                         className='ml-5 mr-3'
-                        src={user.imageUrl ?? avatarPlaceholder}
-                        alt={user.name}
+                        src={user?.avatar ?? avatarPlaceholder}
+                        alt={user?.name || ''}
                         size={8}
                     ></CircleAvatar>
-                    <span>{user.name}</span>
+                    <span>{user?.name}</span>
                 </Link>
             </div>
 

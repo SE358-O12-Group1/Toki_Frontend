@@ -1,6 +1,6 @@
 import CategoryType, { initialCategory } from './CategoryType';
 
-type SellerType = {
+export type SellerType = {
     _id: string;
     name: string;
     email: string;

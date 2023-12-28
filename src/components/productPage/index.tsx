@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import DOMPurify from 'isomorphic-dompurify';
 import { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -17,10 +18,12 @@ import ShopIcon from '/public/assets/images/shop_icon.png';
 
 // redux
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
+import { addToCart } from '@/redux/slices/cart.slice';
 
 // types
 import ProductType from '@/types/ProductType';
-import { addToCart } from '@/redux/slices/cart.slice';
+import { toast } from 'react-toastify';
+import { toastMessages, toastOptions } from '@/constants/toast';
 
 export default function ProductDetailPage() {
     const dispatch = useAppDispatch();
@@ -28,6 +31,12 @@ export default function ProductDetailPage() {
     const { detailProduct, relatedProducts } = useAppSelector(
         (state) => state.product
     );
+
+    const router = useRouter();
+
+    useEffect(() => {
+        console.log('relatedProducts', relatedProducts);
+    }, [relatedProducts]);
 
     const [buyCount, setBuyCount] = useState(1);
 
@@ -115,12 +124,25 @@ export default function ProductDetailPage() {
             addToCart({
                 product: detailProduct,
                 quantity: buyCount,
-                variants: selectedChip
+                variants: selectedChip,
+                checked: false
             })
         );
+        toast.success(toastMessages.addToCart, toastOptions);
     };
 
-    const buyNow = async () => {};
+    const buyNow = async () => {
+        dispatch(
+            addToCart({
+                product: detailProduct,
+                quantity: buyCount,
+                variants: selectedChip,
+                checked: true
+            })
+        );
+        toast.success(toastMessages.addToCart, toastOptions);
+        router.push('/cart');
+    };
 
     return (
         <>

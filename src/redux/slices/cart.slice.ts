@@ -1,17 +1,7 @@
-import ProductType from '@/types/ProductType';
+import CartType, { CartItemType } from '@/types/CartType';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-type CartItemType = {
-    product: ProductType;
-    quantity: number;
-    variants?: string[];
-};
-
-type CartState = {
-    cart: CartItemType[];
-};
-
-const initialState: CartState = {
+const initialState: CartType = {
     cart: []
 };
 
@@ -20,7 +10,7 @@ const cartSlice = createSlice({
     initialState: initialState,
     reducers: {
         addToCart: (state, action: PayloadAction<CartItemType>) => {
-            const { product, quantity, variants } = action.payload;
+            const { product, quantity, variants, checked } = action.payload;
             const index = state.cart.findIndex(
                 (item) =>
                     item.product._id === product._id &&
@@ -28,14 +18,37 @@ const cartSlice = createSlice({
             );
             if (index >= 0) {
                 state.cart[index].quantity += quantity;
+                state.cart[index].checked = checked;
             } else {
-                state.cart.push({ product, quantity, variants });
+                state.cart.push({ product, quantity, variants, checked });
+            }
+        },
+
+        deleteFromCart: (state, action: PayloadAction<string>) => {
+            const index = state.cart.findIndex(
+                (item) => item.product._id === action.payload
+            );
+            if (index >= 0) {
+                state.cart.splice(index, 1);
+            }
+        },
+
+        setCartItem: (state, action: PayloadAction<CartItemType>) => {
+            const { product, quantity, variants, checked } = action.payload;
+            const index = state.cart.findIndex(
+                (item) =>
+                    item.product._id === product._id &&
+                    item.variants?.join('') === variants?.join('')
+            );
+            if (index >= 0) {
+                state.cart[index].quantity = quantity;
+                state.cart[index].checked = checked;
             }
         }
     }
 });
 
-export const { addToCart } = cartSlice.actions;
+export const { addToCart, deleteFromCart, setCartItem } = cartSlice.actions;
 
 const cartReducer = cartSlice.reducer;
 
