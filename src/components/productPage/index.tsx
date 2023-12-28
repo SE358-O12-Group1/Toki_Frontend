@@ -18,25 +18,35 @@ import ShopIcon from '/public/assets/images/shop_icon.png';
 // redux
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
 
-// apis
+// types
 import ProductType from '@/types/ProductType';
+import { addToCart } from '@/redux/slices/cart.slice';
 
 export default function ProductDetailPage() {
-    const { id: productId } = useParams();
-    console.log(productId);
-
     const dispatch = useAppDispatch();
 
-    const { detailProduct, relatedProducts, products } = useAppSelector(
+    const { detailProduct, relatedProducts } = useAppSelector(
         (state) => state.product
     );
 
     const [buyCount, setBuyCount] = useState(1);
-    const [selectedChip, setSelectedChip] = useState('');
 
-    const handleChipClick = (chipValue: string) => {
-        setSelectedChip(chipValue);
-        // Do something with the selected value
+    const initialChip = () => {
+        const result: string[] = [];
+        Object.entries(detailProduct?.variants).forEach((variant) => {
+            result.push(variant[1][0]);
+        });
+        return result;
+    };
+
+    const [selectedChip, setSelectedChip] = useState<string[]>(initialChip);
+
+    const handleChipClick = (index: number, chipValue: string) => {
+        setSelectedChip((prev) => {
+            const result = [...prev];
+            result[index] = chipValue;
+            return result;
+        });
     };
 
     const [currentIndexImages, setCurrentIndexImages] = useState([0, 5]);
@@ -53,26 +63,10 @@ export default function ProductDetailPage() {
     );
 
     useEffect(() => {
-        if (isSuccess) {
-            dispatch(setDetailProduct(data.data.data));
-            console.log(detailProduct);
-        } else {
-            console.log(error);
-        }
-    }, [data, isSuccess, error, dispatch, detailProduct]);
-
-    // const addToCartMutation = useMutation(purchaseApi.addToCart);
-
-    useEffect(() => {
         if (detailProduct && detailProduct.images.length > 0) {
             setActiveImage(detailProduct.images[0]);
         }
     }, [detailProduct]);
-
-    useEffect(() => {
-        console.log('relatedProducts', relatedProducts);
-        console.log('products', products);
-    }, [relatedProducts, products]);
 
     const next = () => {
         if (currentIndexImages[1] < detailProduct.images.length) {
@@ -116,17 +110,26 @@ export default function ProductDetailPage() {
         setBuyCount(value);
     };
 
-    const addToCart = () => {};
+    const handleAddToCart = () => {
+        dispatch(
+            addToCart({
+                product: detailProduct,
+                quantity: buyCount,
+                variants: selectedChip
+            })
+        );
+    };
 
     const buyNow = async () => {};
 
     return (
         <>
             <div className='bg-gray-200 py-6'>
-                <div className='container '>
+                <div className='container'>
                     <div className='rounded-md bg-white p-4 shadow'>
                         <div className='grid grid-cols-12 gap-9'>
                             <div className='col-span-5'>
+                                {/* Active Image */}
                                 <div
                                     className='relative w-full cursor-zoom-in overflow-hidden rounded-md pt-[100%] shadow'
                                     onMouseMove={handleZoom}
@@ -139,6 +142,8 @@ export default function ProductDetailPage() {
                                         ref={imageRef}
                                     />
                                 </div>
+
+                                {/* Images */}
                                 <div className='relative mt-4 grid grid-cols-5 gap-1'>
                                     <button
                                         className='absolute left-0 top-1/2 z-10 h-9 w-5 -translate-y-1/2 bg-black/20 text-white'
@@ -200,6 +205,8 @@ export default function ProductDetailPage() {
                                         </svg>
                                     </button>
                                 </div>
+
+                                {/* Shop */}
                                 <div className='grid grid-cols-3 items-center justify-start p-4'>
                                     <div className='col-span-1 px-5'>
                                         <img
@@ -222,11 +229,16 @@ export default function ProductDetailPage() {
                                     </div>
                                 </div>
                             </div>
+
                             <div className='col-span-7'>
+                                {/* Name */}
                                 <h1 className='text-xl font-medium uppercase'>
                                     {detailProduct.name}
                                 </h1>
+
+                                {/* Rating and Sold Quantity */}
                                 <div className='mt-8 flex items-center'>
+                                    {/* Rating */}
                                     <div className='flex items-center'>
                                         <span className='border-b-yellow mr-1 border-b'>
                                             {detailProduct.rating}
@@ -237,7 +249,10 @@ export default function ProductDetailPage() {
                                             nonActiveClassname='fill-gray-300 text-gray-300 h-4 w-4'
                                         />
                                     </div>
-                                    <div className='mx-4 h-4 w-[1px] bg-gray-300'></div>
+
+                                    <div className='mx-4 h-4 w-[1px] bg-gray-300' />
+
+                                    {/* Sold Quantity */}
                                     <div>
                                         <span>
                                             {formatNumberToSocialStyle(
@@ -248,9 +263,12 @@ export default function ProductDetailPage() {
                                     </div>
                                 </div>
 
+                                {/* Price */}
                                 <div className='text-main ml-3 mt-6 text-3xl font-medium'>
                                     {formatCurrency(detailProduct.price)} ₫
                                 </div>
+
+                                {/* Normal Price */}
                                 {detailProduct.normalPrice && (
                                     <div className='mt-6 flex items-center'>
                                         <div className='bg-main text-yellow ml-4 rounded-sm px-1 py-[2px] text-xs font-semibold uppercase'>
@@ -269,29 +287,45 @@ export default function ProductDetailPage() {
                                     </div>
                                 )}
 
-                                <div className='mt-8 flex items-center'>
-                                    <div className='mr-10 font-medium capitalize'>
-                                        {'Variants'}
-                                    </div>
-                                    <div className='flex'>
-                                        {detailProduct.variants?.map((chip) => (
-                                            <div
-                                                key={chip}
-                                                className={`radio-button hover:bg-main/5 mr-2 flex h-12 items-center justify-center rounded-md px-4 capitalize ${
-                                                    selectedChip === chip
-                                                        ? 'border-main'
-                                                        : 'border'
-                                                }`}
-                                                onClick={() =>
-                                                    handleChipClick(chip)
-                                                }
-                                            >
-                                                {chip}
+                                {/* Variants */}
+                                {Object.entries(detailProduct.variants).map(
+                                    (variant, index) => (
+                                        <div
+                                            key={index}
+                                            className='mt-8 flex items-center'
+                                        >
+                                            <div className='mr-10 font-medium capitalize'>
+                                                {variant[0]}
                                             </div>
-                                        ))}
-                                    </div>
-                                </div>
 
+                                            <div className='flex'>
+                                                {variant[1].map((chip) => (
+                                                    <div
+                                                        key={chip}
+                                                        className={`radio-button hover:bg-main/5 mr-2 flex h-12 items-center justify-center rounded-md px-4 capitalize
+                                                            ${
+                                                                selectedChip[
+                                                                    index
+                                                                ] === chip
+                                                                    ? 'border-main'
+                                                                    : 'border'
+                                                            }`}
+                                                        onClick={() =>
+                                                            handleChipClick(
+                                                                index,
+                                                                chip
+                                                            )
+                                                        }
+                                                    >
+                                                        {chip}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )
+                                )}
+
+                                {/* Quantity */}
                                 <div className='mt-8 flex items-center'>
                                     <div className='font-medium capitalize'>
                                         {'Quantity'}
@@ -305,9 +339,10 @@ export default function ProductDetailPage() {
                                     />
                                 </div>
 
+                                {/* Buttons */}
                                 <div className='mt-8 flex items-center'>
                                     <button
-                                        onClick={addToCart}
+                                        onClick={handleAddToCart}
                                         className='border-main text-main hover:bg-main/5 flex h-12 items-center justify-center rounded-md px-5 capitalize shadow-sm'
                                     >
                                         <svg
@@ -373,6 +408,7 @@ export default function ProductDetailPage() {
                     </div>
                 </div>
 
+                {/* Description */}
                 <div className='mt-8'>
                     <div className='container '>
                         <div className='mt-8 rounded-md bg-white p-4  shadow'>
@@ -392,6 +428,7 @@ export default function ProductDetailPage() {
                     </div>
                 </div>
 
+                {/* Related Products */}
                 {relatedProducts ? (
                     <div className='mt-8'>
                         <div className='container'>
