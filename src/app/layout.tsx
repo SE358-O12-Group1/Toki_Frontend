@@ -3,10 +3,12 @@
 import { Inter } from 'next/font/google';
 import 'bootstrap/dist/css/bootstrap.css';
 import { Provider } from 'react-redux';
+import store, { persistor } from '@/redux/store';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { ToastContainer } from 'react-toastify';
 
 import './globals.css';
-import store, { persistor } from '@/redux/store';
+import 'react-toastify/dist/ReactToastify.css';
 import { PersistGate } from 'redux-persist/integration/react';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -35,6 +37,7 @@ export default function RootLayout({
                         </PersistGate>
                     </Provider>
                 </QueryClientProvider>
+                <ToastContainer />
             </body>
         </html>
     );

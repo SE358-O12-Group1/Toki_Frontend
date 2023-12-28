@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useMutation } from 'react-query';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
+import { toast } from 'react-toastify';
 
 // components
 import Button from '@/components/common/Button';
@@ -13,6 +14,9 @@ import TextBox from '@/components/common/TextBox';
 import { useAppDispatch } from '@/redux/hook';
 import authApi from '@/apis/auth.api';
 import { signup } from '@/redux/slices/auth.slice';
+
+// constants
+import { toastMessages, toastOptions } from '@/constants/toast';
 
 type FormSignupType = {
     email: string;
@@ -66,6 +70,8 @@ export default function SignupForm() {
 
         signupMutation.mutate(formSignup, {
             onSuccess: (res) => {
+                toast.success(toastMessages.register, toastOptions);
+
                 const {
                     user,
                     tokens: { accessToken, refreshToken }

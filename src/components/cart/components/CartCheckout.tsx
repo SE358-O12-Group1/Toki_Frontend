@@ -135,15 +135,9 @@ export default function CartCheckout() {
                             {productsShop.products.length > 0 && (
                                 <div className='rounded-sm bg-white p-3'>
                                     {productsShop.products.map(
-                                        (product, index: number) => (
-                                            <div>
-                                                <div
-                                                    key={
-                                                        productList[product]
-                                                            .product.id
-                                                    }
-                                                    className='grid grid-cols-12 items-center rounded-sm bg-white pl-4 text-center text-sm text-gray-500 first:mt-0'
-                                                >
+                                        (product, index) => (
+                                            <div key={index}>
+                                                <div className='grid grid-cols-12 items-center rounded-sm bg-white pl-4 text-center text-sm text-gray-500 first:mt-0'>
                                                     <div className='col-span-6'>
                                                         <div className='flex'>
                                                             <div className='flex-grow'>
