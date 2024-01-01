@@ -37,7 +37,7 @@ const Header = () => {
                     </Link>
                 )}
                 <Link
-                    className='me-1 me-5 ms-auto  flex items-center text-white'
+                    className='me-5 ms-auto  flex items-center text-white'
                     href={''}
                 >
                     <img src={Notification.src} /> Notification
