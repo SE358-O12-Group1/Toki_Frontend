@@ -1,43 +1,59 @@
-export interface IProduct {
-    _id: string;
-    name: string;
-    images: Array<string>;
-    seller: IUSer;
-    description: string;
-    category: string;
-    price: number;
-    normalPrice?: number;
-    quantity: number;
-    ratings?: number;
-    sold_quantity: number;
-    variants?: Array<string>;
-    relatedProducts?: Array<IProduct>;
-}
+import CategoryType from '@/types/CategoryType';
+import ProductType from '@/types/ProductType';
+import UserType from '@/types/UserType';
 
 export interface IProductInCart {
     _id: string;
-    product: IProduct;
+    product: ProductType;
     quantity: number;
     variantId?: number;
 }
 
-export const mockUser: IUSer = {
+export const mockCategory: CategoryType = {
+    _id: '1',
+    name: 'Category 1',
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_jgho-PgO5rtMOErauKhhRLlb8vsl5cof3RBLf1o1jw&s'
+};
+
+export const mockCategory2: CategoryType = {
+    _id: '2',
+    name: 'Category 2',
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_jgho-PgO5rtMOErauKhhRLlb8vsl5cof3RBLf1o1jw&s'
+};
+
+export const mockCategory3: CategoryType = {
+    _id: '3',
+    name: 'Category 3',
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_jgho-PgO5rtMOErauKhhRLlb8vsl5cof3RBLf1o1jw&s'
+};
+
+export const mockUser: UserType = {
     name: 'Nhà sách Bán sách',
     email: 'com.example@ddsdsd.com',
-    imageUrl:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_jgho-PgO5rtMOErauKhhRLlb8vsl5cof3RBLf1o1jw&s',
-    _id: '1'
+    avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_jgho-PgO5rtMOErauKhhRLlb8vsl5cof3RBLf1o1jw&s',
+    _id: '1',
+    password: '',
+    phone: '',
+    address: '',
+    status: '',
+    verified: false,
+    role: 'user'
 };
 
-export const mockUser2: IUSer = {
+export const mockUser2: UserType = {
     name: 'Nhà sách Bán sách 2',
     email: 'com.example@ddsdsd.com',
-    imageUrl:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_jgho-PgO5rtMOErauKhhRLlb8vsl5cof3RBLf1o1jw&s',
-    _id: '2'
+    avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_jgho-PgO5rtMOErauKhhRLlb8vsl5cof3RBLf1o1jw&s',
+    _id: '2',
+    password: '',
+    phone: '',
+    address: '',
+    status: '',
+    verified: false,
+    role: ''
 };
 
-export const mockProduct2: IProduct = {
+export const mockProduct2: ProductType = {
     _id: '2',
     name: 'P1 - Giáo Trình Kỹ Thuật Lập Trình C',
     images: [
@@ -46,15 +62,18 @@ export const mockProduct2: IProduct = {
         'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-liyb396b445o55'
     ],
     seller: mockUser,
-    category: 'Sách',
+    category: mockCategory,
     price: 12000,
     quantity: 12,
     sold_quantity: 4,
     description:
-        "Sách - Giáo Trình Kỹ Thuật Lập Trình C, \nTác giả: Nhiều tác giả \nNhà xuất bản: Nhà Xuất Bản Giáo Dục Việt Nam\nĐơn vị phát hành: Nhà Xuất Bản Giáo Dục Việt Nam\nNgày xuất bản:2010\nSố trang :216\nKích thước 16 x 24 cm\nLoại bìa: Mềm\nNội dung : \nNgôn ngữ lập trình C là một ngôn ngữ lập trình vạn năng, ngoài việc dùng để viết hệ điều hành UNIX, người ta nhanh chóng nhận ra sức mạnh của nó trong việc xử lý các vấn đề của Tin học. Ngôn ngữ lập trình C được gọi là 'Ngôn ngữ lập trình hệ thống' vì nó được dùng cho việc viết hệ điều hành; nó cũng tiện lợi cho việc viết các chương trình xử lý số, xử lý văn bản, cơ sở dữ liệu, các chương trình ứng dụng trong công nghiệp và dân dụng. Trong thực tế, người ta thường dùng trình dịch Turbo C hoặc Borland C của hãng Borland. Ngày nay, do xu hướng chuyển sang lập trình hướng đối tượng nên ngôn ngữ lập trình C còn được phát triển thành ngôn ngữ lập trình hướng đối tượng có tên là C++. Ngoài Borland, hãng Microsoft cũng cung cấp bộ phát triển tích hợp Visual C++ trong bộ Visual Studio. Giáo trình này tập trung đề cập vào trình dịch Turbo C (TC) của Borland."
+        "Sách - Giáo Trình Kỹ Thuật Lập Trình C, \nTác giả: Nhiều tác giả \nNhà xuất bản: Nhà Xuất Bản Giáo Dục Việt Nam\nĐơn vị phát hành: Nhà Xuất Bản Giáo Dục Việt Nam\nNgày xuất bản:2010\nSố trang :216\nKích thước 16 x 24 cm\nLoại bìa: Mềm\nNội dung : \nNgôn ngữ lập trình C là một ngôn ngữ lập trình vạn năng, ngoài việc dùng để viết hệ điều hành UNIX, người ta nhanh chóng nhận ra sức mạnh của nó trong việc xử lý các vấn đề của Tin học. Ngôn ngữ lập trình C được gọi là 'Ngôn ngữ lập trình hệ thống' vì nó được dùng cho việc viết hệ điều hành; nó cũng tiện lợi cho việc viết các chương trình xử lý số, xử lý văn bản, cơ sở dữ liệu, các chương trình ứng dụng trong công nghiệp và dân dụng. Trong thực tế, người ta thường dùng trình dịch Turbo C hoặc Borland C của hãng Borland. Ngày nay, do xu hướng chuyển sang lập trình hướng đối tượng nên ngôn ngữ lập trình C còn được phát triển thành ngôn ngữ lập trình hướng đối tượng có tên là C++. Ngoài Borland, hãng Microsoft cũng cung cấp bộ phát triển tích hợp Visual C++ trong bộ Visual Studio. Giáo trình này tập trung đề cập vào trình dịch Turbo C (TC) của Borland.",
+    normalPrice: 0,
+    rating: 0,
+    variants: {}
 };
 
-export const mockProduct3: IProduct = {
+export const mockProduct3: ProductType = {
     _id: '3',
     name: 'P2- Giáo Trình Kỹ Thuật Lập Trình C',
     images: [
@@ -63,16 +82,19 @@ export const mockProduct3: IProduct = {
         'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-liyb396b445o55'
     ],
     seller: mockUser2,
-    ratings: 4.2,
-    category: 'Sách',
+    // ratings: 4.2,
+    category: mockCategory2,
     price: 12000,
     quantity: 12,
     sold_quantity: 4,
     description:
-        "Sách - Giáo Trình Kỹ Thuật Lập Trình C, \nTác giả: Nhiều tác giả \nNhà xuất bản: Nhà Xuất Bản Giáo Dục Việt Nam\nĐơn vị phát hành: Nhà Xuất Bản Giáo Dục Việt Nam\nNgày xuất bản:2010\nSố trang :216\nKích thước 16 x 24 cm\nLoại bìa: Mềm\nNội dung : \nNgôn ngữ lập trình C là một ngôn ngữ lập trình vạn năng, ngoài việc dùng để viết hệ điều hành UNIX, người ta nhanh chóng nhận ra sức mạnh của nó trong việc xử lý các vấn đề của Tin học. Ngôn ngữ lập trình C được gọi là 'Ngôn ngữ lập trình hệ thống' vì nó được dùng cho việc viết hệ điều hành; nó cũng tiện lợi cho việc viết các chương trình xử lý số, xử lý văn bản, cơ sở dữ liệu, các chương trình ứng dụng trong công nghiệp và dân dụng. Trong thực tế, người ta thường dùng trình dịch Turbo C hoặc Borland C của hãng Borland. Ngày nay, do xu hướng chuyển sang lập trình hướng đối tượng nên ngôn ngữ lập trình C còn được phát triển thành ngôn ngữ lập trình hướng đối tượng có tên là C++. Ngoài Borland, hãng Microsoft cũng cung cấp bộ phát triển tích hợp Visual C++ trong bộ Visual Studio. Giáo trình này tập trung đề cập vào trình dịch Turbo C (TC) của Borland."
+        "Sách - Giáo Trình Kỹ Thuật Lập Trình C, \nTác giả: Nhiều tác giả \nNhà xuất bản: Nhà Xuất Bản Giáo Dục Việt Nam\nĐơn vị phát hành: Nhà Xuất Bản Giáo Dục Việt Nam\nNgày xuất bản:2010\nSố trang :216\nKích thước 16 x 24 cm\nLoại bìa: Mềm\nNội dung : \nNgôn ngữ lập trình C là một ngôn ngữ lập trình vạn năng, ngoài việc dùng để viết hệ điều hành UNIX, người ta nhanh chóng nhận ra sức mạnh của nó trong việc xử lý các vấn đề của Tin học. Ngôn ngữ lập trình C được gọi là 'Ngôn ngữ lập trình hệ thống' vì nó được dùng cho việc viết hệ điều hành; nó cũng tiện lợi cho việc viết các chương trình xử lý số, xử lý văn bản, cơ sở dữ liệu, các chương trình ứng dụng trong công nghiệp và dân dụng. Trong thực tế, người ta thường dùng trình dịch Turbo C hoặc Borland C của hãng Borland. Ngày nay, do xu hướng chuyển sang lập trình hướng đối tượng nên ngôn ngữ lập trình C còn được phát triển thành ngôn ngữ lập trình hướng đối tượng có tên là C++. Ngoài Borland, hãng Microsoft cũng cung cấp bộ phát triển tích hợp Visual C++ trong bộ Visual Studio. Giáo trình này tập trung đề cập vào trình dịch Turbo C (TC) của Borland.",
+    normalPrice: 0,
+    rating: 0,
+    variants: {}
 };
 
-export const mockProduct4: IProduct = {
+export const mockProduct4: ProductType = {
     _id: '4',
     name: 'P3- Giáo Trình Kỹ Thuật Lập Trình C',
     images: [
@@ -81,17 +103,18 @@ export const mockProduct4: IProduct = {
         'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-liyb396b445o55'
     ],
     seller: mockUser,
-    // ratings: 4.2,
-    category: 'Sách',
+    category: mockCategory3,
     price: 12000,
     normalPrice: 16000,
     quantity: 12,
     sold_quantity: 4,
     description:
-        "Sách - Giáo Trình Kỹ Thuật Lập Trình C, \nTác giả: Nhiều tác giả \nNhà xuất bản: Nhà Xuất Bản Giáo Dục Việt Nam\nĐơn vị phát hành: Nhà Xuất Bản Giáo Dục Việt Nam\nNgày xuất bản:2010\nSố trang :216\nKích thước 16 x 24 cm\nLoại bìa: Mềm\nNội dung : \nNgôn ngữ lập trình C là một ngôn ngữ lập trình vạn năng, ngoài việc dùng để viết hệ điều hành UNIX, người ta nhanh chóng nhận ra sức mạnh của nó trong việc xử lý các vấn đề của Tin học. Ngôn ngữ lập trình C được gọi là 'Ngôn ngữ lập trình hệ thống' vì nó được dùng cho việc viết hệ điều hành; nó cũng tiện lợi cho việc viết các chương trình xử lý số, xử lý văn bản, cơ sở dữ liệu, các chương trình ứng dụng trong công nghiệp và dân dụng. Trong thực tế, người ta thường dùng trình dịch Turbo C hoặc Borland C của hãng Borland. Ngày nay, do xu hướng chuyển sang lập trình hướng đối tượng nên ngôn ngữ lập trình C còn được phát triển thành ngôn ngữ lập trình hướng đối tượng có tên là C++. Ngoài Borland, hãng Microsoft cũng cung cấp bộ phát triển tích hợp Visual C++ trong bộ Visual Studio. Giáo trình này tập trung đề cập vào trình dịch Turbo C (TC) của Borland."
+        "Sách - Giáo Trình Kỹ Thuật Lập Trình C, \nTác giả: Nhiều tác giả \nNhà xuất bản: Nhà Xuất Bản Giáo Dục Việt Nam\nĐơn vị phát hành: Nhà Xuất Bản Giáo Dục Việt Nam\nNgày xuất bản:2010\nSố trang :216\nKích thước 16 x 24 cm\nLoại bìa: Mềm\nNội dung : \nNgôn ngữ lập trình C là một ngôn ngữ lập trình vạn năng, ngoài việc dùng để viết hệ điều hành UNIX, người ta nhanh chóng nhận ra sức mạnh của nó trong việc xử lý các vấn đề của Tin học. Ngôn ngữ lập trình C được gọi là 'Ngôn ngữ lập trình hệ thống' vì nó được dùng cho việc viết hệ điều hành; nó cũng tiện lợi cho việc viết các chương trình xử lý số, xử lý văn bản, cơ sở dữ liệu, các chương trình ứng dụng trong công nghiệp và dân dụng. Trong thực tế, người ta thường dùng trình dịch Turbo C hoặc Borland C của hãng Borland. Ngày nay, do xu hướng chuyển sang lập trình hướng đối tượng nên ngôn ngữ lập trình C còn được phát triển thành ngôn ngữ lập trình hướng đối tượng có tên là C++. Ngoài Borland, hãng Microsoft cũng cung cấp bộ phát triển tích hợp Visual C++ trong bộ Visual Studio. Giáo trình này tập trung đề cập vào trình dịch Turbo C (TC) của Borland.",
+    rating: 0,
+    variants: {}
 };
 
-export const mockProduct5: IProduct = {
+export const mockProduct5: ProductType = {
     _id: '5',
     name: 'P4- Giáo Trình Kỹ Thuật Lập Trình C',
     images: [
@@ -100,16 +123,18 @@ export const mockProduct5: IProduct = {
         'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-liyb396b445o55'
     ],
     seller: mockUser2,
-    ratings: 4.2,
-    category: 'Sách',
+    rating: 4.2,
+    category: mockCategory,
     price: 12000,
     quantity: 12,
     sold_quantity: 4,
     description:
-        "Sách - Giáo Trình Kỹ Thuật Lập Trình C, \nTác giả: Nhiều tác giả \nNhà xuất bản: Nhà Xuất Bản Giáo Dục Việt Nam\nĐơn vị phát hành: Nhà Xuất Bản Giáo Dục Việt Nam\nNgày xuất bản:2010\nSố trang :216\nKích thước 16 x 24 cm\nLoại bìa: Mềm\nNội dung : \nNgôn ngữ lập trình C là một ngôn ngữ lập trình vạn năng, ngoài việc dùng để viết hệ điều hành UNIX, người ta nhanh chóng nhận ra sức mạnh của nó trong việc xử lý các vấn đề của Tin học. Ngôn ngữ lập trình C được gọi là 'Ngôn ngữ lập trình hệ thống' vì nó được dùng cho việc viết hệ điều hành; nó cũng tiện lợi cho việc viết các chương trình xử lý số, xử lý văn bản, cơ sở dữ liệu, các chương trình ứng dụng trong công nghiệp và dân dụng. Trong thực tế, người ta thường dùng trình dịch Turbo C hoặc Borland C của hãng Borland. Ngày nay, do xu hướng chuyển sang lập trình hướng đối tượng nên ngôn ngữ lập trình C còn được phát triển thành ngôn ngữ lập trình hướng đối tượng có tên là C++. Ngoài Borland, hãng Microsoft cũng cung cấp bộ phát triển tích hợp Visual C++ trong bộ Visual Studio. Giáo trình này tập trung đề cập vào trình dịch Turbo C (TC) của Borland."
+        "Sách - Giáo Trình Kỹ Thuật Lập Trình C, \nTác giả: Nhiều tác giả \nNhà xuất bản: Nhà Xuất Bản Giáo Dục Việt Nam\nĐơn vị phát hành: Nhà Xuất Bản Giáo Dục Việt Nam\nNgày xuất bản:2010\nSố trang :216\nKích thước 16 x 24 cm\nLoại bìa: Mềm\nNội dung : \nNgôn ngữ lập trình C là một ngôn ngữ lập trình vạn năng, ngoài việc dùng để viết hệ điều hành UNIX, người ta nhanh chóng nhận ra sức mạnh của nó trong việc xử lý các vấn đề của Tin học. Ngôn ngữ lập trình C được gọi là 'Ngôn ngữ lập trình hệ thống' vì nó được dùng cho việc viết hệ điều hành; nó cũng tiện lợi cho việc viết các chương trình xử lý số, xử lý văn bản, cơ sở dữ liệu, các chương trình ứng dụng trong công nghiệp và dân dụng. Trong thực tế, người ta thường dùng trình dịch Turbo C hoặc Borland C của hãng Borland. Ngày nay, do xu hướng chuyển sang lập trình hướng đối tượng nên ngôn ngữ lập trình C còn được phát triển thành ngôn ngữ lập trình hướng đối tượng có tên là C++. Ngoài Borland, hãng Microsoft cũng cung cấp bộ phát triển tích hợp Visual C++ trong bộ Visual Studio. Giáo trình này tập trung đề cập vào trình dịch Turbo C (TC) của Borland.",
+    normalPrice: 0,
+    variants: {}
 };
 
-export const mockProduct6: IProduct = {
+export const mockProduct6: ProductType = {
     _id: '6',
     name: 'P5- Giáo Trình Kỹ Thuật Lập Trình C',
     images: [
@@ -118,17 +143,24 @@ export const mockProduct6: IProduct = {
         'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-liyb396b445o55'
     ],
     seller: mockUser,
-    ratings: 4.2,
-    category: 'Sách',
+    rating: 4.2,
+    category: mockCategory,
     price: 12000,
     normalPrice: 20000,
     quantity: 12,
     sold_quantity: 4,
     description:
-        "Sách - Giáo Trình Kỹ Thuật Lập Trình C, \nTác giả: Nhiều tác giả \nNhà xuất bản: Nhà Xuất Bản Giáo Dục Việt Nam\nĐơn vị phát hành: Nhà Xuất Bản Giáo Dục Việt Nam\nNgày xuất bản:2010\nSố trang :216\nKích thước 16 x 24 cm\nLoại bìa: Mềm\nNội dung : \nNgôn ngữ lập trình C là một ngôn ngữ lập trình vạn năng, ngoài việc dùng để viết hệ điều hành UNIX, người ta nhanh chóng nhận ra sức mạnh của nó trong việc xử lý các vấn đề của Tin học. Ngôn ngữ lập trình C được gọi là 'Ngôn ngữ lập trình hệ thống' vì nó được dùng cho việc viết hệ điều hành; nó cũng tiện lợi cho việc viết các chương trình xử lý số, xử lý văn bản, cơ sở dữ liệu, các chương trình ứng dụng trong công nghiệp và dân dụng. Trong thực tế, người ta thường dùng trình dịch Turbo C hoặc Borland C của hãng Borland. Ngày nay, do xu hướng chuyển sang lập trình hướng đối tượng nên ngôn ngữ lập trình C còn được phát triển thành ngôn ngữ lập trình hướng đối tượng có tên là C++. Ngoài Borland, hãng Microsoft cũng cung cấp bộ phát triển tích hợp Visual C++ trong bộ Visual Studio. Giáo trình này tập trung đề cập vào trình dịch Turbo C (TC) của Borland."
+        "Sách - Giáo Trình Kỹ Thuật Lập Trình C, \nTác giả: Nhiều tác giả \nNhà xuất bản: Nhà Xuất Bản Giáo Dục Việt Nam\nĐơn vị phát hành: Nhà Xuất Bản Giáo Dục Việt Nam\nNgày xuất bản:2010\nSố trang :216\nKích thước 16 x 24 cm\nLoại bìa: Mềm\nNội dung : \nNgôn ngữ lập trình C là một ngôn ngữ lập trình vạn năng, ngoài việc dùng để viết hệ điều hành UNIX, người ta nhanh chóng nhận ra sức mạnh của nó trong việc xử lý các vấn đề của Tin học. Ngôn ngữ lập trình C được gọi là 'Ngôn ngữ lập trình hệ thống' vì nó được dùng cho việc viết hệ điều hành; nó cũng tiện lợi cho việc viết các chương trình xử lý số, xử lý văn bản, cơ sở dữ liệu, các chương trình ứng dụng trong công nghiệp và dân dụng. Trong thực tế, người ta thường dùng trình dịch Turbo C hoặc Borland C của hãng Borland. Ngày nay, do xu hướng chuyển sang lập trình hướng đối tượng nên ngôn ngữ lập trình C còn được phát triển thành ngôn ngữ lập trình hướng đối tượng có tên là C++. Ngoài Borland, hãng Microsoft cũng cung cấp bộ phát triển tích hợp Visual C++ trong bộ Visual Studio. Giáo trình này tập trung đề cập vào trình dịch Turbo C (TC) của Borland.",
+    variants: {}
 };
 
-export const mockProduct: IProduct = {
+export const mockCategories: CategoryType[] = [
+    mockCategory,
+    mockCategory2,
+    mockCategory3
+];
+
+export const mockProduct: ProductType = {
     _id: '1',
     name: 'Giáo Trình Kỹ Thuật Lập Trình C',
     images: [
@@ -137,16 +169,15 @@ export const mockProduct: IProduct = {
         'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-liyb396b445o55'
     ],
     seller: mockUser,
-    category: 'Sách',
-    ratings: 4.2,
+    category: mockCategory3,
+    rating: 4.2,
     price: 10000,
     normalPrice: 18000,
     quantity: 12,
     sold_quantity: 4,
     description:
         "Sách - Giáo Trình Kỹ Thuật Lập Trình C, \nTác giả: Nhiều tác giả \nNhà xuất bản: Nhà Xuất Bản Giáo Dục Việt Nam\nĐơn vị phát hành: Nhà Xuất Bản Giáo Dục Việt Nam\nNgày xuất bản:2010\nSố trang :216\nKích thước 16 x 24 cm\nLoại bìa: Mềm\nNội dung : \nNgôn ngữ lập trình C là một ngôn ngữ lập trình vạn năng, ngoài việc dùng để viết hệ điều hành UNIX, người ta nhanh chóng nhận ra sức mạnh của nó trong việc xử lý các vấn đề của Tin học. Ngôn ngữ lập trình C được gọi là 'Ngôn ngữ lập trình hệ thống' vì nó được dùng cho việc viết hệ điều hành; nó cũng tiện lợi cho việc viết các chương trình xử lý số, xử lý văn bản, cơ sở dữ liệu, các chương trình ứng dụng trong công nghiệp và dân dụng. Trong thực tế, người ta thường dùng trình dịch Turbo C hoặc Borland C của hãng Borland. Ngày nay, do xu hướng chuyển sang lập trình hướng đối tượng nên ngôn ngữ lập trình C còn được phát triển thành ngôn ngữ lập trình hướng đối tượng có tên là C++. Ngoài Borland, hãng Microsoft cũng cung cấp bộ phát triển tích hợp Visual C++ trong bộ Visual Studio. Giáo trình này tập trung đề cập vào trình dịch Turbo C (TC) của Borland.",
-    relatedProducts: [mockProduct2, mockProduct3],
-    variants: ['Bìa cứng', 'Bìa mềm', 'Bản đặc biệt']
+    variants: {}
 };
 
 export const mockProducts = [
