@@ -1,13 +1,22 @@
 import CategoryType from '@/types/CategoryType';
+import { MouseEvent, MouseEventHandler } from 'react';
 
 export interface ICategoryCardProps {
     category: CategoryType;
+    onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
-export default function CategoryCard(props: ICategoryCardProps) {
-    const { category } = props;
+export default function CategoryCard({
+    category,
+    onClick
+}: ICategoryCardProps) {
     return (
-        <button type='button' className='btn' style={{ width: '100%' }}>
+        <button
+            type='button'
+            className='btn'
+            style={{ width: '100%' }}
+            onClick={onClick}
+        >
             <div className='ms-1 flex items-center'>
                 <div className='d-flex '>
                     <img
