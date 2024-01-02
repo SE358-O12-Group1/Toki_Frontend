@@ -1,14 +1,13 @@
 'use client';
 
-// components
-import ManageWindow from './Manage Window';
-import AdminHeader from './Header';
 import Footer from '../common/MainLayout/Footer';
+import ManageWindow from './ManageWindow';
+import SellerHeader from './SellerHeader';
 
-export default function adminPage() {
+export default function sellerScreen() {
     return (
         <>
-            <AdminHeader></AdminHeader>
+            <SellerHeader></SellerHeader>
 
             <div style={{ background: '#EEEEEE' }} className='min-h-[78vh]'>
                 {' '}

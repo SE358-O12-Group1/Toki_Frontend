@@ -6,7 +6,7 @@ import AdminScreen from '@/components/adminPage';
 
 const AdminPage = () => {
     useEffect(() => {
-        document.title = 'TOKI | Sign Up';
+        document.title = 'TOKI | Admin Center';
     }, []);
 
     return <AdminScreen />;
