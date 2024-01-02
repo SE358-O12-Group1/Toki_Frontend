@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { ChangeEvent, FocusEventHandler, useEffect } from 'react';
 
 // assets
 import Notification from '/public/assets/images/Notification.png';
@@ -18,7 +18,12 @@ import { avatarPlaceholder } from '@/constants/common';
 // redux
 import { useAppSelector } from '@/redux/hook';
 
-const Header = () => {
+export interface IHeaderProps {
+    onChange?: FocusEventHandler<HTMLInputElement>;
+}
+
+const Header = (props: IHeaderProps) => {
+    const { onChange } = props;
     const { user } = useAppSelector((state) => state.auth);
     const { cart } = useAppSelector((state) => state.cart);
 
@@ -81,7 +86,11 @@ const Header = () => {
                     </Link>
                 </div>
                 <div className='mx-10 flex flex-1 items-center'>
-                    <TextBox placeholder='Search' className='mb-0'></TextBox>
+                    <TextBox
+                        placeholder='Search'
+                        className='mb-0'
+                        onChange={onChange}
+                    ></TextBox>
                     <button type='button' className='btn btn-xxl ml-5'>
                         <img src={Search.src} />
                     </button>
