@@ -1,16 +1,17 @@
-import { ReactNode } from 'react';
+import { FocusEventHandler, ReactNode } from 'react';
 
 import Footer from './Footer';
 import Header from './Header';
 
 interface IMainLayoutProps {
     children: ReactNode;
+    onChange?: FocusEventHandler<HTMLInputElement>;
 }
 
-export default function MainLayout({ children }: IMainLayoutProps) {
+export default function MainLayout({ children, onChange }: IMainLayoutProps) {
     return (
         <>
-            <Header />
+            <Header onChange={onChange} />
             {children}
             <Footer />
         </>

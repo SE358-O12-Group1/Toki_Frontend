@@ -1,7 +1,7 @@
 'use client';
 
 import { useQueries } from 'react-query';
-import { ReactNode, useEffect } from 'react';
+import { MouseEvent, ReactNode, useEffect, useState } from 'react';
 
 import Bank from '/public/assets/images/Bank.png';
 
@@ -18,11 +18,18 @@ import categoryApi from '@/apis/category.api';
 import productApi from '@/apis/product.api';
 import { setProducts } from '@/redux/slices/product.slice';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
+import { mockCategories, mockProducts } from '../productPage/mockData';
 
-export default function LandingPage() {
+export interface ILandingPageProps {
+    filterQuery?: string;
+}
+
+export default function LandingPage({ filterQuery }: ILandingPageProps) {
     const dispatch = useAppDispatch();
 
     const { products } = useAppSelector((state) => state.product);
+
+    const [categoryFilter, setCategoryFilter] = useState<String>();
 
     const [
         { data: categoryData },
@@ -49,6 +56,23 @@ export default function LandingPage() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [productData, products]);
 
+    const filteredProducts = products;
+
+    if (filterQuery) {
+        const filterString = filterQuery.trim();
+        filteredProducts.filter(
+            (product) =>
+                product.name.includes(filterString) ||
+                product.category.name.includes(filterString) ||
+                product.seller.name.includes(filterString)
+        );
+    }
+    if (categoryFilter) {
+        filteredProducts.filter((product) =>
+            product.category.name.includes(categoryFilter.trim())
+        );
+    }
+
     return (
         <>
             <div className='grid min-h-[70vh] grid-cols-12 bg-gray-200 px-5 py-3'>
@@ -58,9 +82,17 @@ export default function LandingPage() {
                             CATEGORY
                         </div>
                         {categories &&
-                            categories.map((category, index) => (
-                                <CategoryCard key={index} category={category} />
-                            ))}
+                            categories.map((category, index) => {
+                                return (
+                                    <CategoryCard
+                                        key={index}
+                                        category={category}
+                                        onClick={() => {
+                                            setCategoryFilter(category.name);
+                                        }}
+                                    />
+                                );
+                            })}
                     </div>
 
                     <div className='col offset-1 ms-5 mt-3 rounded-md border bg-white shadow-md'>
@@ -83,7 +115,7 @@ export default function LandingPage() {
                 </div>
                 {products && products.length > 0 ? (
                     <div className='col-span-9 mb-5 me-5 px-5'>
-                        {getProductGrid(products)}
+                        {getProductGrid(filteredProducts)}
                     </div>
                 ) : (
                     <div className='container col-span-9 mb-5 me-5 px-5 text-center'>
