@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 // assets
 import Notification from '/public/assets/images/AdminNotification.png';
 import Question from '/public/assets/images/AdminQuestion.png';
-import AdminCenter from '/public/assets/images/ADMIN CENTER.png';
+import SellerCenter from '/public/assets/images/seller_center.png';
 import Circle from '/public/assets/images/BlueUserProfileCircle.png';
 
 import Logo from '/public/assets/images/Logo.png';
@@ -16,9 +16,9 @@ import { avatarPlaceholder } from '@/constants/common';
 
 // redux
 import { useAppSelector } from '@/redux/hook';
-import CircleAvatar from '@/components/landing/components/CircleAvatar';
+import CircleAvatar from '../landing/components/CircleAvatar';
 
-const Header = () => {
+const SellerHeader = () => {
     const { user } = useAppSelector((state) => state.auth);
     const { cart } = useAppSelector((state) => state.cart);
 
@@ -34,15 +34,15 @@ const Header = () => {
                     style={{ paddingLeft: 50 }}
                 >
                     <div className='offset-1'>
-                        <Link href={'/admin'}>
+                        <Link href={'/seller'}>
                             <img className='ms-5 ' src={Logo.src} />
                         </Link>
                     </div>
                 </div>
                 <div className='flex items-center justify-between '>
                     <div style={{ paddingTop: 20, paddingLeft: 15 }}>
-                        <Link href={'/admin'}>
-                            <img className='ms-1' src={AdminCenter.src} />
+                        <Link href={'/seller'}>
+                            <img className='ms-1' src={SellerCenter.src} />
                         </Link>
                     </div>
                 </div>
@@ -100,7 +100,7 @@ const Header = () => {
                                     paddingLeft: 10
                                 }}
                             >
-                                UserName
+                                Shop Center
                             </div>
                         </Link>
                     )}
@@ -110,4 +110,4 @@ const Header = () => {
     );
 };
 
-export default Header;
+export default SellerHeader;
