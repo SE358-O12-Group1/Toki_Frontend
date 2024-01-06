@@ -1644,3 +1644,7 @@ a:focus {
 .dropdown-button svg {
     margin-left: 5px;
 }
+
+.btn {
+    border: none;
+}
