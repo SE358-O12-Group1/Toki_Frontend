@@ -124,7 +124,7 @@ export default function LoginForm() {
                         </span>
 
                         <div className='col-12 mt-5 text-center'>
-                            <Button className='btn btn-primary' type='submit'>
+                            <Button className='' type='submit'>
                                 {isLoading ? 'Loading...' : 'Submit'}
                             </Button>
                         </div>

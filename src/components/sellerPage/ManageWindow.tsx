@@ -1,5 +1,6 @@
 import { Container, Row, Tabs, Tab } from 'react-bootstrap';
 import './tabStyle.css';
+import SellerProductsList from './components/ProductsList';
 export default function ManageWindow() {
     return (
         <>
@@ -19,7 +20,7 @@ export default function ManageWindow() {
                                 color: 'black'
                             }}
                         >
-                            WIP
+                            <SellerProductsList></SellerProductsList>
                         </Tab>
                         <Tab
                             eventKey='Orders'

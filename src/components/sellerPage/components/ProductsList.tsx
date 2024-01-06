@@ -1,0 +1,108 @@
+import Button from '@/components/common/Button';
+import TextBox from '@/components/common/TextBox';
+import { mockProducts } from '@/components/productPage/mockData';
+import { formatCurrency } from '@/utils/utils';
+import Link from 'next/link';
+
+export default function SellerProductsList() {
+    const products = mockProducts;
+    return (
+        <div className='container p-4'>
+            <div className='grid grid-cols-3'>
+                <div className='col-span-2 flex'>
+                    <TextBox
+                        className='col-span-6 mr-4'
+                        placeholder='ProductName'
+                    ></TextBox>
+                    <Button className='btn col-span-3'>Search</Button>
+                </div>
+            </div>
+            <div className='mt-4 grid grid-cols-6'>
+                <Button className='btn col-span-1'>+ Add new product</Button>
+            </div>
+
+            <span className='text-main mt-4 flex text-xl'>
+                {products.length} Products
+            </span>
+            <div className='container mt-6 border px-0'>
+                <div className='rounded-sm bg-white '>
+                    <div className='container rounded-sm px-0'>
+                        <div className=' grid grid-cols-12 items-center rounded-sm  bg-gray-300 py-3 pl-4 pr-3 text-sm'>
+                            <div className='col-span-6'>Product</div>
+                            <div className='col-span-6'>
+                                <div className='grid grid-cols-8 items-center'>
+                                    <div className='col-span-2 mx-auto text-sm text-gray-600'>
+                                        Price
+                                    </div>
+                                    <div className='col-span-2 mx-auto text-sm text-gray-600'>
+                                        Stock
+                                    </div>
+                                    <div className='col-span-2 mx-auto text-sm text-gray-600'>
+                                        Sale
+                                    </div>
+                                    <div className='col-span-2 mx-auto text-sm text-gray-600'>
+                                        Option
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {products.map((product, index) => (
+                        <div key={index}>
+                            <div className='grid grid-cols-12 items-center rounded-sm bg-white pr-3 text-center text-sm text-gray-500 first:mt-4'>
+                                <div className='col-span-6'>
+                                    <div className='flex pl-4'>
+                                        <div className='flex-grow'>
+                                            <div className='flex'>
+                                                <Link
+                                                    className='h-20 w-20 flex-shrink-0'
+                                                    href='/'
+                                                >
+                                                    <img
+                                                        alt={product.name}
+                                                        src={product.images[0]}
+                                                    />
+                                                </Link>
+                                                <div className='my-auto p-2'>
+                                                    <Link
+                                                        href='/'
+                                                        className='my-auto line-clamp-2 text-left font-semibold text-black'
+                                                    >
+                                                        {product.name}
+                                                    </Link>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className='col-span-6 '>
+                                    <div className='grid grid-cols-8 items-center text-lg'>
+                                        <div className='text-main col-span-2 text-center text-xl font-medium'>
+                                            {formatCurrency(product.price)}₫
+                                        </div>
+                                        <div className='col-span-2 text-center'>
+                                            {product.quantity}
+                                        </div>
+                                        <div className='col-span-2 text-center'>
+                                            {product.sold_quantity}
+                                        </div>
+                                        <Button
+                                            className='col-span-2 text-center'
+                                            backgroundColor='#FFFFFF'
+                                            textColor='#00adb5'
+                                        >
+                                            Edit
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className='container'>
+                                <div className='dashed-divider'></div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+}
