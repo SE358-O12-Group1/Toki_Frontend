@@ -15,7 +15,8 @@ const toastMessages = {
     register: 'Register successfully!',
     login: 'Login successfully!',
     addToCart: 'Add to cart successfully!',
-    deleteFromCart: 'Delete from cart successfully!'
+    deleteFromCart: 'Delete from cart successfully!',
+    placeOrder: 'Place order successfully!'
 };
 
 export { toastMessages, toastOptions };
