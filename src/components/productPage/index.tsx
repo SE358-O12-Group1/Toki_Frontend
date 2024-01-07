@@ -34,10 +34,6 @@ export default function ProductDetailPage() {
 
     const router = useRouter();
 
-    useEffect(() => {
-        console.log('relatedProducts', relatedProducts);
-    }, [relatedProducts]);
-
     const [buyCount, setBuyCount] = useState(1);
 
     const initialChip = () => {

@@ -49,7 +49,6 @@ export default function LandingPage({ filterQuery }: ILandingPageProps) {
     // const products: ProductType[] = productData?.data.data;
 
     useEffect(() => {
-        console.log(products);
         if (isGetAllProductsSuccess) {
             dispatch(setProducts(productData?.data.data));
         }
