@@ -2,9 +2,9 @@
 
 import Link from 'next/link';
 import { toast } from 'react-toastify';
-import { useMutation } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { useRouter } from 'next/navigation';
-import { FocusEvent, FormEvent, useState } from 'react';
+import { FocusEvent, FormEvent, useEffect, useState } from 'react';
 
 // components
 import Button from '@/components/common/Button';
@@ -14,9 +14,11 @@ import TextBox from '@/components/common/TextBox';
 import authApi from '@/apis/auth.api';
 import { useAppDispatch } from '@/redux/hook';
 import { login } from '@/redux/slices/auth.slice';
+import { setProfile } from '@/redux/slices/user.slice';
 
 // constants
 import { toastMessages, toastOptions } from '@/constants/toast';
+import userApi from '@/apis/user.api';
 
 type FormLoginType = {
     email: string;
@@ -41,7 +43,7 @@ export default function LoginForm() {
         mutationFn: (body: FormLoginType) => authApi.login(body)
     });
 
-    const { isError, error, isSuccess, data, isLoading } = loginMutation;
+    const { isError, error, isSuccess, isLoading } = loginMutation;
 
     // Handle change
     const handleChangeEmail = (e: FocusEvent<HTMLInputElement, Element>) => {

@@ -27,10 +27,6 @@ const Header = (props: IHeaderProps) => {
     const { user } = useAppSelector((state) => state.auth);
     const { cart } = useAppSelector((state) => state.cart);
 
-    useEffect(() => {
-        console.log(cart);
-    }, [cart]);
-
     const isSeller = user?.role === 'seller';
 
     return (

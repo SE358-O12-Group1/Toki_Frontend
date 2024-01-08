@@ -1,6 +1,7 @@
 'use client';
 
 import { produce } from 'immer';
+import { toast } from 'react-toastify';
 import { IconButton } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
@@ -12,11 +13,14 @@ import EmptyCart from './EmptyCart';
 
 // Utils
 import { formatCurrency } from '@/utils/utils';
+import { groupProductsByShops } from '@/utils/product';
+
+// Icons
 import trashIcon from '/public/assets/images/trash.png';
 
 // Types
-import { CartItemType } from '@/types/CartType';
-import ProductType, { SellerType } from '@/types/ProductType';
+import { CartItemType, CheckoutItemType } from '@/types/CartType';
+import ProductType from '@/types/ProductType';
 
 // Redux
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
@@ -25,7 +29,8 @@ import {
     getRelatedProducts,
     setDetailProduct
 } from '@/redux/slices/product.slice';
-import { toast } from 'react-toastify';
+
+// Constants
 import { toastMessages, toastOptions } from '@/constants/toast';
 
 export default function CartDetail() {
@@ -140,66 +145,20 @@ export default function CartDetail() {
         dispatch(deleteFromCart(cart[purchaseIndex].product._id));
     };
 
-    const handlePlaceOrder = () => {
-        const checkoutList = checkedPurchases.map((purchase, index) => {
-            return {
-                product: {
-                    id: purchase.product._id,
-                    name: purchase.product.name,
-                    price: purchase.product.price,
-                    image: purchase.product.images[0]
-                },
-                seller: {
-                    id: purchase.product.seller._id,
-                    name: purchase.product.seller.name
-                },
-                quantity: purchase.quantity
-                // variantIndex: productsCheck[index].cartProduct.variantId,
-                // variantName:
-                //     purchase.product.variants &&
-                //     purchase.product.variants[selectedVariants[index] || 0]
-            };
-        });
-        const encodedObject = encodeURIComponent(JSON.stringify(checkoutList));
-        router.push(`/cart/checkout?data=${encodedObject}`);
-        console.log(checkedPurchases);
-    };
-
-    const groupProductsByShops = () => {
-        interface IProductGroup {
-            seller: SellerType;
-            products: number[];
-        }
-
-        const productGroups: IProductGroup[] = [];
-
-        productsCheck.forEach((product, index) => {
-            var temp = -1;
-
-            productGroups.forEach((group, groupIndex) => {
-                console.log(group.seller, product.cartProduct.product.seller);
-                if (
-                    group.seller._id === product.cartProduct.product.seller._id
-                ) {
-                    temp = groupIndex;
-                    productGroups[groupIndex].products.push(index);
-                }
-            });
-
-            if (temp === -1) {
-                productGroups.push({
-                    seller: product.cartProduct.product.seller,
-                    products: [index]
-                });
-            }
-        });
-        return productGroups;
-    };
-
     const handleClickProduct = (product: ProductType) => {
         dispatch(setDetailProduct(product));
         dispatch(getRelatedProducts(product.category._id));
         router.push(`/products/${product._id}`);
+    };
+
+    const handleCheckout = () => {
+        const checkoutList: CheckoutItemType[] = checkedPurchases.map(
+            (purchase) => ({
+                ...purchase
+            })
+        );
+        const encodedObject = encodeURIComponent(JSON.stringify(checkoutList));
+        router.push(`/cart/checkout?data=${encodedObject}`);
     };
 
     return (
@@ -249,7 +208,7 @@ export default function CartDetail() {
                                     </div>
                                 </div>
 
-                                {groupProductsByShops().map(
+                                {groupProductsByShops(cart).map(
                                     (productsShop, index) => {
                                         return (
                                             <div key={index}>
@@ -351,7 +310,7 @@ export default function CartDetail() {
                                                                                             .cartProduct
                                                                                             .product
                                                                                             .variants && (
-                                                                                            <div className='mt-2 flex text-left'>
+                                                                                            <div className='mt-2 flex space-x-2 text-left'>
                                                                                                 {productsCheck[
                                                                                                     product
                                                                                                 ]
@@ -368,7 +327,7 @@ export default function CartDetail() {
                                                                                                                 key={
                                                                                                                     index
                                                                                                                 }
-                                                                                                                className='mr-2 rounded-full bg-gray-200 px-2 py-1 text-xs'
+                                                                                                                className='rounded-full bg-gray-200 px-2 py-1 text-xs'
                                                                                                             >
                                                                                                                 {
                                                                                                                     variant
@@ -570,7 +529,7 @@ export default function CartDetail() {
                                 </div>
                                 <Button
                                     className='h-10 w-52 bg-red-500 p-4 text-sm uppercase text-white'
-                                    onClick={handlePlaceOrder}
+                                    onClick={handleCheckout}
                                     disable={checkedPurchases.length <= 0}
                                 >
                                     {'Check out'}
