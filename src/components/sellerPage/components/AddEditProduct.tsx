@@ -4,6 +4,7 @@ import TextBox from '@/components/common/TextBox';
 import InputNumber from '@/components/productPage/components/InputNumber';
 import { mockCategories } from '@/components/productPage/mockData';
 import ProductType from '@/types/ProductType';
+import { useRouter } from 'next/navigation';
 import { useState, FocusEvent, useMemo, ChangeEvent, FormEvent } from 'react';
 import { toast } from 'react-toastify';
 
@@ -17,6 +18,7 @@ type AddEditProductType = {
     images: string[];
     description: string;
     price: number;
+    stock: number;
 };
 
 export default function AddEditProduct({ product }: IAddEditProductProps) {
@@ -25,19 +27,29 @@ export default function AddEditProduct({ product }: IAddEditProductProps) {
         categoryId: product ? product.category._id : '',
         images: product ? product.images : [],
         description: product ? product.description : '',
-        price: product ? product.price : 0
+        price: product ? product.price : 0,
+        stock: product ? product.quantity : 0
     };
+    const router = useRouter();
     const isEditing: boolean = product != null;
     const categories = mockCategories;
     const [formValues, setFormValues] = useState(init);
-    const [imageValues, setImageValues] = useState(['']);
+    const [imageValues, setImageValues] = useState(
+        product ? product.images : ['']
+    );
 
     function handleSubmit(event: FormEvent<HTMLFormElement>): void {
-        // TODO
         event.preventDefault();
 
         if (imageValues.every((e) => e.length < 1)) {
             toast.warn('There must be at least one product image.');
+        }
+
+        // TODO
+        if (isEditing) {
+            // EDIT product
+        } else {
+            // CREATE product
         }
     }
 
@@ -67,11 +79,11 @@ export default function AddEditProduct({ product }: IAddEditProductProps) {
     }
 
     function handlePriceChange(e: ChangeEvent<HTMLInputElement>): void {
-        setFormValues({ ...formValues, description: e.target.value });
+        setFormValues({ ...formValues, price: parseFloat(e.target.value) });
     }
 
     function handleStockChange(e: ChangeEvent<HTMLInputElement>): void {
-        setFormValues({ ...formValues, description: e.target.value });
+        setFormValues({ ...formValues, stock: parseFloat(e.target.value) });
     }
 
     return (
@@ -95,6 +107,7 @@ export default function AddEditProduct({ product }: IAddEditProductProps) {
                                 required={true}
                                 placeholder='Product name'
                                 onChange={handleNameChange}
+                                value={formValues.name}
                             ></TextBox>
                         </div>
                     </div>
@@ -164,6 +177,7 @@ export default function AddEditProduct({ product }: IAddEditProductProps) {
                                 className='text-md full-width-div flex p-1'
                                 name=''
                                 id=''
+                                value={formValues.description}
                                 rows={5}
                                 onChange={handleDescriptionChange}
                             ></textarea>
@@ -185,6 +199,7 @@ export default function AddEditProduct({ product }: IAddEditProductProps) {
                                 placeholder='Product Price'
                                 className='text-md p-0 '
                                 required
+                                value={formValues.price}
                                 onChange={handlePriceChange}
                             ></InputNumber>
                             <span className='text-md ml-4 flex items-center justify-end'>
@@ -202,6 +217,7 @@ export default function AddEditProduct({ product }: IAddEditProductProps) {
                             <InputNumber
                                 placeholder='Quantity in stock'
                                 required
+                                value={formValues.stock}
                                 className='text-md p-0 '
                                 onChange={handleStockChange}
                             ></InputNumber>
@@ -218,6 +234,7 @@ export default function AddEditProduct({ product }: IAddEditProductProps) {
                             backgroundColor='#FFFFFF'
                             onClick={(e) => {
                                 e.preventDefault();
+                                router.back();
                             }}
                         >
                             Cancel
