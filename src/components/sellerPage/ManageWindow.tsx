@@ -1,6 +1,7 @@
 import { Container, Row, Tabs, Tab } from 'react-bootstrap';
 import './tabStyle.css';
 import SellerProductsList from './components/ProductsList';
+import AddEditProduct from './components/AddEditProduct';
 export default function ManageWindow() {
     return (
         <>

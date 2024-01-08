@@ -1,18 +1,51 @@
+'use client';
+
 import Button from '@/components/common/Button';
 import TextBox from '@/components/common/TextBox';
 import { mockProducts } from '@/components/productPage/mockData';
-import { formatCurrency } from '@/utils/utils';
+import { formatCurrency, removeVietnamesePhonetics } from '@/utils/utils';
 import Link from 'next/link';
+import { useMemo, useState } from 'react';
 
 export default function SellerProductsList() {
-    const products = mockProducts;
+    const [searchInput, setSearchInput] = useState('');
+
+    const filteredProducts = useMemo(() => {
+        const products = mockProducts;
+        const filterString = removeVietnamesePhonetics(searchInput.trim());
+        console.log(removeVietnamesePhonetics(products[0].name));
+
+        return products.filter(
+            (product) =>
+                removeVietnamesePhonetics(product.name.toLowerCase()).includes(
+                    filterString
+                ) ||
+                removeVietnamesePhonetics(
+                    product.category.name.toLowerCase()
+                ).includes(filterString) ||
+                removeVietnamesePhonetics(
+                    product.seller.name.toLowerCase()
+                ).includes(filterString)
+        );
+    }, [searchInput]);
+
+    function handleDelete(index: number) {
+        //TODO
+    }
+
+    function handleEdit(index: number) {}
+
     return (
         <div className='container p-4'>
             <div className='grid grid-cols-3'>
                 <div className='col-span-2 flex'>
                     <TextBox
                         className='col-span-6 mr-4'
-                        placeholder='ProductName'
+                        placeholder='Product Name'
+                        onChange={(e) => {
+                            setSearchInput(e.target.value);
+                        }}
+                        value={searchInput}
                     ></TextBox>
                     <Button className='btn col-span-3'>Search</Button>
                 </div>
@@ -22,12 +55,12 @@ export default function SellerProductsList() {
             </div>
 
             <span className='text-main mt-4 flex text-xl'>
-                {products.length} Products
+                {filteredProducts.length} Products
             </span>
             <div className='container mt-6 border px-0'>
                 <div className='rounded-sm bg-white '>
                     <div className='container rounded-sm px-0'>
-                        <div className=' grid grid-cols-12 items-center rounded-sm  bg-gray-300 py-3 pl-4 pr-3 text-sm'>
+                        <div className=' grid grid-cols-12 items-center rounded-sm  bg-gray-100 py-3 pl-4 pr-3 text-sm'>
                             <div className='col-span-6'>Product</div>
                             <div className='col-span-6'>
                                 <div className='grid grid-cols-8 items-center'>
@@ -47,7 +80,7 @@ export default function SellerProductsList() {
                             </div>
                         </div>
                     </div>
-                    {products.map((product, index) => (
+                    {filteredProducts.map((product, index) => (
                         <div key={index}>
                             <div className='grid grid-cols-12 items-center rounded-sm bg-white pr-3 text-center text-sm text-gray-500 first:mt-4'>
                                 <div className='col-span-6'>
@@ -86,13 +119,28 @@ export default function SellerProductsList() {
                                         <div className='col-span-2 text-center'>
                                             {product.sold_quantity}
                                         </div>
-                                        <Button
-                                            className='col-span-2 text-center'
-                                            backgroundColor='#FFFFFF'
-                                            textColor='#00adb5'
-                                        >
-                                            Edit
-                                        </Button>
+                                        <div className='col-span-2 flex text-center'>
+                                            <Button
+                                                className=''
+                                                backgroundColor='#FFFFFF'
+                                                textColor='#00adb5'
+                                                onClick={() => {
+                                                    handleEdit(index);
+                                                }}
+                                            >
+                                                Edit
+                                            </Button>
+                                            <Button
+                                                className='ml-2'
+                                                backgroundColor='#FFFFFF'
+                                                textColor='#FF0000'
+                                                onClick={() => {
+                                                    handleDelete(index);
+                                                }}
+                                            >
+                                                Delete
+                                            </Button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
