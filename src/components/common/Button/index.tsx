@@ -38,7 +38,7 @@ export default function Button({
                     color: textColor || '#FFFFFF'
                 }}
                 className={
-                    className + 'form-control flex items-center justify-center'
+                    className + ' form-control flex items-center justify-center'
                 }
                 placeholder={placeholder}
                 onClick={onClick}

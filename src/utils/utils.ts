@@ -30,3 +30,13 @@ export const getIdFromNameId = (nameId: string) => {
     const arr = nameId.split('-i-');
     return arr[arr.length - 1];
 };
+
+export function removeVietnamesePhonetics(input: string): string {
+    // Define a regular expression pattern for Vietnamese characters with diacritics
+    const vietnamesePattern = /[\u0300-\u036f]/g;
+
+    // Use normalize to handle composed and decomposed characters, then replace
+    const result = input.normalize('NFD').replace(vietnamesePattern, '');
+
+    return result;
+}
