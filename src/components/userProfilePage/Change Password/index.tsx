@@ -36,7 +36,10 @@ export default function UserProfilePage(props: IChangePasswordForm) {
     };
     return (
         <>
-            <div className='row mt-3' style={{ backgroundColor: '#E2E2E2' }}>
+            <div
+                className='row mx-0 mt-3'
+                style={{ backgroundColor: '#E2E2E2' }}
+            >
                 <div className='row' style={{ marginTop: 30 }}>
                     <div
                         className='col d-flex '

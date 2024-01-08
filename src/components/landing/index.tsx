@@ -19,6 +19,7 @@ import productApi from '@/apis/product.api';
 import { setProducts } from '@/redux/slices/product.slice';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
 import { mockCategories, mockProducts } from '../productPage/mockData';
+import { removeVietnamesePhonetics } from '@/utils/utils';
 
 export interface ILandingPageProps {
     filterQuery?: string;
@@ -55,19 +56,25 @@ export default function LandingPage({ filterQuery }: ILandingPageProps) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [productData, products]);
 
-    const filteredProducts = products;
+    let filteredProducts = products;
 
     if (filterQuery) {
-        const filterString = filterQuery.trim();
-        filteredProducts.filter(
+        const filterString = removeVietnamesePhonetics(filterQuery.trim());
+        filteredProducts = filteredProducts.filter(
             (product) =>
-                product.name.includes(filterString) ||
-                product.category.name.includes(filterString) ||
-                product.seller.name.includes(filterString)
+                removeVietnamesePhonetics(product.name.toLowerCase()).includes(
+                    filterString
+                ) ||
+                removeVietnamesePhonetics(
+                    product.category.name.toLowerCase()
+                ).includes(filterString) ||
+                removeVietnamesePhonetics(
+                    product.seller.name.toLowerCase()
+                ).includes(filterString)
         );
     }
     if (categoryFilter) {
-        filteredProducts.filter((product) =>
+        filteredProducts = filteredProducts.filter((product) =>
             product.category.name.includes(categoryFilter.trim())
         );
     }
