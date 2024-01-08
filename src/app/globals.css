@@ -1069,6 +1069,16 @@ video {
     padding-right: 1.25rem;
 }
 
+.px-6 {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+.px-10 {
+    padding-left: 3rem;
+    padding-right: 3rem;
+}
+
 .mx-10 {
     margin-left: 2.5rem;
     margin-right: 2.5rem;
@@ -1127,6 +1137,10 @@ video {
     text-align: center;
 }
 
+.text-right {
+    text-align: right;
+}
+
 .text-end {
     text-align: end;
 }
@@ -1149,6 +1163,11 @@ video {
 .text-sm {
     font-size: 0.875rem;
     line-height: 1.25rem;
+}
+
+.text-md {
+    font-size: 1rem;
+    line-height: 1.5rem;
 }
 
 .text-xl {
@@ -1643,4 +1662,8 @@ a:focus {
 
 .dropdown-button svg {
     margin-left: 5px;
+}
+
+.btn {
+    border: none;
 }

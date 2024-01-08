@@ -4,12 +4,12 @@ import { FaAngleDown } from 'react-icons/fa'; // Import the arrow-down icon
 export interface IDropdownButtonProps {
     items: string[];
     value?: string;
-
+    className?: string;
     onSelect: (selectedItem: number) => void;
 }
 
 const DropdownButton = (props: IDropdownButtonProps) => {
-    const { items, value, onSelect } = props;
+    const { items, value, className, onSelect } = props;
     const [isOpen, setIsOpen] = useState(false);
     const [selectedValue, setSelectedValue] = useState(value);
     const dropdownRef = useRef(null);
@@ -42,8 +42,14 @@ const DropdownButton = (props: IDropdownButtonProps) => {
     }, []);
 
     return (
-        <div className='dropdown-container' ref={dropdownRef}>
-            <button className='dropdown-button ' onClick={toggleDropdown}>
+        <div className={className + ' dropdown-container'} ref={dropdownRef}>
+            <button
+                className='dropdown-button '
+                onClick={(e) => {
+                    e.preventDefault();
+                    toggleDropdown();
+                }}
+            >
                 {selectedValue || 'Variants'}
                 <FaAngleDown />
             </button>
