@@ -7,6 +7,8 @@ export type CartItemType = {
     checked?: boolean;
 };
 
+export type CheckoutItemType = Omit<CartItemType, 'checked'>;
+
 type CartType = {
     cart: CartItemType[];
 };
