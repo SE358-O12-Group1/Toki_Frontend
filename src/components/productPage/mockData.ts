@@ -12,19 +12,22 @@ export interface IProductInCart {
 export const mockCategory: CategoryType = {
     _id: '1',
     name: 'Category 1',
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_jgho-PgO5rtMOErauKhhRLlb8vsl5cof3RBLf1o1jw&s'
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_jgho-PgO5rtMOErauKhhRLlb8vsl5cof3RBLf1o1jw&s',
+    shopsales: 100
 };
 
 export const mockCategory2: CategoryType = {
     _id: '2',
     name: 'Category 2',
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_jgho-PgO5rtMOErauKhhRLlb8vsl5cof3RBLf1o1jw&s'
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_jgho-PgO5rtMOErauKhhRLlb8vsl5cof3RBLf1o1jw&s',
+    shopsales: 100
 };
 
 export const mockCategory3: CategoryType = {
     _id: '3',
     name: 'Category 3',
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_jgho-PgO5rtMOErauKhhRLlb8vsl5cof3RBLf1o1jw&s'
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_jgho-PgO5rtMOErauKhhRLlb8vsl5cof3RBLf1o1jw&s',
+    shopsales: 100
 };
 
 export const mockUser: UserType = {
