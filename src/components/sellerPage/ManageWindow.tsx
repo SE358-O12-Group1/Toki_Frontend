@@ -2,6 +2,7 @@ import { Container, Row, Tabs, Tab } from 'react-bootstrap';
 import './tabStyle.css';
 import SellerProductsList from './components/ProductsList';
 import AddEditProduct from './components/AddEditProduct';
+import SellerOrderList from './components/OrderList';
 export default function ManageWindow() {
     return (
         <>
@@ -28,7 +29,7 @@ export default function ManageWindow() {
                             title='Orders'
                             style={{ fontSize: 300 }}
                         >
-                            WIP
+                            <SellerOrderList></SellerOrderList>
                         </Tab>
                     </Tabs>
                 </Row>
