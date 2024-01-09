@@ -1,10 +1,17 @@
 import { Container, Row, Tabs, Tab } from 'react-bootstrap';
 import './tabStyle.css';
+import Users from './Users';
+import Sellers from './Sellers';
+
 export default function ManageWindow() {
     return (
         <>
             <Container className='py-4'>
-                <Row style={{ justifyContent: 'center' }}>
+                <Row
+                    style={{
+                        justifyContent: 'center'
+                    }}
+                >
                     <Tabs
                         variant='pills'
                         defaultActiveKey='Categories'
@@ -21,26 +28,14 @@ export default function ManageWindow() {
                         >
                             WIP
                         </Tab>
-                        <Tab
-                            eventKey='Vouchers'
-                            title='Vouchers'
-                            style={{ fontSize: 300 }}
-                        >
+                        <Tab eventKey='Vouchers' title='Vouchers'>
                             WIP
                         </Tab>
-                        <Tab
-                            eventKey='Users'
-                            title='Users'
-                            style={{ fontSize: 300 }}
-                        >
-                            WIP
+                        <Tab eventKey='Users' title='Users'>
+                            <Users></Users>
                         </Tab>
-                        <Tab
-                            eventKey='Sellers'
-                            title='Sellers'
-                            style={{ fontSize: 300 }}
-                        >
-                            WIP
+                        <Tab eventKey='Sellers' title='Sellers'>
+                            <Sellers></Sellers>
                         </Tab>
                     </Tabs>
                 </Row>
