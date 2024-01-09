@@ -226,3 +226,57 @@ export const mockCartProducts: IProductInCart[] = [
         quantity: 3
     }
 ];
+
+export const ORDER_STATUS = {
+    BEING_PREPARED: 'being prepared',
+    TO_SHIP: 'to ship',
+    TO_RECEIVE: 'to receive',
+    COMPLETED: 'completed',
+    CANCELLED: 'cancelled'
+};
+
+export interface IOrder {
+    user: UserType;
+    status: string;
+    address: string;
+    total: number;
+    orders: IProductInCart[];
+}
+
+export const mockOrder1: IOrder = {
+    user: mockUser,
+    status: ORDER_STATUS.BEING_PREPARED,
+    address: '7664 Talbot St.Kingsport, TN 37660',
+    total: mockCartProducts.reduce(
+        (accumulator, currentValue) =>
+            accumulator + currentValue.quantity * currentValue.product.price,
+        0
+    ),
+    orders: mockCartProducts
+};
+
+export const mockOrder2: IOrder = {
+    user: mockUser2,
+    status: ORDER_STATUS.COMPLETED,
+    address: '9177 Studebaker Court East Brunswick, NJ 08816',
+    total: mockCartProducts.reduce(
+        (accumulator, currentValue) =>
+            accumulator + currentValue.quantity * currentValue.product.price,
+        0
+    ),
+    orders: mockCartProducts
+};
+
+export const mockOrder3: IOrder = {
+    user: mockUser,
+    status: ORDER_STATUS.TO_RECEIVE,
+    address: '2 Sulphur Springs St.Port Chester, NY 10573',
+    total: mockCartProducts.reduce(
+        (accumulator, currentValue) =>
+            accumulator + currentValue.quantity * currentValue.product.price,
+        0
+    ),
+    orders: mockCartProducts
+};
+
+export const mockOrders = [mockOrder1, mockOrder2, mockOrder3];

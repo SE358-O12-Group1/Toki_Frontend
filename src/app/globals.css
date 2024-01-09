@@ -1180,6 +1180,10 @@ video {
     line-height: 1rem;
 }
 
+.text-nowrap {
+    white-space: 'nowrap';
+}
+
 .font-light {
     font-weight: 300;
 }

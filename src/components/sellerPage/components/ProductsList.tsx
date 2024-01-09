@@ -52,7 +52,7 @@ export default function SellerProductsList() {
                             }}
                             value={searchInput}
                         ></TextBox>
-                        <Button className='btn col-span-3'>Search</Button>
+                        <Button className='btn col-span-2'>Search</Button>
                     </div>
                 </div>
                 <div className='mt-4 grid grid-cols-6'>
