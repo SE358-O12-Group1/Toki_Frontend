@@ -101,8 +101,7 @@ export default function SellerProductsList() {
                                                         <img
                                                             alt={product.name}
                                                             src={
-                                                                product
-                                                                    .images[0]
+                                                                product.images[0]
                                                             }
                                                         />
                                                     </Link>
