@@ -1,6 +1,7 @@
 import { Container, Row, Tabs, Tab } from 'react-bootstrap';
 import './tabStyle.css';
 import Users from './Users';
+import Sellers from './Sellers';
 
 export default function ManageWindow() {
     return (
@@ -34,7 +35,7 @@ export default function ManageWindow() {
                             <Users></Users>
                         </Tab>
                         <Tab eventKey='Sellers' title='Sellers'>
-                            WIP
+                            <Sellers></Sellers>
                         </Tab>
                     </Tabs>
                 </Row>
