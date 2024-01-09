@@ -1,5 +1,7 @@
 import { Container, Row, Tabs, Tab } from 'react-bootstrap';
 import './tabStyle.css';
+import Categories from "./Categories"
+import Vouchers from './Vouchers';
 import Users from './Users';
 import Sellers from './Sellers';
 
@@ -17,19 +19,11 @@ export default function ManageWindow() {
                         defaultActiveKey='Categories'
                         className='mb-1 p-0'
                     >
-                        <Tab
-                            eventKey='Categories'
-                            title='Categories'
-                            style={{
-                                fontSize: 300,
-                                border: 1,
-                                color: 'black'
-                            }}
-                        >
-                            WIP
+                        <Tab eventKey='Categories' title='Categories'>
+                            <Categories></Categories>
                         </Tab>
                         <Tab eventKey='Vouchers' title='Vouchers'>
-                            WIP
+                            <Vouchers></Vouchers>
                         </Tab>
                         <Tab eventKey='Users' title='Users'>
                             <Users></Users>
