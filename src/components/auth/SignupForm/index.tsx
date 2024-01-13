@@ -14,7 +14,6 @@ import TextBox from '@/components/common/TextBox';
 import { useAppDispatch } from '@/redux/hook';
 import authApi from '@/apis/auth.api';
 import { signup } from '@/redux/slices/auth.slice';
-import { setProfile } from '@/redux/slices/user.slice';
 
 // constants
 import { toastMessages, toastOptions } from '@/constants/toast';
@@ -85,8 +84,6 @@ export default function SignupForm() {
                         refreshToken
                     })
                 );
-
-                dispatch(setProfile(user));
 
                 router.push('/');
             },

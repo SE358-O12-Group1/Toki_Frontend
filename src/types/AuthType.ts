@@ -3,7 +3,7 @@ import UserType from './UserType';
 export type UserAuthType = Pick<
     UserType,
     '_id' | 'name' | 'email' | 'avatar' | 'role'
-> | null;
+>;
 
 type AuthType = {
     user: UserAuthType;
@@ -12,7 +12,13 @@ type AuthType = {
 };
 
 export const initialAuth: AuthType = {
-    user: null,
+    user: {
+        _id: '',
+        name: '',
+        email: '',
+        avatar: '',
+        role: ''
+    },
     accessToken: '',
     refreshToken: ''
 };
