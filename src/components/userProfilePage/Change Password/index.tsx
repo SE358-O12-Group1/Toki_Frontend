@@ -1,26 +1,38 @@
 'use client';
-import React from 'react';
+import { MouseEvent, useState } from 'react';
 import Link from 'next/link';
-import Header from '@/components/common/MainLayout/Header';
 import Circle from '/public/assets/images/userprofilecircle.png';
-import profile from '/public/assets/images/profile.png';
+import profileIcon from '/public/assets/images/profile.png';
 import order from '/public/assets/images/orderbutton.png';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { useAppSelector } from '@/redux/hook';
+import { useMutation } from 'react-query';
+import authApi from '@/apis/auth.api';
+import ChangePasswordType from '@/types/ChangePasswordType';
+import { toast } from 'react-toastify';
+import { toastOptions } from '@/constants/toast';
 
-export interface IChangePasswordForm {}
+const initialChangePasswordState: ChangePasswordType = {
+    oldPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+};
 
-export default function UserProfilePage(props: IChangePasswordForm) {
-    const [showCurrentPassword, setShowCurrentPassword] = React.useState(false);
-    const [showNewPassword, setShowNewPassword] = React.useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+export default function ChangePasswordPage() {
+    const { profile } = useAppSelector((state) => state.user);
+    const [changePasswordState, setChangePasswordState] = useState(
+        initialChangePasswordState
+    );
+
+    const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const handleClickShowCurrentPassword = () =>
         setShowCurrentPassword((show) => !show);
@@ -29,11 +41,83 @@ export default function UserProfilePage(props: IChangePasswordForm) {
     const handleClickShowConfirmPassword = () =>
         setShowConfirmPassword((show) => !show);
 
-    const handleMouseDownPassword = (
-        event: React.MouseEvent<HTMLButtonElement>
-    ) => {
+    const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
     };
+
+    const { mutate: changePasswordMutation } = useMutation({
+        mutationFn: (body: ChangePasswordType) => authApi.changePassword(body)
+    });
+
+    const handleChangeOldPassword = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        setChangePasswordState({
+            ...changePasswordState,
+            oldPassword: event.target.value
+        });
+    };
+
+    const handleChangeNewPassword = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        setChangePasswordState({
+            ...changePasswordState,
+            newPassword: event.target.value
+        });
+    };
+
+    const handleChangeConfirmPassword = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        setChangePasswordState({
+            ...changePasswordState,
+            confirmPassword: event.target.value
+        });
+    };
+
+    const handleChangePassword = () => {
+        const { oldPassword, newPassword, confirmPassword } =
+            changePasswordState;
+
+        if (newPassword !== confirmPassword) {
+            toast.error(
+                'New password and confirm password are not the same',
+                toastOptions
+            );
+            return;
+        }
+
+        if (oldPassword === newPassword) {
+            toast.error(
+                'New password must be different from old password',
+                toastOptions
+            );
+            return;
+        }
+
+        if (newPassword.length < 8) {
+            toast.error(
+                'New password must be at least 8 characters long',
+                toastOptions
+            );
+            return;
+        }
+
+        changePasswordMutation(changePasswordState, {
+            onSuccess: (res) => {
+                toast.success(res.data.message, toastOptions);
+                setChangePasswordState(initialChangePasswordState);
+                setShowCurrentPassword(false);
+                setShowNewPassword(false);
+                setShowConfirmPassword(false);
+            },
+            onError: (err: any) => {
+                toast.error(err.response.data.message, toastOptions);
+            }
+        });
+    };
+
     return (
         <>
             <div
@@ -55,14 +139,14 @@ export default function UserProfilePage(props: IChangePasswordForm) {
                             }}
                         >
                             <img
-                                className='mb-5'
+                                className='mb-5 rounded-full'
                                 style={{ scale: 1.3 }}
-                                src={Circle.src}
+                                src={profile.avatar || Circle.src}
                             />
                             <img
                                 className='mb-5 mt-2'
                                 style={{ scale: 1.3 }}
-                                src={profile.src}
+                                src={profileIcon.src}
                             />
                             <img
                                 style={{ scale: 1.3, marginTop: 50 }}
@@ -80,7 +164,7 @@ export default function UserProfilePage(props: IChangePasswordForm) {
                                     display: 'flex'
                                 }}
                             >
-                                Username
+                                {profile.name}
                             </div>
                             <div
                                 style={{
@@ -169,10 +253,11 @@ export default function UserProfilePage(props: IChangePasswordForm) {
                                         color: '#777777'
                                     }}
                                 >
-                                    For your account's security, do not share
-                                    your password with anyone else
+                                    For your security, do not share your
+                                    password with anyone else
                                 </div>
                             </div>
+
                             <div
                                 className='col-4'
                                 style={{
@@ -206,6 +291,10 @@ export default function UserProfilePage(props: IChangePasswordForm) {
                                         variant='outlined'
                                     >
                                         <OutlinedInput
+                                            value={
+                                                changePasswordState.oldPassword
+                                            }
+                                            onChange={handleChangeOldPassword}
                                             id='outlined-adornment-password'
                                             type={
                                                 showCurrentPassword
@@ -224,7 +313,7 @@ export default function UserProfilePage(props: IChangePasswordForm) {
                                                         }
                                                         edge='end'
                                                     >
-                                                        {showCurrentPassword ? (
+                                                        {!showCurrentPassword ? (
                                                             <VisibilityOff />
                                                         ) : (
                                                             <Visibility />
@@ -240,6 +329,10 @@ export default function UserProfilePage(props: IChangePasswordForm) {
                                         variant='outlined'
                                     >
                                         <OutlinedInput
+                                            value={
+                                                changePasswordState.newPassword
+                                            }
+                                            onChange={handleChangeNewPassword}
                                             id='outlined-adornment-password'
                                             type={
                                                 showNewPassword
@@ -258,7 +351,7 @@ export default function UserProfilePage(props: IChangePasswordForm) {
                                                         }
                                                         edge='end'
                                                     >
-                                                        {showNewPassword ? (
+                                                        {!showNewPassword ? (
                                                             <VisibilityOff />
                                                         ) : (
                                                             <Visibility />
@@ -274,6 +367,12 @@ export default function UserProfilePage(props: IChangePasswordForm) {
                                         variant='outlined'
                                     >
                                         <OutlinedInput
+                                            value={
+                                                changePasswordState.confirmPassword
+                                            }
+                                            onChange={
+                                                handleChangeConfirmPassword
+                                            }
                                             id='outlined-adornment-password'
                                             type={
                                                 showConfirmPassword
@@ -292,7 +391,7 @@ export default function UserProfilePage(props: IChangePasswordForm) {
                                                         }
                                                         edge='end'
                                                     >
-                                                        {showConfirmPassword ? (
+                                                        {!showConfirmPassword ? (
                                                             <VisibilityOff />
                                                         ) : (
                                                             <Visibility />
@@ -302,6 +401,7 @@ export default function UserProfilePage(props: IChangePasswordForm) {
                                             }
                                         />
                                     </FormControl>
+
                                     <div
                                         className='container'
                                         style={{
@@ -309,6 +409,7 @@ export default function UserProfilePage(props: IChangePasswordForm) {
                                         }}
                                     >
                                         <Button
+                                            onClick={handleChangePassword}
                                             size='large'
                                             variant='outlined'
                                             style={{

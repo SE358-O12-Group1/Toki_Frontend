@@ -14,7 +14,6 @@ import TextBox from '@/components/common/TextBox';
 import authApi from '@/apis/auth.api';
 import { useAppDispatch } from '@/redux/hook';
 import { login } from '@/redux/slices/auth.slice';
-import { setProfile } from '@/redux/slices/user.slice';
 
 // constants
 import { toastMessages, toastOptions } from '@/constants/toast';

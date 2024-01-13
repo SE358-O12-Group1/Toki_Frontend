@@ -12,9 +12,11 @@ export const API_ROUTES = {
 export const AUTH_API_ROUTES = {
     login: API_ROUTES.auth + 'login',
     register: API_ROUTES.auth + 'register',
-    logout: API_ROUTES.auth + 'logout'
+    logout: API_ROUTES.auth + 'logout',
+    changePassword: API_ROUTES.auth + 'change-password'
 };
 
 export const USER_API_ROUTES = {
-    profile: API_ROUTES.users + 'profile'
+    profile: API_ROUTES.users + 'profile',
+    orders: API_ROUTES.users + 'orders'
 };

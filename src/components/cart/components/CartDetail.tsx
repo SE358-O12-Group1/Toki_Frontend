@@ -528,7 +528,7 @@ export default function CartDetail() {
                                     {formatCurrency(totalCheckedPurchasePrice)}₫
                                 </div>
                                 <Button
-                                    className='h-10 w-52 bg-red-500 p-4 text-sm uppercase text-white'
+                                    className='uppercase text-white'
                                     onClick={handleCheckout}
                                     disable={checkedPurchases.length <= 0}
                                 >
