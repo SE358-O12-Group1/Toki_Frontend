@@ -11,6 +11,11 @@ type UserType = {
     role: string;
 };
 
+export type ProfileType = Pick<
+    UserType,
+    'name' | 'email' | 'phone' | 'address' | 'avatar'
+>;
+
 export const initialUser = {
     _id: '',
     name: '',

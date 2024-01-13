@@ -1,17 +1,115 @@
 'use client';
 
 import Link from 'next/link';
-import Header from '@/components/common/MainLayout/Header';
-import Circle from '/public/assets/images/userprofilecircle.png';
-import profile from '/public/assets/images/profile.png';
-import order from '/public/assets/images/orderbutton.png';
-import bigCircle from '/public/assets/images/bigprofilecircle.png';
+import { toast } from 'react-toastify';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import { ChangeEvent, useState } from 'react';
 
-export interface IUserProfilePage {}
+import Circle from '/public/assets/images/userprofilecircle.png';
+import profileIcon from '/public/assets/images/profile.png';
+import order from '/public/assets/images/orderbutton.png';
+import bigCircle from '/public/assets/images/bigprofilecircle.png';
 
-export default function UserProfilePage(props: IUserProfilePage) {
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import userApi from '@/apis/user.api';
+import { useAppDispatch, useAppSelector } from '@/redux/hook';
+import UserType, { ProfileType } from '@/types/UserType';
+import { toastOptions } from '@/constants/toast';
+import { setProfile } from '@/redux/slices/user.slice';
+
+const initialProfileState: ProfileType = {
+    name: '',
+    email: '',
+    phone: '',
+    address: '',
+    avatar: ''
+};
+
+export default function UserProfilePage() {
+    const dispatch = useAppDispatch();
+
+    const queryClient = useQueryClient();
+
+    const { user } = useAppSelector((state) => state.auth);
+
+    const { data, isLoading } = useQuery({
+        queryKey: ['profile'],
+        queryFn: () => userApi.getProfile(),
+        onSuccess: (res) => {
+            const { data } = res.data;
+            dispatch(setProfile(data));
+            setProfileState({
+                name: data.name,
+                email: data.email,
+                phone: data.phone,
+                address: data.address,
+                avatar: data.avatar
+            });
+        }
+    });
+
+    const profileData: UserType = data?.data.data;
+
+    const { mutate: updateUserMutation } = useMutation({
+        mutationKey: ['profile'],
+        mutationFn: ({ userId, body }: { userId: string; body: ProfileType }) =>
+            userApi.updateUser(userId, body),
+        onSuccess: () => {
+            queryClient.invalidateQueries('profile');
+        }
+    });
+
+    const [profileState, setProfileState] =
+        useState<ProfileType>(initialProfileState);
+
+    const handleChangeName = (e: ChangeEvent<HTMLInputElement>) => {
+        setProfileState((prev) => ({
+            ...prev,
+            name: e.target.value
+        }));
+    };
+
+    const handleChangeEmail = (e: ChangeEvent<HTMLInputElement>) => {
+        setProfileState((prev) => ({
+            ...prev,
+            email: e.target.value
+        }));
+    };
+
+    const handleChangePhoneNumber = (e: ChangeEvent<HTMLInputElement>) => {
+        setProfileState((prev) => ({
+            ...prev,
+            phone: e.target.value
+        }));
+    };
+
+    const handleChangeAddress = (e: ChangeEvent<HTMLInputElement>) => {
+        setProfileState((prev) => ({
+            ...prev,
+            address: e.target.value
+        }));
+    };
+
+    const handleSaveProfile = () => {
+        updateUserMutation(
+            {
+                userId: user._id,
+                body: profileState
+            },
+            {
+                onSuccess: (res) => {
+                    toast.success(res.data.message, toastOptions);
+                },
+                onError: (err: any) => {
+                    console.log(err);
+                }
+            }
+        );
+    };
+
+    if (isLoading) return <div>Loading...</div>;
+
     return (
         <>
             <div
@@ -33,14 +131,14 @@ export default function UserProfilePage(props: IUserProfilePage) {
                             }}
                         >
                             <img
-                                className='mb-5'
+                                className='mb-5 rounded-full'
                                 style={{ scale: 1.3 }}
-                                src={Circle.src}
+                                src={profileData.avatar || Circle.src}
                             />
                             <img
                                 className='mb-5 mt-2'
                                 style={{ scale: 1.3 }}
-                                src={profile.src}
+                                src={profileIcon.src}
                             />
                             <img
                                 style={{ scale: 1.3, marginTop: 50 }}
@@ -58,7 +156,7 @@ export default function UserProfilePage(props: IUserProfilePage) {
                                     display: 'flex'
                                 }}
                             >
-                                Username
+                                {profileData.name}
                             </div>
                             <div
                                 style={{
@@ -151,7 +249,7 @@ export default function UserProfilePage(props: IUserProfilePage) {
                             >
                                 <img
                                     className='mb-4'
-                                    src={bigCircle.src}
+                                    src={profileState.avatar || bigCircle.src}
                                     style={{ scale: 1.2 }}
                                 />
                                 <Button
@@ -177,7 +275,6 @@ export default function UserProfilePage(props: IUserProfilePage) {
                                 }}
                             >
                                 <div className='row d-flex space-y-7'>
-                                    <div className='mb-4 mt-4'>Username</div>
                                     <div className='mb-4'>Name</div>
                                     <div className='mb-4'>Email</div>
                                     <div className='mb-4'>Phone Number</div>
@@ -192,51 +289,41 @@ export default function UserProfilePage(props: IUserProfilePage) {
                                     <TextField
                                         size='medium'
                                         style={{
-                                            width: '10',
-                                            marginTop: 15,
-                                            fontSize: 20,
-                                            textTransform: 'none'
+                                            width: '100',
+                                            marginTop: 25
                                         }}
-                                    >
-                                        {' '}
-                                    </TextField>
+                                        value={profileState.name}
+                                        onChange={handleChangeName}
+                                    />
                                     <TextField
                                         size='medium'
                                         style={{
                                             width: '100',
                                             marginTop: 25
                                         }}
-                                    >
-                                        {' '}
-                                    </TextField>
+                                        value={profileState.email}
+                                        onChange={handleChangeEmail}
+                                    />
                                     <TextField
                                         size='medium'
                                         style={{
                                             width: '100',
                                             marginTop: 25
                                         }}
-                                    >
-                                        {' '}
-                                    </TextField>
+                                        value={profileState.phone}
+                                        onChange={handleChangePhoneNumber}
+                                    />
                                     <TextField
                                         size='medium'
                                         style={{
                                             width: '100',
                                             marginTop: 25
                                         }}
-                                    >
-                                        {' '}
-                                    </TextField>
-                                    <TextField
-                                        size='medium'
-                                        style={{
-                                            width: '100',
-                                            marginTop: 25
-                                        }}
-                                    >
-                                        {' '}
-                                    </TextField>
+                                        value={profileState.address}
+                                        onChange={handleChangeAddress}
+                                    />
                                 </div>
+
                                 <div
                                     className='container'
                                     style={{
@@ -244,6 +331,7 @@ export default function UserProfilePage(props: IUserProfilePage) {
                                     }}
                                 >
                                     <Button
+                                        onClick={handleSaveProfile}
                                         size='large'
                                         variant='outlined'
                                         style={{
@@ -257,14 +345,13 @@ export default function UserProfilePage(props: IUserProfilePage) {
                                             fontSize: 20
                                         }}
                                     >
-                                        Save change
+                                        Save changes
                                     </Button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div className='row' style={{ minHeight: 55 }}></div>
             </div>
         </>
     );

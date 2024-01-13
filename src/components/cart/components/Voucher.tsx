@@ -91,7 +91,7 @@ export default function Voucher({
                 ></TextBox>
                 <Button
                     onClick={handleApplyDiscount}
-                    className='ml-3 px-4 text-sm uppercase text-white'
+                    className='ml-3 text-sm uppercase text-white'
                 >
                     {'Apply'}
                 </Button>
