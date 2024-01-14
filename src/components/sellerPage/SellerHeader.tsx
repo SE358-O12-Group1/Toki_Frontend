@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import Link from 'next/link';
@@ -20,11 +21,11 @@ import CircleAvatar from '../landing/components/CircleAvatar';
 
 const SellerHeader = () => {
     const { user } = useAppSelector((state) => state.auth);
-    const { cart } = useAppSelector((state) => state.cart);
+    // const { cart } = useAppSelector((state) => state.cart);
 
-    useEffect(() => {
-        console.log(cart);
-    }, [cart]);
+    // useEffect(() => {
+    //     console.log(cart);
+    // }, [cart]);
 
     return (
         <>
@@ -35,14 +36,18 @@ const SellerHeader = () => {
                 >
                     <div className='offset-1'>
                         <Link href={'/seller'}>
-                            <img className='ms-5 ' src={Logo.src} />
+                            <img alt='' className='ms-5 ' src={Logo.src} />
                         </Link>
                     </div>
                 </div>
                 <div className='flex items-center justify-between '>
                     <div style={{ paddingTop: 20, paddingLeft: 15 }}>
                         <Link href={'/seller'}>
-                            <img className='ms-1' src={SellerCenter.src} />
+                            <img
+                                alt=''
+                                className='ms-1'
+                                src={SellerCenter.src}
+                            />
                         </Link>
                     </div>
                 </div>
@@ -51,7 +56,7 @@ const SellerHeader = () => {
                     style={{ display: 'flex' }}
                 >
                     <Link href={''} style={{ display: 'flex' }}>
-                        <img src={Notification.src} />{' '}
+                        <img alt='' src={Notification.src} />{' '}
                         <div
                             style={{
                                 color: '#00ADB5',
@@ -63,7 +68,7 @@ const SellerHeader = () => {
                         </div>
                     </Link>
                     <Link href={''} style={{ display: 'flex' }}>
-                        <img src={Question.src} />
+                        <img alt='' src={Question.src} />
                         <div
                             style={{
                                 color: '#00ADB5',
@@ -86,12 +91,14 @@ const SellerHeader = () => {
                                     alt={user.name}
                                     size={8}
                                 ></CircleAvatar>
-                                <span>{user.name}</span>
+                                <span className='text-[#00ADB5]'>
+                                    {user.name}
+                                </span>
                             </Link>
                         </>
                     ) : (
                         <Link href={''} style={{ display: 'flex' }}>
-                            <img src={Circle.src} />
+                            <img alt='' src={Circle.src} />
                             <div
                                 style={{
                                     color: '#00ADB5',

@@ -26,6 +26,17 @@ type ProductType = {
     quantity: number;
 };
 
+export type ShopProductType = Omit<ProductType, 'seller' | 'category'> & {
+    seller: {
+        _id: string;
+        name: string;
+    };
+    category: {
+        _id: string;
+        name: string;
+    };
+};
+
 export const initialProduct: ProductType = {
     _id: '',
     name: '',

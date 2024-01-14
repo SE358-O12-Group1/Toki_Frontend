@@ -1,49 +1,62 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
-import { IOrder, ORDER_STATUS } from '@/components/productPage/mockData';
+import { useState } from 'react';
+// import { useRouter } from 'next/navigation';
 
+// components
 import DropdownButton from '@/components/common/DropdownButton';
 import Button from '@/components/common/Button';
-import { formatCurrency } from '@/utils/utils';
-import ProductType from '@/types/ProductType';
-import {
-    getRelatedProducts,
-    setDetailProduct
-} from '@/redux/slices/product.slice';
-import { useAppDispatch } from '@/redux/hook';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 
-const statuses = [
-    'ALL',
-    ORDER_STATUS.BEING_PREPARED,
-    ORDER_STATUS.CANCELLED,
-    ORDER_STATUS.COMPLETED,
-    ORDER_STATUS.TO_RECEIVE,
-    ORDER_STATUS.TO_SHIP
-];
+// types
+// import ProductType from '@/types/ProductType';
+import { OrderType } from '@/types/OrderType';
+
+// utils
+import { formatCurrency } from '@/utils/utils';
+import { ORDER_STATUS, covertStatusToName } from '@/constants/orderStatus';
+import { useMutation, useQueryClient } from 'react-query';
+import orderApi from '@/apis/order.api';
+import { toast } from 'react-toastify';
+import { toastOptions } from '@/constants/toast';
 
 export interface IOrderItemProps {
-    order: IOrder;
+    order: OrderType;
 }
 export default function OrderItem({ order }: IOrderItemProps) {
-    function handleUpdate() {
-        // TODO
-    }
+    const [status, setStatus] = useState(order.status);
 
-    const dispatch = useAppDispatch();
-    const router = useRouter();
+    const queryClient = useQueryClient();
+
+    const { mutate: updateOrderStatus } = useMutation({
+        mutationFn: (status: number) =>
+            orderApi.updateOrderStatus(order._id, status),
+        onSuccess: () => {
+            queryClient.invalidateQueries('shopOrders');
+        }
+    });
+
+    const handleUpdate = () => {
+        updateOrderStatus(status, {
+            onSuccess: (res) => {
+                toast.success(res.data.message, toastOptions);
+            }
+        });
+    };
 
     const [isExpanded, setIsExpanded] = useState(false);
 
-    const handleClickProduct = (product: ProductType) => {
-        dispatch(setDetailProduct(product));
-        dispatch(getRelatedProducts(product.category._id));
-        router.push(`/products/${product._id}`);
+    const handleChangeStatus = (status: number) => {
+        setStatus(status);
     };
+
+    // const handleClickProduct = (product: ProductType) => {
+    //     dispatch(setDetailProduct(product));
+    //     dispatch(getRelatedProducts(product.category._id));
+    //     router.push(`/products/${product._id}`);
+    // };
 
     return (
         <div className='mb-4 rounded-md border'>
-            {/* Address */}
             <div className='container rounded-md bg-gray-100 px-4 py-2 capitalize text-gray-500'>
                 <div className='mt-2 grid grid-cols-4 items-center'>
                     <div className='text-md col-span-1'>
@@ -64,23 +77,21 @@ export default function OrderItem({ order }: IOrderItemProps) {
                         </p>
                         <p>
                             <span className='font-semibold'>Address:</span>{' '}
-                            {order.address}
+                            {order.delivery_address}
                         </p>
                     </div>
 
-                    <div className='text-md col-span-1 flex grid grid-cols-2 items-center pr-4 text-gray-600'>
+                    <div className='text-md col-span-1 grid grid-cols-2 items-center pr-4 text-gray-600'>
                         <DropdownButton
                             className='nowrap border-main col-span-1 mr-4 rounded-md p-2'
-                            items={getStatusOpstions(order.status)}
-                            value={order.status.toUpperCase()}
-                            onSelect={function (selectedItem: number): void {}}
-                        ></DropdownButton>
+                            items={getStatusOpstions(status)}
+                            value={covertStatusToName(status)}
+                            onSelect={handleChangeStatus}
+                        />
 
                         <Button
                             className='col-span-1 ml-4'
-                            onClick={() => {
-                                handleUpdate();
-                            }}
+                            onClick={handleUpdate}
                         >
                             Update
                         </Button>
@@ -88,7 +99,6 @@ export default function OrderItem({ order }: IOrderItemProps) {
                 </div>
             </div>
 
-            {/* Heading */}
             <div className='container sticky top-0 rounded-md bg-white px-4 py-0'>
                 <div className=' grid grid-cols-12 items-center rounded-sm  bg-white py-3 pl-4 pr-3 text-sm'>
                     <div className='col-span-6'>Products Ordered</div>
@@ -117,36 +127,37 @@ export default function OrderItem({ order }: IOrderItemProps) {
                                         <div className='flex'>
                                             <button
                                                 className='h-20 w-20 flex-shrink-0'
-                                                onClick={() =>
-                                                    handleClickProduct(
-                                                        order.orders[0].product
-                                                    )
-                                                }
+                                                // onClick={() =>
+                                                //     handleClickProduct(
+                                                //         order.order_lines[0]
+                                                //             .product
+                                                //     )
+                                                // }
                                             >
                                                 <img
                                                     alt={
-                                                        order.orders[0].product
-                                                            .name
+                                                        order.order_lines[0]
+                                                            .product.name
                                                     }
                                                     src={
-                                                        order.orders[0].product
-                                                            .images[0]
+                                                        order.order_lines[0]
+                                                            .product.images[0]
                                                     }
                                                 />
                                             </button>
                                             <div className='my-auto p-2'>
                                                 <button
-                                                    onClick={() =>
-                                                        handleClickProduct(
-                                                            order.orders[0]
-                                                                .product
-                                                        )
-                                                    }
+                                                    // onClick={() =>
+                                                    //     handleClickProduct(
+                                                    //         order.order_lines[0]
+                                                    //             .product
+                                                    //     )
+                                                    // }
                                                     className='my-auto line-clamp-2 text-left font-semibold text-black'
                                                 >
                                                     {
-                                                        order.orders[0].product
-                                                            .name
+                                                        order.order_lines[0]
+                                                            .product.name
                                                     }
                                                 </button>
                                             </div>
@@ -158,17 +169,17 @@ export default function OrderItem({ order }: IOrderItemProps) {
                                 <div className='grid grid-cols-6 items-center'>
                                     <div className='text-main col-span-2 text-center text-xl font-medium'>
                                         {formatCurrency(
-                                            order.orders[0].product.price
+                                            order.order_lines[0].product.price
                                         )}{' '}
                                         ₫
                                     </div>
                                     <div className=' text-md col-span-2 font-medium'>
-                                        {order.orders[0].quantity}
+                                        {order.order_lines[0].quantity}
                                     </div>
                                     <div className='text-main col-span-2 text-center text-xl font-medium'>
                                         {formatCurrency(
-                                            order.orders[0].product.price *
-                                                order.orders[0].quantity
+                                            order.order_lines[0].product.price *
+                                                order.order_lines[0].quantity
                                         )}
                                         ₫
                                     </div>
@@ -177,9 +188,9 @@ export default function OrderItem({ order }: IOrderItemProps) {
                         </div>
                     </div>
                 )}
-                {order.orders.length > 0 && isExpanded && (
+                {order.order_lines.length > 0 && isExpanded && (
                     <div className='rounded-md bg-white p-3'>
-                        {order.orders.map((product, index) => (
+                        {order.order_lines.map((product: any, index: any) => (
                             <div key={index}>
                                 <div className='grid grid-cols-12 items-center rounded-sm bg-white pl-4 pr-3  text-center text-sm text-gray-500 first:mt-0'>
                                     <div className='col-span-6'>
@@ -188,11 +199,11 @@ export default function OrderItem({ order }: IOrderItemProps) {
                                                 <div className='flex'>
                                                     <button
                                                         className='h-20 w-20 flex-shrink-0'
-                                                        onClick={() =>
-                                                            handleClickProduct(
-                                                                product.product
-                                                            )
-                                                        }
+                                                        // onClick={() =>
+                                                        //     handleClickProduct(
+                                                        //         product.product
+                                                        //     )
+                                                        // }
                                                     >
                                                         <img
                                                             alt={
@@ -207,11 +218,11 @@ export default function OrderItem({ order }: IOrderItemProps) {
                                                     </button>
                                                     <div className='my-auto p-2'>
                                                         <button
-                                                            onClick={() =>
-                                                                handleClickProduct(
-                                                                    product.product
-                                                                )
-                                                            }
+                                                            // onClick={() =>
+                                                            //     handleClickProduct(
+                                                            //         product.product
+                                                            //     )
+                                                            // }
                                                             className='my-auto line-clamp-2 text-left font-semibold text-black'
                                                         >
                                                             {
@@ -265,24 +276,20 @@ export default function OrderItem({ order }: IOrderItemProps) {
     );
 }
 
-function getStatusOpstions(currentStatus: string): string[] {
-    if (currentStatus == ORDER_STATUS.BEING_PREPARED) {
-        return [
-            ORDER_STATUS.TO_SHIP.toUpperCase(),
-            ORDER_STATUS.CANCELLED.toUpperCase()
-        ];
-    }
-    if (currentStatus == ORDER_STATUS.TO_RECEIVE) {
-        return [
-            ORDER_STATUS.COMPLETED.toUpperCase(),
-            ORDER_STATUS.CANCELLED.toUpperCase()
-        ];
-    }
-    if (currentStatus == ORDER_STATUS.TO_SHIP) {
-        return [
-            ORDER_STATUS.TO_RECEIVE.toUpperCase(),
-            ORDER_STATUS.CANCELLED.toUpperCase()
-        ];
-    }
-    return [];
+function getStatusOpstions(currentStatus: number): string[] {
+    // if (currentStatus == ORDER_STATUS.BEING_PREPARED.value) {
+    //     return [ORDER_STATUS.TO_SHIP.name, ORDER_STATUS.CANCELLED.name];
+    // }
+    // switch (currentStatus) {
+    //     case ORDER_STATUS.BEING_PREPARED.value:
+    //         return [ORDER_STATUS.TO_SHIP.name, ORDER_STATUS.CANCELLED.name];
+    //     case ORDER_STATUS.TO_SHIP.value:
+    //         return [ORDER_STATUS.TO_RECEIVE.name];
+    //     case ORDER_STATUS.TO_RECEIVE.value:
+    //         return [ORDER_STATUS.COMPLETED.name];
+    //     default:
+    //         return [];
+    // }
+
+    return Object.values(ORDER_STATUS).map((status) => status.name);
 }
