@@ -20,3 +20,11 @@ export const USER_API_ROUTES = {
     profile: API_ROUTES.users + 'profile',
     orders: API_ROUTES.users + 'orders'
 };
+
+export const PRODUCT_API_ROUTES = {
+    shop: API_ROUTES.products + 'shop'
+};
+
+export const ORDER_API_ROUTES = {
+    shop: API_ROUTES.orders + 'shop'
+};

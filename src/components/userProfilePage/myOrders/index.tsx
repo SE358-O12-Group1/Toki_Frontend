@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import React from 'react';
@@ -58,16 +59,19 @@ export default function MyOrdersPage() {
                         }}
                     >
                         <img
+                            alt=''
                             className='mb-5 rounded-full'
                             style={{ scale: 1.3 }}
                             src={profile.avatar || Circle.src}
                         />
                         <img
+                            alt=''
                             className='mb-5 mt-2'
                             style={{ scale: 1.3 }}
                             src={profileIcon.src}
                         />
                         <img
+                            alt=''
                             style={{ scale: 1.3, marginTop: 50 }}
                             src={order.src}
                         />
