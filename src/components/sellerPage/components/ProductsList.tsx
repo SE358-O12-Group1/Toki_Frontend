@@ -1,22 +1,55 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
+import Link from 'next/link';
+import { toast } from 'react-toastify';
+import { useMemo, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 
+// components
 import Button from '@/components/common/Button';
 import TextBox from '@/components/common/TextBox';
-import { mockProducts } from '@/components/productPage/mockData';
-import ProductType from '@/types/ProductType';
-import { formatCurrency, removeVietnamesePhonetics } from '@/utils/utils';
-import Link from 'next/link';
-import { useMemo, useState } from 'react';
 import AddEditProduct from './AddEditProduct';
 
+// utils
+import { formatCurrency, removeVietnamesePhonetics } from '@/utils/utils';
+
+// types
+import { ShopProductType } from '@/types/ProductType';
+
+// api
+import productApi from '@/apis/product.api';
+
+// constants
+import { toastOptions } from '@/constants/toast';
+
 export default function SellerProductsList() {
+    const [products, setProducts] = useState<ShopProductType[]>([]);
+
+    const queryClient = useQueryClient();
+
+    const { isLoading } = useQuery({
+        queryKey: 'shopProducts',
+        queryFn: () => productApi.getShopProducts(),
+        onSuccess: (res) => {
+            setProducts(res.data.data);
+        }
+    });
+
+    const { mutate: deleteProduct } = useMutation({
+        mutationFn: (productId: string) => productApi.deleteProduct(productId),
+        onSuccess: () => {
+            queryClient.invalidateQueries('shopProducts');
+        }
+    });
+
+    const [action, setAction] = useState<string>('');
+
     const [searchInput, setSearchInput] = useState('');
-    const [selectedProduct, setSelectedProduct] = useState<ProductType>();
+
+    const [editProduct, setEditProduct] = useState<ShopProductType>();
 
     const filteredProducts = useMemo(() => {
-        const products = mockProducts;
         const filterString = removeVietnamesePhonetics(searchInput.trim());
-        console.log(removeVietnamesePhonetics(products[0].name));
 
         return products.filter(
             (product) =>
@@ -30,16 +63,28 @@ export default function SellerProductsList() {
                     product.seller.name.toLowerCase()
                 ).includes(filterString)
         );
-    }, [searchInput]);
+    }, [searchInput, products]);
 
-    function handleDelete(index: number) {
-        // TODO
-    }
+    const handleDelete = (deleteId: string) => {
+        deleteProduct(deleteId, {
+            onSuccess: (res) => {
+                toast.success(res.data.message, toastOptions);
+            }
+        });
+    };
 
-    function handleEdit(index: number) {
-        setSelectedProduct(filteredProducts[index]);
-    }
-    if (!selectedProduct)
+    const handleAdd = () => {
+        setAction('add');
+    };
+
+    const handleEdit = (product: ShopProductType) => {
+        setAction('edit');
+        setEditProduct(product);
+    };
+
+    if (isLoading) return <div>Loading...</div>;
+
+    if (!action)
         return (
             <div className='container p-4'>
                 <div className='grid grid-cols-3'>
@@ -52,17 +97,18 @@ export default function SellerProductsList() {
                             }}
                             value={searchInput}
                         ></TextBox>
-                        <Button className='btn col-span-2'>Search</Button>
+                        {/* <Button className='btn col-span-2'>Search</Button> */}
                     </div>
                 </div>
                 <div className='mt-4 grid grid-cols-6'>
-                    <Button className='btn col-span-1'>
+                    <Button onClick={handleAdd} className='btn col-span-1'>
                         + Add new product
                     </Button>
                 </div>
 
                 <span className='text-main mt-4 flex text-xl'>
-                    {filteredProducts.length} Products
+                    {filteredProducts.length}{' '}
+                    {filteredProducts.length > 1 ? 'products' : 'product'}
                 </span>
                 <div className='container mt-6 border px-0'>
                     <div className='rounded-sm bg-white '>
@@ -94,29 +140,31 @@ export default function SellerProductsList() {
                                         <div className='flex pl-4'>
                                             <div className='flex-grow'>
                                                 <div className='flex'>
-                                                    <Link
+                                                    <div
                                                         className='h-20 w-20 flex-shrink-0'
-                                                        href={`/products/${product._id}`}
+                                                        // href={`/products/${product._id}`}
                                                     >
                                                         <img
                                                             alt={product.name}
                                                             src={
-                                                                product.images[0]
+                                                                product
+                                                                    .images[0]
                                                             }
                                                         />
-                                                    </Link>
+                                                    </div>
                                                     <div className='my-auto p-2'>
-                                                        <Link
-                                                            href={`/products/${product._id}`}
+                                                        <div
+                                                            // href={`/products/${product._id}`}
                                                             className='my-auto line-clamp-2 text-left font-semibold text-black'
                                                         >
                                                             {product.name}
-                                                        </Link>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+
                                     <div className='col-span-6 '>
                                         <div className='grid grid-cols-8 items-center text-lg'>
                                             <div className='text-main col-span-2 text-center text-xl font-medium'>
@@ -134,7 +182,7 @@ export default function SellerProductsList() {
                                                     backgroundColor='#FFFFFF'
                                                     textColor='#00adb5'
                                                     onClick={() => {
-                                                        handleEdit(index);
+                                                        handleEdit(product);
                                                     }}
                                                 >
                                                     Edit
@@ -144,7 +192,9 @@ export default function SellerProductsList() {
                                                     backgroundColor='#FFFFFF'
                                                     textColor='#FF0000'
                                                     onClick={() => {
-                                                        handleDelete(index);
+                                                        handleDelete(
+                                                            product._id
+                                                        );
                                                     }}
                                                 >
                                                     Delete
@@ -153,6 +203,8 @@ export default function SellerProductsList() {
                                         </div>
                                     </div>
                                 </div>
+
+                                {/* Divider */}
                                 <div className='container'>
                                     <div className='dashed-divider'></div>
                                 </div>
@@ -162,5 +214,20 @@ export default function SellerProductsList() {
                 </div>
             </div>
         );
-    else return <AddEditProduct product={selectedProduct}></AddEditProduct>;
+    else if (action === 'add')
+        return (
+            <AddEditProduct
+                action={action}
+                setAction={setAction}
+            ></AddEditProduct>
+        );
+    else {
+        return (
+            <AddEditProduct
+                product={editProduct}
+                action={action}
+                setAction={setAction}
+            ></AddEditProduct>
+        );
+    }
 }

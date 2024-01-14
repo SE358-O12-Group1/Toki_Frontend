@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useRouter } from 'next/navigation';
 
 import ProductRating from '@/components/productPage/components/ProductRatings';
@@ -37,12 +38,13 @@ export default function ProductCard({ product, minHeight }: IProductCardProps) {
                 style={{ minHeight: minHeight }}
             >
                 <img
+                    alt=''
                     style={{ scale: 0.8 }}
                     src={
                         product.images[0] ||
                         'https://sieuthikhan.com/images/thumbs/default-image_450.png'
                     }
-                ></img>
+                />
                 <div className='text-left'>
                     <div className='text-lg'>{product.name}</div>
                     <div className='flex items-center'>

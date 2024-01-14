@@ -1,15 +1,34 @@
+import {
+    useState,
+    FocusEvent,
+    useMemo,
+    ChangeEvent,
+    SetStateAction,
+    Dispatch
+} from 'react';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { toast } from 'react-toastify';
+
+// apis
+import categoryApi from '@/apis/category.api';
+import productApi, { ProductRequestType } from '@/apis/product.api';
+
+// components
 import Button from '@/components/common/Button';
 import DropdownButton from '@/components/common/DropdownButton';
 import TextBox from '@/components/common/TextBox';
 import InputNumber from '@/components/productPage/components/InputNumber';
-import { mockCategories } from '@/components/productPage/mockData';
-import ProductType from '@/types/ProductType';
-import { useRouter } from 'next/navigation';
-import { useState, FocusEvent, useMemo, ChangeEvent, FormEvent } from 'react';
-import { toast } from 'react-toastify';
+
+// constants
+import { toastOptions } from '@/constants/toast';
+
+// types
+import { ShopProductType } from '@/types/ProductType';
 
 export interface IAddEditProductProps {
-    product?: ProductType;
+    product?: ShopProductType;
+    action: string;
+    setAction: Dispatch<SetStateAction<string>>;
 }
 
 type AddEditProductType = {
@@ -17,41 +36,56 @@ type AddEditProductType = {
     categoryId: string;
     images: string[];
     description: string;
+    normalPrice: number;
     price: number;
     stock: number;
 };
 
-export default function AddEditProduct({ product }: IAddEditProductProps) {
+export default function AddEditProduct({
+    product,
+    action,
+    setAction
+}: IAddEditProductProps) {
+    const queryClient = useQueryClient();
+
+    const { data, isLoading } = useQuery({
+        queryKey: 'category',
+        queryFn: () => categoryApi.getAllCategories()
+    });
+
+    const { mutate: addProduct } = useMutation({
+        mutationFn: (body: ProductRequestType) =>
+            productApi.createProduct(body),
+        onSuccess: () => {
+            queryClient.invalidateQueries('shopProducts');
+        }
+    });
+
+    const { mutate: editProduct } = useMutation({
+        mutationFn: ({ id, body }: { id: string; body: ProductRequestType }) =>
+            productApi.updateProduct(id, body),
+        onSuccess: () => {
+            queryClient.invalidateQueries('shopProducts');
+        }
+    });
+
+    const categories = data?.data.data;
+
     const init: AddEditProductType = {
         name: product ? product.name : '',
         categoryId: product ? product.category._id : '',
         images: product ? product.images : [],
         description: product ? product.description : '',
+        normalPrice: product ? product.normalPrice : 0,
         price: product ? product.price : 0,
         stock: product ? product.quantity : 0
     };
-    const router = useRouter();
-    const isEditing: boolean = product != null;
-    const categories = mockCategories;
+
     const [formValues, setFormValues] = useState(init);
+
     const [imageValues, setImageValues] = useState(
         product ? product.images : ['']
     );
-
-    function handleSubmit(event: FormEvent<HTMLFormElement>): void {
-        event.preventDefault();
-
-        if (imageValues.every((e) => e.length < 1)) {
-            toast.warn('There must be at least one product image.');
-        }
-
-        // TODO
-        if (isEditing) {
-            // EDIT product
-        } else {
-            // CREATE product
-        }
-    }
 
     const handleNameChange = (e: FocusEvent<HTMLInputElement, Element>) => {
         setFormValues({ ...formValues, name: e.currentTarget.value });
@@ -59,7 +93,7 @@ export default function AddEditProduct({ product }: IAddEditProductProps) {
 
     const imagesField = useMemo(() => {
         return imageValues.map((image, index) => (
-            <div className='text-md mb-2 flex'>
+            <div key={index} className='text-md mb-2 flex'>
                 <TextBox
                     value={image}
                     placeholder='Image link'
@@ -78,24 +112,99 @@ export default function AddEditProduct({ product }: IAddEditProductProps) {
         setFormValues({ ...formValues, description: e.currentTarget.value });
     }
 
+    function handleNormalPriceChange(e: ChangeEvent<HTMLInputElement>): void {
+        setFormValues({
+            ...formValues,
+            normalPrice: parseFloat(e.target.value) || 0
+        });
+    }
+
     function handlePriceChange(e: ChangeEvent<HTMLInputElement>): void {
-        setFormValues({ ...formValues, price: parseFloat(e.target.value) });
+        setFormValues({
+            ...formValues,
+            price: parseFloat(e.target.value) || 0
+        });
     }
 
     function handleStockChange(e: ChangeEvent<HTMLInputElement>): void {
-        setFormValues({ ...formValues, stock: parseFloat(e.target.value) });
+        setFormValues({
+            ...formValues,
+            stock: parseFloat(e.target.value) || 0
+        });
     }
+
+    const handleSave = () => {
+        if (
+            formValues.name === '' ||
+            formValues.categoryId === '' ||
+            formValues.normalPrice === 0 ||
+            formValues.price === 0 ||
+            formValues.stock === 0
+        ) {
+            toast.error('Please fill in all fields', toastOptions);
+            return;
+        }
+
+        if (action === 'add') {
+            addProduct(
+                {
+                    name: formValues.name,
+                    description: formValues.description,
+                    normalPrice: formValues.normalPrice,
+                    price: formValues.price,
+                    quantity: formValues.stock,
+                    images: imageValues,
+                    category: formValues.categoryId
+                },
+                {
+                    onSuccess: (res) => {
+                        toast.success(res.data.message, toastOptions);
+                        setAction('');
+                    }
+                }
+            );
+        }
+
+        if (action === 'edit') {
+            editProduct(
+                {
+                    id: product?._id || '',
+                    body: {
+                        name: formValues.name,
+                        description: formValues.description,
+                        normalPrice: formValues.normalPrice,
+                        price: formValues.price,
+                        quantity: formValues.stock,
+                        images: imageValues,
+                        category: formValues.categoryId
+                    }
+                },
+                {
+                    onSuccess: (res) => {
+                        toast.success(res.data.message, toastOptions);
+                        setAction('');
+                    }
+                }
+            );
+        }
+    };
+
+    if (isLoading) return <div>Loading...</div>;
+
+    console.log('formValues', formValues);
 
     return (
         <div className='container p-4'>
             <span className='text-main mb-2 flex text-lg'>
-                {isEditing ? 'Edit product' : 'Add new product'}
+                {action === 'edit' ? 'Edit product' : 'Add new product'}
             </span>
-            <form onSubmit={handleSubmit}>
+            <div>
                 <div className='rounded-sm bg-gray-100 px-4 py-2'>
                     <span className='text-main flex text-lg'>
                         Basic Information
                     </span>
+
+                    {/* Name */}
                     <div className='grid grid-cols-12'>
                         <div className='col-span-3 grid pr-4 '>
                             <span className='text-md flex items-center justify-end'>
@@ -111,6 +220,8 @@ export default function AddEditProduct({ product }: IAddEditProductProps) {
                             ></TextBox>
                         </div>
                     </div>
+
+                    {/* Category */}
                     <div className='mt-2 grid grid-cols-12'>
                         <div className='col-span-3 grid pr-4 '>
                             <span className='text-md flex items-center justify-end'>
@@ -122,13 +233,13 @@ export default function AddEditProduct({ product }: IAddEditProductProps) {
                             <DropdownButton
                                 className='text-md full-width-div'
                                 value={
-                                    init.categoryId
-                                        ? categories.find(
-                                              (e) => e._id == init.categoryId
-                                          )?.name
-                                        : categories[0].name
+                                    categories.find(
+                                        (e: any) =>
+                                            e._id === formValues.categoryId
+                                    )?.name || 'Select category'
+                                    // formValues.categoryId || 'Select category'
                                 }
-                                items={categories.map((e) => e.name)}
+                                items={categories.map((e: any) => e.name)}
                                 onSelect={function (
                                     selectedItem: number
                                 ): void {
@@ -140,6 +251,8 @@ export default function AddEditProduct({ product }: IAddEditProductProps) {
                             ></DropdownButton>
                         </div>
                     </div>
+
+                    {/* Images */}
                     <div className='mt-2 grid grid-cols-12'>
                         <div className='col-span-3 grid pr-4 '>
                             <span className='text-md mt-2 flex justify-end'>
@@ -165,6 +278,8 @@ export default function AddEditProduct({ product }: IAddEditProductProps) {
                             </Button>
                         </div>
                     </div>
+
+                    {/* Description */}
                     <div className='grid grid-cols-12'>
                         <div className='col-span-3 grid pr-4 pt-1'>
                             <span className='text-md flex items-start justify-end'>
@@ -184,11 +299,35 @@ export default function AddEditProduct({ product }: IAddEditProductProps) {
                         </div>
                     </div>
                 </div>
+
                 <div className='mt-3 rounded-sm bg-gray-100 px-4 py-2'>
                     <span className='text-main flex text-lg'>
                         Sale Information
                     </span>
+
+                    {/* Normal price */}
                     <div className='grid grid-cols-12'>
+                        <div className='col-span-3 grid pr-4 '>
+                            <span className='text-md flex items-center justify-end'>
+                                Normal price
+                            </span>
+                        </div>
+                        <div className='col-span-4 flex'>
+                            <InputNumber
+                                placeholder='Product Price'
+                                className='text-md p-0 '
+                                required
+                                value={formValues.normalPrice}
+                                onChange={handleNormalPriceChange}
+                            ></InputNumber>
+                            <span className='text-md ml-4 flex items-center justify-end'>
+                                VND
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Price */}
+                    <div className='mt-2 grid grid-cols-12'>
                         <div className='col-span-3 grid pr-4 '>
                             <span className='text-md flex items-center justify-end'>
                                 Price
@@ -207,6 +346,8 @@ export default function AddEditProduct({ product }: IAddEditProductProps) {
                             </span>
                         </div>
                     </div>
+
+                    {/* Stock */}
                     <div className='mt-2 grid grid-cols-12'>
                         <div className='col-span-3 grid pr-4 '>
                             <span className='text-md flex items-center justify-end'>
@@ -232,19 +373,16 @@ export default function AddEditProduct({ product }: IAddEditProductProps) {
                             className='text-md m-4 '
                             textColor='#777777'
                             backgroundColor='#FFFFFF'
-                            onClick={(e) => {
-                                e.preventDefault();
-                                router.back();
-                            }}
+                            onClick={() => setAction('')}
                         >
                             Cancel
                         </Button>
-                        <Button className='text-md my-4'>
+                        <Button onClick={handleSave} className='text-md my-4'>
                             Save and Publish
                         </Button>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
     );
 }

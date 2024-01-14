@@ -1,7 +1,8 @@
 'use client';
 
 import { useQueries } from 'react-query';
-import { MouseEvent, ReactNode, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { ReactNode, useEffect, useState } from 'react';
 
 import Bank from '/public/assets/images/Bank.png';
 
@@ -18,7 +19,6 @@ import categoryApi from '@/apis/category.api';
 import productApi from '@/apis/product.api';
 import { setProducts } from '@/redux/slices/product.slice';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
-import { mockCategories, mockProducts } from '../productPage/mockData';
 import { removeVietnamesePhonetics } from '@/utils/utils';
 
 export interface ILandingPageProps {
@@ -27,6 +27,8 @@ export interface ILandingPageProps {
 
 export default function LandingPage({ filterQuery }: ILandingPageProps) {
     const dispatch = useAppDispatch();
+
+    const router = useRouter();
 
     const { products } = useAppSelector((state) => state.product);
 
@@ -106,6 +108,7 @@ export default function LandingPage({ filterQuery }: ILandingPageProps) {
                             type='button'
                             className='btn'
                             style={{ minWidth: 280 }}
+                            onClick={() => router.push('/seller')}
                         >
                             <div className='row my-1 ms-1'>
                                 <div className='d-flex'>
