@@ -20,11 +20,11 @@ import CircleAvatar from '@/components/landing/components/CircleAvatar';
 
 const Header = () => {
     const { user } = useAppSelector((state) => state.auth);
-    const { cart } = useAppSelector((state) => state.cart);
+    // const { cart } = useAppSelector((state) => state.cart);
 
-    useEffect(() => {
-        console.log(cart);
-    }, [cart]);
+    // useEffect(() => {
+    //     console.log(cart);
+    // }, [cart]);
 
     return (
         <>
@@ -86,7 +86,9 @@ const Header = () => {
                                     alt={user.name}
                                     size={8}
                                 ></CircleAvatar>
-                                <span>{user.name}</span>
+                                <span className='text-[#00ADB5]'>
+                                    {user.name}
+                                </span>
                             </Link>
                         </>
                     ) : (
