@@ -2,14 +2,14 @@ type CategoryType = {
     _id: string;
     name: string;
     image: string;
-    shopsales: number;
+    numberOfProducts: number;
 };
 
 export const initialCategory: CategoryType = {
     _id: '',
     name: '',
     image: '',
-    shopsales: 0,
+    numberOfProducts: 0
 };
 
 export default CategoryType;
