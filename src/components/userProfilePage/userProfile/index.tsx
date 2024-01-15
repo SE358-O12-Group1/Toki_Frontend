@@ -133,7 +133,7 @@ export default function UserProfilePage() {
                             <img
                                 className='mb-5 rounded-full'
                                 style={{ scale: 1.3 }}
-                                src={profileData.avatar || Circle.src}
+                                src={profileData?.avatar || Circle.src}
                             />
                             <img
                                 className='mb-5 mt-2'
@@ -156,7 +156,7 @@ export default function UserProfilePage() {
                                     display: 'flex'
                                 }}
                             >
-                                {profileData.name}
+                                {profileData?.name}
                             </div>
                             <div
                                 style={{

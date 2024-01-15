@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 
 // images
@@ -11,39 +11,43 @@ import order from '/public/assets/images/orderbutton.png';
 
 // components
 import ProductsOrdered from '@/components/userProfilePage/myOrders/ProductsOrdered';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 
 // api
 import userApi from '@/apis/user.api';
 import { useAppSelector } from '@/redux/hook';
+import TextBox from '@/components/common/TextBox';
+import { OrderType } from '@/types/OrderType';
+import OrderItem from '@/components/sellerPage/components/OrderItem';
+import { ORDER_STATUS, convertStatusToValue } from '@/constants/orderStatus';
+import orderApi from '@/apis/order.api';
+import { mockOrder1, mockOrders } from '@/components/productPage/mockData';
+
+const chips = [
+    'ALL',
+    ...Object.values(ORDER_STATUS).map((status) => status.name)
+];
 
 export default function MyOrdersPage() {
     const { profile } = useAppSelector((state) => state.user);
+    const initialChip = chips[0];
+    const [selectedStatus, setSelectedStatus] = useState<string>(initialChip);
 
     const { data, isLoading } = useQuery({
         queryKey: 'myOrders',
-        queryFn: () =>
-            userApi.getMyOrders(/**
-             * Chỗ này truyền số thì get theo status
-             * 0: being prepared
-             * 1: to ship
-             * 2: to receive
-             * 3: complete
-             * 4: cancel
-             * Không truyền số thì get all
-             */)
+        queryFn: () => userApi.getMyOrders(convertStatusToValue(selectedStatus))
     });
 
-    /**
-     * @todo
-     * - Làm lại UI để Từng order phân biệt nhau vì trong mỗi order có nhiều Orderline
-     */
-
     const orders = data?.data.data;
+    // const orders = mockOrders;
 
     console.log(orders);
 
     if (isLoading) return <div>Loading...</div>;
+
+    function handleChipClick(chipValue: string): void {
+        setSelectedStatus(chipValue);
+    }
 
     return (
         <div className='row mx-0 mt-3' style={{ backgroundColor: '#E2E2E2' }}>
@@ -132,89 +136,53 @@ export default function MyOrdersPage() {
                     </div>
                 </div>
                 <div className='col-8' style={{ marginInlineEnd: 110 }}>
-                    <div
-                        className='col-12 d-flex'
-                        style={{
-                            backgroundColor: '#ffffff',
-                            borderRadius: 10,
-                            fontSize: 18,
-                            fontWeight: 500,
-                            maxHeight: 60
-                        }}
-                    >
-                        <div
-                            className='text col-2'
-                            style={{
-                                marginInlineStart: 15,
-                                color: '#00ADB5',
-                                marginTop: 10,
-                                marginBottom: 8,
-                                marginInlineEnd: 5
-                            }}
-                        >
-                            All
+                    {orders ? (
+                        <div className='container rounded-lg bg-white p-4'>
+                            <span className='text-main mt-4 flex text-xl'>
+                                {orders.length}{' '}
+                                {orders.length <= 1 ? 'Order' : 'Orders'}
+                            </span>
+                            <div className='mt-4 grid grid-cols-6'>
+                                <div className='flex'>
+                                    {chips.map((chip) => (
+                                        <div
+                                            key={chip}
+                                            className={`hover:bg-main/5 text-md text-nowrap mr-2 flex h-12 items-center justify-center rounded-md px-4 capitalize
+                                            ${
+                                                selectedStatus === chip
+                                                    ? 'border-main'
+                                                    : 'border'
+                                            }`}
+                                            onClick={() =>
+                                                handleChipClick(chip)
+                                            }
+                                        >
+                                            {chip}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className='container mt-6 px-0'>
+                                <div className='rounded-sm bg-white '>
+                                    {orders.map(
+                                        (order: OrderType, index: number) => (
+                                            <OrderItem
+                                                order={order}
+                                                key={index}
+                                                isEditable={false}
+                                            ></OrderItem>
+                                        )
+                                    )}
+                                </div>
+                            </div>
                         </div>
-                        <div
-                            className='text col-2 text-center'
-                            style={{
-                                color: '#808089',
-                                marginTop: 10,
-                                marginBottom: 8,
-                                marginInlineEnd: 5
-                            }}
-                        >
-                            Being Prepared
+                    ) : (
+                        <div className='container min-h-[60vh] p-4 text-center'>
+                            <span className='text-grey-500 mx-auto rounded-lg bg-white p-4 text-lg'>
+                                Empty purchase history
+                            </span>
                         </div>
-                        <div
-                            className='text col-2 text-center'
-                            style={{
-                                color: '#808089',
-                                marginTop: 10,
-                                marginBottom: 8,
-                                marginInlineEnd: 5
-                            }}
-                        >
-                            To Ship
-                        </div>
-                        <div
-                            className='text col-2 text-center'
-                            style={{
-                                color: '#808089',
-                                marginTop: 10,
-                                marginBottom: 8,
-                                marginInlineEnd: 5
-                            }}
-                        >
-                            To Receive
-                        </div>
-                        <div
-                            className='text col-2 text-center'
-                            style={{
-                                color: '#808089',
-                                marginTop: 10,
-                                marginBottom: 8,
-                                marginInlineEnd: 5
-                            }}
-                        >
-                            Complete
-                        </div>
-                        <div
-                            className='text col-2 text-center'
-                            style={{
-                                color: '#808089',
-                                marginTop: 10,
-                                marginBottom: 8
-                            }}
-                        >
-                            Cancel
-                        </div>
-                    </div>
-                    {/* {data?.data?.map((order) => (
-                        <ProductsOrdered order={order} />
-                    ))} */}
-                    <ProductsOrdered />
-                    <ProductsOrdered />
-                    <ProductsOrdered />
+                    )}
                 </div>
             </div>
             <div className='row' style={{ minHeight: 74 }}></div>

@@ -120,7 +120,11 @@ export default function SellerOrderList() {
             <div className='container mt-6 px-0'>
                 <div className='rounded-sm bg-white '>
                     {filteredOrders.map((order, index) => (
-                        <OrderItem order={order} key={index}></OrderItem>
+                        <OrderItem
+                            order={order}
+                            key={index}
+                            isEditable={true}
+                        ></OrderItem>
                     ))}
                 </div>
             </div>

@@ -21,8 +21,9 @@ import { toastOptions } from '@/constants/toast';
 
 export interface IOrderItemProps {
     order: OrderType;
+    isEditable: boolean;
 }
-export default function OrderItem({ order }: IOrderItemProps) {
+export default function OrderItem({ order, isEditable }: IOrderItemProps) {
     const [status, setStatus] = useState(order.status);
 
     const queryClient = useQueryClient();
@@ -80,22 +81,27 @@ export default function OrderItem({ order }: IOrderItemProps) {
                             {order.delivery_address}
                         </p>
                     </div>
+                    {isEditable ? (
+                        <div className='text-md col-span-1 grid grid-cols-2 items-center pr-4 text-gray-600'>
+                            <DropdownButton
+                                className='nowrap border-main col-span-1 mr-4 rounded-md p-2'
+                                items={getStatusOpstions(status)}
+                                value={covertStatusToName(status)}
+                                onSelect={handleChangeStatus}
+                            />
 
-                    <div className='text-md col-span-1 grid grid-cols-2 items-center pr-4 text-gray-600'>
-                        <DropdownButton
-                            className='nowrap border-main col-span-1 mr-4 rounded-md p-2'
-                            items={getStatusOpstions(status)}
-                            value={covertStatusToName(status)}
-                            onSelect={handleChangeStatus}
-                        />
-
-                        <Button
-                            className='col-span-1 ml-4'
-                            onClick={handleUpdate}
-                        >
-                            Update
-                        </Button>
-                    </div>
+                            <Button
+                                className='col-span-1 ml-4'
+                                onClick={handleUpdate}
+                            >
+                                Update
+                            </Button>
+                        </div>
+                    ) : (
+                        <div className='bg-main col-span-1 rounded-md px-4 pr-4 text-center text-lg text-white'>
+                            {covertStatusToName(status)}
+                        </div>
+                    )}
                 </div>
             </div>
 
