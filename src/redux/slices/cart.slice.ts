@@ -10,17 +10,15 @@ const cartSlice = createSlice({
     initialState: initialState,
     reducers: {
         addToCart: (state, action: PayloadAction<CartItemType>) => {
-            const { product, quantity, variants, checked } = action.payload;
+            const { product, quantity, checked } = action.payload;
             const index = state.cart.findIndex(
-                (item) =>
-                    item.product._id === product._id &&
-                    item.variants?.join('') === variants?.join('')
+                (item) => item.product._id === product._id
             );
             if (index >= 0) {
                 state.cart[index].quantity += quantity;
                 state.cart[index].checked = checked;
             } else {
-                state.cart.push({ product, quantity, variants, checked });
+                state.cart.push({ product, quantity, checked });
             }
         },
 
@@ -34,11 +32,9 @@ const cartSlice = createSlice({
         },
 
         setCartItem: (state, action: PayloadAction<CartItemType>) => {
-            const { product, quantity, variants, checked } = action.payload;
+            const { product, quantity, checked } = action.payload;
             const index = state.cart.findIndex(
-                (item) =>
-                    item.product._id === product._id &&
-                    item.variants?.join('') === variants?.join('')
+                (item) => item.product._id === product._id
             );
             if (index >= 0) {
                 state.cart[index].quantity = quantity;

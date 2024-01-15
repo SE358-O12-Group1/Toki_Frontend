@@ -7,10 +7,6 @@ export type SellerType = {
     avatar: string;
 };
 
-type VariantType = {
-    [key: string]: string[];
-};
-
 type ProductType = {
     _id: string;
     name: string;
@@ -22,8 +18,9 @@ type ProductType = {
     images: string[];
     category: CategoryType;
     sold_quantity: number;
-    variants: VariantType;
+    reviews: string[];
     quantity: number;
+    relatedProducts: ProductType[];
 };
 
 export type ShopProductType = Omit<ProductType, 'seller' | 'category'> & {
@@ -53,8 +50,9 @@ export const initialProduct: ProductType = {
     images: [],
     category: initialCategory,
     sold_quantity: 0,
-    variants: {},
-    quantity: 0
+    quantity: 0,
+    reviews: [],
+    relatedProducts: []
 };
 
 export default ProductType;

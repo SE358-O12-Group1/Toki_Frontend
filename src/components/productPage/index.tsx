@@ -1,8 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import DOMPurify from 'isomorphic-dompurify';
 import { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import { toast } from 'react-toastify';
+import { useQuery } from 'react-query';
 
 import {
     formatCurrency,
@@ -17,42 +20,35 @@ import ProductRating from './components/ProductRatings';
 import ShopIcon from '/public/assets/images/shop_icon.png';
 
 // redux
-import { useAppDispatch, useAppSelector } from '@/redux/hook';
+import { useAppDispatch } from '@/redux/hook';
 import { addToCart } from '@/redux/slices/cart.slice';
 
 // types
-import ProductType from '@/types/ProductType';
-import { toast } from 'react-toastify';
+import ProductType, { initialProduct } from '@/types/ProductType';
 import { toastMessages, toastOptions } from '@/constants/toast';
 
-export default function ProductDetailPage() {
-    const dispatch = useAppDispatch();
+// apis
+import productApi from '@/apis/product.api';
 
-    const { detailProduct, relatedProducts } = useAppSelector(
-        (state) => state.product
-    );
+export default function ProductDetailPage() {
+    const { id } = useParams();
+
+    const [detailProduct, setDetailProduct] =
+        useState<ProductType>(initialProduct);
+
+    const { isLoading } = useQuery({
+        queryKey: ['product', id],
+        queryFn: () => productApi.getProductById(id as string),
+        onSuccess: (data) => {
+            setDetailProduct(data.data.data);
+        }
+    });
+
+    const dispatch = useAppDispatch();
 
     const router = useRouter();
 
     const [buyCount, setBuyCount] = useState(1);
-
-    const initialChip = () => {
-        const result: string[] = [];
-        Object.entries(detailProduct?.variants).forEach((variant) => {
-            result.push(variant[1][0]);
-        });
-        return result;
-    };
-
-    const [selectedChip, setSelectedChip] = useState<string[]>(initialChip);
-
-    const handleChipClick = (index: number, chipValue: string) => {
-        setSelectedChip((prev) => {
-            const result = [...prev];
-            result[index] = chipValue;
-            return result;
-        });
-    };
 
     const [currentIndexImages, setCurrentIndexImages] = useState([0, 5]);
     const [activeImage, setActiveImage] = useState('');
@@ -120,7 +116,6 @@ export default function ProductDetailPage() {
             addToCart({
                 product: detailProduct,
                 quantity: buyCount,
-                variants: selectedChip,
                 checked: false
             })
         );
@@ -132,13 +127,16 @@ export default function ProductDetailPage() {
             addToCart({
                 product: detailProduct,
                 quantity: buyCount,
-                variants: selectedChip,
                 checked: true
             })
         );
         toast.success(toastMessages.addToCart, toastOptions);
         router.push('/cart');
     };
+
+    if (isLoading) {
+        return <></>;
+    }
 
     return (
         <>
@@ -305,44 +303,6 @@ export default function ProductDetailPage() {
                                     </div>
                                 )}
 
-                                {/* Variants */}
-                                {Object.entries(detailProduct.variants).map(
-                                    (variant, index) => (
-                                        <div
-                                            key={index}
-                                            className='mt-8 flex items-center'
-                                        >
-                                            <div className='mr-10 font-medium capitalize'>
-                                                {variant[0]}
-                                            </div>
-
-                                            <div className='flex'>
-                                                {variant[1].map((chip) => (
-                                                    <div
-                                                        key={chip}
-                                                        className={`radio-button hover:bg-main/5 mr-2 flex h-12 items-center justify-center rounded-md px-4 capitalize
-                                                            ${
-                                                                selectedChip[
-                                                                    index
-                                                                ] === chip
-                                                                    ? 'border-main'
-                                                                    : 'border'
-                                                            }`}
-                                                        onClick={() =>
-                                                            handleChipClick(
-                                                                index,
-                                                                chip
-                                                            )
-                                                        }
-                                                    >
-                                                        {chip}
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )
-                                )}
-
                                 {/* Quantity */}
                                 <div className='mt-8 flex items-center'>
                                     <div className='font-medium capitalize'>
@@ -447,13 +407,13 @@ export default function ProductDetailPage() {
                 </div>
 
                 {/* Related Products */}
-                {relatedProducts ? (
+                {detailProduct.relatedProducts ? (
                     <div className='mt-8'>
                         <div className='container'>
                             <div className='uppercase text-gray-400'>
                                 {'Related products'}
                             </div>
-                            {getProductGrid(relatedProducts)}
+                            {getProductGrid(detailProduct.relatedProducts)}
                         </div>
                     </div>
                 ) : (

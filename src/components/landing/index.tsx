@@ -1,8 +1,9 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { useQueries } from 'react-query';
 import { useRouter } from 'next/navigation';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useState } from 'react';
 
 import Bank from '/public/assets/images/Bank.png';
 
@@ -17,8 +18,6 @@ import CategoryType from '@/types/CategoryType';
 // apis
 import categoryApi from '@/apis/category.api';
 import productApi from '@/apis/product.api';
-import { setProducts } from '@/redux/slices/product.slice';
-import { useAppDispatch, useAppSelector } from '@/redux/hook';
 import { removeVietnamesePhonetics } from '@/utils/utils';
 
 export interface ILandingPageProps {
@@ -26,18 +25,11 @@ export interface ILandingPageProps {
 }
 
 export default function LandingPage({ filterQuery }: ILandingPageProps) {
-    const dispatch = useAppDispatch();
-
     const router = useRouter();
-
-    const { products } = useAppSelector((state) => state.product);
 
     const [categoryFilter, setCategoryFilter] = useState<String>();
 
-    const [
-        { data: categoryData },
-        { data: productData, isSuccess: isGetAllProductsSuccess }
-    ] = useQueries([
+    const [{ data: categoryData }, { data: productData }] = useQueries([
         {
             queryKey: 'categories',
             queryFn: () => categoryApi.getAllCategories()
@@ -49,14 +41,7 @@ export default function LandingPage({ filterQuery }: ILandingPageProps) {
     ]);
 
     const categories: CategoryType[] = categoryData?.data.data;
-    // const products: ProductType[] = productData?.data.data;
-
-    useEffect(() => {
-        if (isGetAllProductsSuccess) {
-            dispatch(setProducts(productData?.data.data));
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [productData, products]);
+    const products: ProductType[] = productData?.data.data;
 
     let filteredProducts = products;
 
@@ -112,7 +97,7 @@ export default function LandingPage({ filterQuery }: ILandingPageProps) {
                         >
                             <div className='row my-1 ms-1'>
                                 <div className='d-flex'>
-                                    <img src={Bank.src} />
+                                    <img src={Bank.src} alt='' />
                                     <div className='mt- ms-3 mt-1'>
                                         Start selling with Toki
                                     </div>

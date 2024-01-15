@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { produce } from 'immer';
@@ -25,10 +26,6 @@ import ProductType from '@/types/ProductType';
 // Redux
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
 import { setCartItem, deleteFromCart } from '@/redux/slices/cart.slice';
-import {
-    getRelatedProducts,
-    setDetailProduct
-} from '@/redux/slices/product.slice';
 
 // Constants
 import { toastMessages, toastOptions } from '@/constants/toast';
@@ -146,8 +143,6 @@ export default function CartDetail() {
     };
 
     const handleClickProduct = (product: ProductType) => {
-        dispatch(setDetailProduct(product));
-        dispatch(getRelatedProducts(product.category._id));
         router.push(`/products/${product._id}`);
     };
 
@@ -252,7 +247,7 @@ export default function CartDetail() {
                                                                             <div className='flex-grow'>
                                                                                 <div className='flex'>
                                                                                     <div
-                                                                                        className='h-20 w-20 flex-shrink-0'
+                                                                                        className='h-20 w-20 flex-shrink-0 cursor-pointer'
                                                                                         onClick={() =>
                                                                                             handleClickProduct(
                                                                                                 productsCheck[
@@ -284,7 +279,7 @@ export default function CartDetail() {
                                                                                     </div>
                                                                                     <div className='my-auto p-2'>
                                                                                         <div
-                                                                                            className='my-auto line-clamp-2 text-left font-semibold text-black'
+                                                                                            className='my-auto line-clamp-2 cursor-pointer text-left font-semibold text-black'
                                                                                             onClick={() =>
                                                                                                 handleClickProduct(
                                                                                                     productsCheck[
@@ -304,39 +299,6 @@ export default function CartDetail() {
                                                                                                     .name
                                                                                             }
                                                                                         </div>
-                                                                                        {productsCheck[
-                                                                                            product
-                                                                                        ]
-                                                                                            .cartProduct
-                                                                                            .product
-                                                                                            .variants && (
-                                                                                            <div className='mt-2 flex space-x-2 text-left'>
-                                                                                                {productsCheck[
-                                                                                                    product
-                                                                                                ]
-                                                                                                    .cartProduct
-                                                                                                    .variants &&
-                                                                                                    productsCheck[
-                                                                                                        product
-                                                                                                    ].cartProduct.variants?.map(
-                                                                                                        (
-                                                                                                            variant,
-                                                                                                            index
-                                                                                                        ) => (
-                                                                                                            <div
-                                                                                                                key={
-                                                                                                                    index
-                                                                                                                }
-                                                                                                                className='rounded-full bg-gray-200 px-2 py-1 text-xs'
-                                                                                                            >
-                                                                                                                {
-                                                                                                                    variant
-                                                                                                                }
-                                                                                                            </div>
-                                                                                                        )
-                                                                                                    )}
-                                                                                            </div>
-                                                                                        )}
                                                                                     </div>
                                                                                 </div>
                                                                             </div>

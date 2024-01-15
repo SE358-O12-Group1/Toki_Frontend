@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useRouter } from 'next/navigation';
 
 import ProductRating from '@/components/productPage/components/ProductRatings';
@@ -8,11 +9,6 @@ import {
     formatNumberToSocialStyle,
     rateSale
 } from '@/utils/utils';
-import { useAppDispatch } from '@/redux/hook';
-import {
-    getRelatedProducts,
-    setDetailProduct
-} from '@/redux/slices/product.slice';
 
 export interface IProductCardProps {
     product: ProductType;
@@ -20,13 +16,9 @@ export interface IProductCardProps {
 }
 
 export default function ProductCard({ product, minHeight }: IProductCardProps) {
-    const dispatch = useAppDispatch();
-
     const router = useRouter();
 
     const handleClick = () => {
-        dispatch(setDetailProduct(product));
-        dispatch(getRelatedProducts(product.category._id));
         router.push(`/products/${product._id}`);
     };
 
@@ -42,7 +34,8 @@ export default function ProductCard({ product, minHeight }: IProductCardProps) {
                         product.images[0] ||
                         'https://sieuthikhan.com/images/thumbs/default-image_450.png'
                     }
-                ></img>
+                    alt={product.name}
+                />
                 <div className='text-left'>
                     <div className='text-lg'>{product.name}</div>
                     <div className='flex items-center'>
