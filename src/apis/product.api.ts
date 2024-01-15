@@ -4,7 +4,7 @@ import http from '@/utils/http';
 
 export type ProductRequestType = Omit<
     ProductType,
-    '_id' | 'seller' | 'rating' | 'sold_quantity' | 'variants' | 'category'
+    '_id' | 'seller' | 'rating' | 'sold_quantity' | 'category'
 > & { category: string };
 
 const productApi = {

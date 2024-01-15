@@ -29,7 +29,6 @@ export default function Bill({
 
     const order_lines = productList.map((orderLine) => ({
         product: orderLine.product._id,
-        variants: orderLine.variants,
         quantity: orderLine.quantity
     }));
 
