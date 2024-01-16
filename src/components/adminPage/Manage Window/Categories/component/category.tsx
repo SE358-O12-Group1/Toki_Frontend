@@ -1,85 +1,98 @@
-import React from 'react';
-import Circle from '/public/assets/images/Ellipse.png';
+/* eslint-disable @next/next/no-img-element */
+import CategoryType from '@/types/CategoryType';
+
 import Button from '@/components/common/Button';
-import { mockCategory } from '../mockCategory';
+import { useMutation, useQueryClient } from 'react-query';
+import categoryApi from '@/apis/category.api';
+import { toast } from 'react-toastify';
+import { toastOptions } from '@/constants/toast';
 
-export const Category = () => {
-    const handleEdit = (index: number) => {
-        return
-    }
+interface IProps {
+    category: CategoryType;
+    handleEdit: (category: CategoryType) => void;
+}
 
-    const handleDelete = (index: number) => {
-        
-    }
+export const Category = ({ category, handleEdit }: IProps) => {
+    const queryClient = useQueryClient();
+
+    const { mutate } = useMutation({
+        mutationFn: (deleteId: string) => categoryApi.deleteCategory(deleteId),
+        onSuccess: (res) => {
+            toast.success(res.data.message, toastOptions);
+            queryClient.invalidateQueries('categories');
+        }
+    });
+
+    const handleDelete = (deleteId: string) => {
+        mutate(deleteId);
+    };
 
     return (
-        mockCategory.map((category, index) => (
+        <div
+            className='grid grid-cols-12'
+            style={{
+                borderLeft: '2px solid #EEEEEE',
+                marginLeft: 30,
+                marginRight: 30,
+                paddingLeft: 20,
+                paddingTop: 10,
+                paddingBottom: 10,
+                paddingRight: 20,
+                alignItems: 'center',
+                borderBottom: '2px solid #EEEEEE',
+                borderRight: '2px solid #EEEEEE'
+            }}
+        >
             <div
-                key={index}
-                className='grid grid-cols-12'
+                className='col-span-6'
                 style={{
-                    borderLeft: '2px solid #EEEEEE',
-                    marginLeft: 30,
-                    marginRight: 30,
-                    paddingLeft: 20,
-                    paddingTop: 10,
-                    paddingBottom: 10,
-                    paddingRight: 20,
-                    alignItems: 'center',
-                    borderBottom: '2px solid #EEEEEE',
-                    borderRight: '2px solid #EEEEEE'
+                    display: 'flex',
+                    alignItems: 'center'
                 }}
             >
-                <div 
-                    className='col-span-6' 
+                <img
+                    src={category.image}
+                    alt=''
                     style={{
-                        display: 'flex',
-                        alignItems: 'center',
+                        width: 60,
+                        height: 60,
+                        objectFit: 'cover',
+                        display: 'block'
                     }}
-                >
-                    <img 
-                        src={category.image} 
-                        style={{
-                            width: 60,
-                            height: 60,
-                            objectFit: 'cover',
-                            display: 'block'
-                        }}
-                    />
-                    <div style={{ paddingLeft: 10, fontWeight: 600 }}>
-                        {category.name}
-                    </div>
+                />
+                <div style={{ paddingLeft: 10, fontWeight: 600 }}>
+                    {category.name}
                 </div>
-                <div className='col-span-6'>
-                    <div className='grid grid-cols-6 items-center'>
-                        <div className='col-span-3 text-center'>
-                            {category.shopsales}
-                        </div>
-                        <div className='col-span-3 flex text-center'>
-                            <Button
-                                className=''
-                                backgroundColor='#FFFFFF'
-                                textColor='#00adb5'
-                                onClick={() => {
-                                    handleEdit(parseInt(category._id))
-                                }}
-                            >
-                                Edit
-                            </Button>
-                            <Button
-                                className='ml-2'
-                                backgroundColor='#FFFFFF'
-                                textColor='#FF0000'
-                                onClick={() => {
-                                    handleDelete(parseInt(category._id))
-                                }}
-                            >
-                                Delete
-                            </Button>
-                        </div>
+            </div>
+            <div className='col-span-6'>
+                <div className='grid grid-cols-6 items-center'>
+                    <div className='col-span-3 text-center'>
+                        {category.numberOfProducts}
+                    </div>
+                    <div className='col-span-3 flex text-center'>
+                        <Button
+                            className=''
+                            backgroundColor='#FFFFFF'
+                            textColor='#00adb5'
+                            onClick={() => {
+                                handleEdit(category);
+                            }}
+                        >
+                            Edit
+                        </Button>
+                        <Button
+                            className='ml-2'
+                            backgroundColor='#FFFFFF'
+                            textColor='#FF0000'
+                            onClick={() => {
+                                handleDelete(category._id);
+                            }}
+                        >
+                            Delete
+                        </Button>
                     </div>
                 </div>
             </div>
-        ))
-    )
-}
+        </div>
+    );
+};

@@ -126,7 +126,7 @@ export default function UserProfilePage() {
                         >
                             <img
                                 className='rounded-full'
-                                src={profileData.avatar || Circle.src}
+                                src={profileData?.avatar || Circle.src}
                                 style={{
                                     maxWidth: '40px',
                                     maxHeight: '100%',
@@ -158,7 +158,7 @@ export default function UserProfilePage() {
                                         textOverflow: 'ellipsis'
                                     }}
                                 >
-                                    {profileData.name}
+                                    {profileData?.name}
                                 </div>
                             </div>
                             <div

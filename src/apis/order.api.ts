@@ -5,7 +5,6 @@ export type CreateOrderRequest = {
     discount?: string;
     order_lines: {
         product: string;
-        variants?: string[];
         quantity: number;
     }[];
     delivery_address: string;

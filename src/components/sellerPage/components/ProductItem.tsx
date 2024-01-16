@@ -9,11 +9,6 @@ import {
     formatNumberToSocialStyle,
     rateSale
 } from '@/utils/utils';
-import { useAppDispatch } from '@/redux/hook';
-import {
-    getRelatedProducts,
-    setDetailProduct
-} from '@/redux/slices/product.slice';
 
 export interface IProductCardProps {
     product: ProductType;
@@ -21,13 +16,9 @@ export interface IProductCardProps {
 }
 
 export default function ProductCard({ product, minHeight }: IProductCardProps) {
-    const dispatch = useAppDispatch();
-
     const router = useRouter();
 
     const handleClick = () => {
-        dispatch(setDetailProduct(product));
-        dispatch(getRelatedProducts(product.category._id));
         router.push(`/products/${product._id}`);
     };
 

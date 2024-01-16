@@ -1,11 +1,10 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 import { useQuery } from 'react-query';
 import { FocusEvent, useEffect, useState } from 'react';
-import IconButton from '@mui/material/IconButton';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 // Icons
-import editIcon from '/public/assets/images/edit_ic.png';
 import locationIcon from '/public/assets/images/LocationMarker.png';
 
 // Utils
@@ -20,13 +19,6 @@ import Voucher from './Voucher';
 // Types
 import { CheckoutItemType } from '@/types/CartType';
 import ProductType from '@/types/ProductType';
-
-// Redux
-import { useAppDispatch } from '@/redux/hook';
-import {
-    getRelatedProducts,
-    setDetailProduct
-} from '@/redux/slices/product.slice';
 
 // Api
 import userApi from '@/apis/user.api';
@@ -54,7 +46,6 @@ export default function CartCheckout() {
         onError: (err) => console.log(err)
     });
 
-    const dispatch = useAppDispatch();
     const router = useRouter();
 
     useEffect(() => {
@@ -73,8 +64,6 @@ export default function CartCheckout() {
     );
 
     const handleClickProduct = (product: ProductType) => {
-        dispatch(setDetailProduct(product));
-        dispatch(getRelatedProducts(product.category._id));
         router.push(`/products/${product._id}`);
     };
 
@@ -133,15 +122,12 @@ export default function CartCheckout() {
                     <div className='col-span-6'>
                         <div className='grid grid-cols-8 items-center'>
                             <div className='col-span-3 mx-auto text-sm text-gray-600'>
-                                Variation
-                            </div>
-                            <div className='col-span-2 mx-auto text-sm text-gray-600'>
                                 Unit Price
                             </div>
                             <div className='col-span-1 mx-auto text-sm text-gray-600'>
                                 Quantity
                             </div>
-                            <div className='col-span-2 mx-auto text-sm text-gray-600'>
+                            <div className='col-span-3 mx-auto text-sm text-gray-600'>
                                 Total
                             </div>
                         </div>
@@ -171,7 +157,7 @@ export default function CartCheckout() {
                                                     <div className='flex-grow'>
                                                         <div className='flex'>
                                                             <button
-                                                                className='h-20 w-20 flex-shrink-0'
+                                                                className='h-20 w-20 flex-shrink-0 cursor-pointer'
                                                                 onClick={() =>
                                                                     handleClickProduct(
                                                                         productList[
@@ -208,7 +194,7 @@ export default function CartCheckout() {
                                                                                 .product
                                                                         )
                                                                     }
-                                                                    className='my-auto line-clamp-2 text-left font-semibold text-black'
+                                                                    className='my-auto line-clamp-2 cursor-pointer text-left font-semibold text-black'
                                                                 >
                                                                     {
                                                                         productList[
@@ -225,37 +211,20 @@ export default function CartCheckout() {
                                             </div>
                                             <div className='col-span-6'>
                                                 <div className='grid grid-cols-8 items-center'>
-                                                    <div className='text-md col-span-3 flex items-center justify-center space-x-2 font-medium'>
-                                                        {productList[
-                                                            product
-                                                        ]?.variants?.map(
-                                                            (
-                                                                variant,
-                                                                index
-                                                            ) => (
-                                                                <div
-                                                                    key={index}
-                                                                    className='w-fit rounded-full bg-gray-200 px-2 py-1 text-xs'
-                                                                >
-                                                                    {variant}
-                                                                </div>
-                                                            )
-                                                        )}
-                                                    </div>
-                                                    <div className='text-main col-span-2 text-center text-xl font-medium'>
+                                                    <div className='text-main col-span-3 text-center text-xl font-medium'>
                                                         {formatCurrency(
                                                             productList[product]
                                                                 .product.price
                                                         )}{' '}
                                                         ₫
                                                     </div>
-                                                    <div className=' text-md col-span-1 font-medium'>
+                                                    <div className='text-md col-span-1 font-medium'>
                                                         {
                                                             productList[product]
                                                                 .quantity
                                                         }
                                                     </div>
-                                                    <div className='text-main col-span-2 text-center text-xl font-medium'>
+                                                    <div className='text-main col-span-3 text-center text-xl font-medium'>
                                                         {formatCurrency(
                                                             productList[product]
                                                                 .product.price *

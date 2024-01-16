@@ -49,7 +49,9 @@ export default function SellerProductsList() {
     const [editProduct, setEditProduct] = useState<ShopProductType>();
 
     const filteredProducts = useMemo(() => {
-        const filterString = removeVietnamesePhonetics(searchInput.trim());
+        const filterString = removeVietnamesePhonetics(
+            searchInput.trim().toLowerCase()
+        );
 
         return products.filter(
             (product) =>
