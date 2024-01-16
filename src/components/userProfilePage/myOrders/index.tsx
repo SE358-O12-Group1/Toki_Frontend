@@ -87,14 +87,19 @@ export default function MyOrdersPage() {
                                 color: '#00ADB5',
                                 fontWeight: 700,
                                 marginTop: 40,
-                                display: 'flex',
-                                whiteSpace: 'nowrap',
-                                width: '180px',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis'
+                                display: 'flex'
                             }}
                         >
-                            {profile.name}
+                            <div
+                                style={{
+                                    width: '7em',
+                                    overflow: 'hidden',
+                                    whiteSpace: 'nowrap',
+                                    textOverflow: 'ellipsis'
+                                }}
+                            >
+                                {profile.name}
+                            </div>
                         </div>
                         <div
                             style={{

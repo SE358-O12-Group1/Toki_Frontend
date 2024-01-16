@@ -147,14 +147,19 @@ export default function UserProfilePage() {
                                     color: '#00ADB5',
                                     fontWeight: 700,
                                     marginTop: 40,
-                                    display: 'flex',
-                                    whiteSpace: 'nowrap',
-                                    width: '160px',
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis'
+                                    display: 'flex'
                                 }}
                             >
-                                {profileData.name}
+                                <div
+                                    style={{
+                                        width: '7em',
+                                        overflow: 'hidden',
+                                        whiteSpace: 'nowrap',
+                                        textOverflow: 'ellipsis'
+                                    }}
+                                >
+                                    {profileData.name}
+                                </div>
                             </div>
                             <div
                                 style={{
