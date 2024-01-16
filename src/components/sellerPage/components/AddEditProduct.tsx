@@ -100,6 +100,10 @@ export default function AddEditProduct({
                     onChange={(e) => {
                         imageValues[index] = e.currentTarget.value;
                         setImageValues([...imageValues]);
+                        setFormValues({
+                            ...formValues,
+                            images: imageValues
+                        });
                     }}
                 ></TextBox>
             </div>
@@ -154,7 +158,9 @@ export default function AddEditProduct({
                     price: formValues.price,
                     quantity: formValues.stock,
                     images: imageValues,
-                    category: formValues.categoryId
+                    category: formValues.categoryId,
+                    reviews: [],
+                    relatedProducts: []
                 },
                 {
                     onSuccess: (res) => {
@@ -176,7 +182,9 @@ export default function AddEditProduct({
                         price: formValues.price,
                         quantity: formValues.stock,
                         images: imageValues,
-                        category: formValues.categoryId
+                        category: formValues.categoryId,
+                        reviews: [],
+                        relatedProducts: []
                     }
                 },
                 {
@@ -270,6 +278,7 @@ export default function AddEditProduct({
                                     if (
                                         imageValues.every((e) => e.length > 0)
                                     ) {
+                                        console.log(imageValues);
                                         setImageValues([...imageValues, '']);
                                     }
                                 }}

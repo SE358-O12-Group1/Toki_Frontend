@@ -65,9 +65,12 @@ export default function OrderItem({ order, isEditable }: IOrderItemProps) {
                             <span className='font-semibold'>Name:</span>{' '}
                             <span className=''>{order.user.name}</span>
                         </p>
-                        <p className='text-main font-semibold '>
-                            <span className=''>Total:</span>{' '}
+                        <p className='text-main flex items-center font-semibold'>
+                            <span className='mr-2'>Total:</span>
                             {formatCurrency(order.total)} đ
+                            <div className='ml-3 text-sm font-light text-gray-400 line-through'>
+                                {formatCurrency(order.sub_total!)} ₫
+                            </div>
                         </p>
                     </div>
 
