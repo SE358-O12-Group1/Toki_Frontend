@@ -12,6 +12,7 @@ import { removeVietnamesePhonetics } from '@/utils/utils';
 import orderApi from '@/apis/order.api';
 import { OrderType } from '@/types/OrderType';
 import { ORDER_STATUS, convertStatusToValue } from '@/constants/orderStatus';
+import { mockOrders } from '@/components/productPage/mockData';
 
 const chips = [
     'ALL',
