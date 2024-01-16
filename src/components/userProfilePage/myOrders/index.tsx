@@ -48,7 +48,7 @@ export default function MyOrdersPage() {
     return (
         <div className='row mx-0 mt-3' style={{ backgroundColor: '#E2E2E2' }}>
             <div className='row' style={{ marginTop: 30 }}>
-                <div className='col d-flex ' style={{ marginInlineStart: 170 }}>
+                <div className='col d-flex ' style={{ paddingLeft: 180 }}>
                     <div
                         className='col-2 '
                         style={{
@@ -60,19 +60,22 @@ export default function MyOrdersPage() {
                     >
                         <img
                             alt=''
-                            className='mb-5 rounded-full'
-                            style={{ scale: 1.3 }}
+                            className=' rounded-full'
                             src={profile.avatar || Circle.src}
+                            style={{
+                                maxWidth: '40px',
+                                maxHeight: '100%',
+                                objectFit: 'contain'
+                            }}
                         />
                         <img
                             alt=''
-                            className='mb-5 mt-2'
-                            style={{ scale: 1.3 }}
                             src={profileIcon.src}
+                            style={{ paddingTop: 30 }}
                         />
                         <img
                             alt=''
-                            style={{ scale: 1.3, marginTop: 50 }}
+                            style={{ paddingTop: 80 }}
                             src={order.src}
                         />
                     </div>
@@ -84,7 +87,11 @@ export default function MyOrdersPage() {
                                 color: '#00ADB5',
                                 fontWeight: 700,
                                 marginTop: 40,
-                                display: 'flex'
+                                display: 'flex',
+                                whiteSpace: 'nowrap',
+                                width: '180px',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis'
                             }}
                         >
                             {profile.name}
@@ -92,18 +99,17 @@ export default function MyOrdersPage() {
                         <div
                             style={{
                                 fontSize: 18,
-                                marginTop: 52
+                                paddingTop: 28
                             }}
                         >
                             <div
-                                className='mb-2'
                                 style={{
                                     fontWeight: 500
                                 }}
                             >
                                 My account
                             </div>
-                            <div className='mb-2' style={{ color: '#777777' }}>
+                            <div style={{ color: '#777777' }}>
                                 <Link
                                     href='/user/profile'
                                     style={{ color: '#777777' }}
@@ -111,7 +117,7 @@ export default function MyOrdersPage() {
                                     Profile
                                 </Link>
                             </div>
-                            <div className='mb-2' style={{ color: '#777777' }}>
+                            <div style={{ color: '#777777' }}>
                                 <Link
                                     href='/user/changepassword'
                                     style={{ color: '#777777' }}

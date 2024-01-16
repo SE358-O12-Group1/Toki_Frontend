@@ -112,15 +112,9 @@ export default function UserProfilePage() {
 
     return (
         <>
-            <div
-                className='row mx-0 mt-3'
-                style={{ backgroundColor: '#E2E2E2' }}
-            >
+            <div className='row mt-3' style={{ backgroundColor: '#E2E2E2' }}>
                 <div className='row' style={{ marginTop: 30 }}>
-                    <div
-                        className='col d-flex '
-                        style={{ marginInlineStart: 170 }}
-                    >
+                    <div className='col d-flex ' style={{ paddingLeft: 180 }}>
                         <div
                             className='col-2 '
                             style={{
@@ -131,21 +125,21 @@ export default function UserProfilePage() {
                             }}
                         >
                             <img
-                                className='mb-5 rounded-full'
-                                style={{ scale: 1.3 }}
+                                className='rounded-full'
                                 src={profileData.avatar || Circle.src}
+                                style={{
+                                    maxWidth: '40px',
+                                    maxHeight: '100%',
+                                    objectFit: 'contain'
+                                }}
                             />
                             <img
-                                className='mb-5 mt-2'
-                                style={{ scale: 1.3 }}
                                 src={profileIcon.src}
+                                style={{ paddingTop: 30 }}
                             />
-                            <img
-                                style={{ scale: 1.3, marginTop: 50 }}
-                                src={order.src}
-                            />
+                            <img style={{ paddingTop: 80 }} src={order.src} />
                         </div>
-                        <div className='col ms-3'>
+                        <div className='col' style={{ paddingLeft: 20 }}>
                             <div
                                 className='text'
                                 style={{
@@ -153,7 +147,11 @@ export default function UserProfilePage() {
                                     color: '#00ADB5',
                                     fontWeight: 700,
                                     marginTop: 40,
-                                    display: 'flex'
+                                    display: 'flex',
+                                    whiteSpace: 'nowrap',
+                                    width: '160px',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis'
                                 }}
                             >
                                 {profileData.name}
@@ -161,27 +159,18 @@ export default function UserProfilePage() {
                             <div
                                 style={{
                                     fontSize: 18,
-                                    marginTop: 52
+                                    paddingTop: 28
                                 }}
                             >
                                 <div
-                                    className='mb-2'
                                     style={{
                                         fontWeight: 500
                                     }}
                                 >
                                     My account
                                 </div>
-                                <div
-                                    className='mb-2'
-                                    style={{ color: '#00ADB5' }}
-                                >
-                                    Profile
-                                </div>
-                                <div
-                                    className='mb-2'
-                                    style={{ color: '#777777' }}
-                                >
+                                <div style={{ color: '#00ADB5' }}>Profile</div>
+                                <div style={{ color: '#777777' }}>
                                     <Link
                                         href='/user/changepassword'
                                         style={{ color: '#777777' }}
@@ -248,9 +237,13 @@ export default function UserProfilePage() {
                                 }}
                             >
                                 <img
-                                    className='mb-4'
                                     src={profileState.avatar || bigCircle.src}
-                                    style={{ scale: 1.2 }}
+                                    style={{
+                                        scale: 1.2,
+                                        maxWidth: '150px',
+                                        maxHeight: '100%',
+                                        objectFit: 'contain'
+                                    }}
                                 />
                                 <Button
                                     size='large'
@@ -259,7 +252,7 @@ export default function UserProfilePage() {
                                         textTransform: 'none',
                                         color: 'black',
                                         borderColor: '#D2D1D1',
-                                        marginTop: 20
+                                        marginTop: 50
                                     }}
                                 >
                                     New photo
@@ -271,7 +264,7 @@ export default function UserProfilePage() {
                                     fontWeight: 600,
                                     textAlign: 'right',
                                     fontSize: 20,
-                                    marginTop: 30
+                                    marginTop: 60
                                 }}
                             >
                                 <div className='row d-flex space-y-7'>
