@@ -1403,6 +1403,11 @@ a:focus {
     z-index: 100000 !important;
 }
 
+.text-no-decor {
+    text-decoration: none;
+    color: inherit;
+}
+
 [class*='react-datepicker__navigation'] {
     top: 4px !important;
 }
@@ -1633,12 +1638,6 @@ a:focus {
     cursor: pointer;
 }
 
-/* Add this to your styles or import it from a stylesheet */
-.dropdown-container {
-    position: relative;
-    display: inline-block;
-}
-
 .dropdown-button {
     color: var(--gray500);
     border: none;
@@ -1670,4 +1669,42 @@ a:focus {
 
 .btn {
     border: none;
+}
+
+.dropdown-container {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-button {
+    /* background-color: #4caf50; */
+    color: var(--main-color);
+    padding: 10px;
+    border: 1px var(--main-color) solid;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    display: block;
+    text-decoration: none;
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+.dropdown-container:hover .dropdown-content {
+    display: block;
 }

@@ -112,7 +112,10 @@ export default function UserProfilePage() {
 
     return (
         <>
-            <div className='row mt-3' style={{ backgroundColor: '#E2E2E2' }}>
+            <div
+                className='row mx-0 mt-3'
+                style={{ backgroundColor: '#E2E2E2' }}
+            >
                 <div className='row' style={{ marginTop: 30 }}>
                     <div className='col d-flex ' style={{ paddingLeft: 180 }}>
                         <div
@@ -126,7 +129,7 @@ export default function UserProfilePage() {
                         >
                             <img
                                 className='rounded-full'
-                                src={profileData?.avatar || Circle.src}
+                                src={user?.avatar || Circle.src}
                                 style={{
                                     maxWidth: '40px',
                                     maxHeight: '100%',
@@ -139,7 +142,7 @@ export default function UserProfilePage() {
                             />
                             <img style={{ paddingTop: 80 }} src={order.src} />
                         </div>
-                        <div className='col' style={{ paddingLeft: 20 }}>
+                        <div className='col ms-3'>
                             <div
                                 className='text'
                                 style={{
@@ -158,7 +161,7 @@ export default function UserProfilePage() {
                                         textOverflow: 'ellipsis'
                                     }}
                                 >
-                                    {profileData?.name}
+                                    {user?.name}
                                 </div>
                             </div>
                             <div
@@ -174,14 +177,24 @@ export default function UserProfilePage() {
                                 >
                                     My account
                                 </div>
-                                <div style={{ color: '#00ADB5' }}>Profile</div>
+
+                                <div
+                                    style={{
+                                        fontWeight: 500,
+                                        color: '#00ADB5'
+                                    }}
+                                >
+                                    Profile
+                                </div>
                                 <div style={{ color: '#777777' }}>
-                                    <Link
-                                        href='/user/changepassword'
-                                        style={{ color: '#777777' }}
-                                    >
-                                        Change Password
-                                    </Link>
+                                    <div style={{ color: '#777777' }}>
+                                        <Link
+                                            href='/user/changepassword'
+                                            style={{ color: '#777777' }}
+                                        >
+                                            Change Password
+                                        </Link>
+                                    </div>
                                 </div>
                                 <div
                                     style={{

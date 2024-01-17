@@ -1,3 +1,4 @@
+'use client';
 /* eslint-disable @next/next/no-img-element */
 import CategoryType from '@/types/CategoryType';
 
@@ -6,6 +7,8 @@ import { useMutation, useQueryClient } from 'react-query';
 import categoryApi from '@/apis/category.api';
 import { toast } from 'react-toastify';
 import { toastOptions } from '@/constants/toast';
+import ConfirmationModal from '@/components/common/ConfirmationModal';
+import { useState } from 'react';
 
 interface IProps {
     category: CategoryType;
@@ -14,6 +17,8 @@ interface IProps {
 
 export const Category = ({ category, handleEdit }: IProps) => {
     const queryClient = useQueryClient();
+
+    const [isConfirmationOpen, setConfirmationOpen] = useState(false);
 
     const { mutate } = useMutation({
         mutationFn: (deleteId: string) => categoryApi.deleteCategory(deleteId),
@@ -25,6 +30,20 @@ export const Category = ({ category, handleEdit }: IProps) => {
 
     const handleDelete = (deleteId: string) => {
         mutate(deleteId);
+    };
+    const handleConfirm = () => {
+        handleDelete(category._id);
+
+        // Close the modal
+        setConfirmationOpen(false);
+    };
+
+    const handleOpenModal = () => {
+        setConfirmationOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setConfirmationOpen(false);
     };
 
     return (
@@ -43,6 +62,11 @@ export const Category = ({ category, handleEdit }: IProps) => {
                 borderRight: '2px solid #EEEEEE'
             }}
         >
+            <ConfirmationModal
+                isOpen={isConfirmationOpen}
+                onClose={handleCloseModal}
+                onConfirm={handleConfirm}
+            />
             <div
                 className='col-span-6'
                 style={{
@@ -85,7 +109,7 @@ export const Category = ({ category, handleEdit }: IProps) => {
                             backgroundColor='#FFFFFF'
                             textColor='#FF0000'
                             onClick={() => {
-                                handleDelete(category._id);
+                                handleOpenModal();
                             }}
                         >
                             Delete
