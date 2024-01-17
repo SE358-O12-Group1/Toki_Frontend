@@ -17,6 +17,7 @@ import { avatarPlaceholder } from '@/constants/common';
 
 // redux
 import { useAppSelector } from '@/redux/hook';
+import UserDropdown from '../UserAvatar';
 
 export interface IHeaderProps {
     onChange?: FocusEventHandler<HTMLInputElement>;
@@ -48,20 +49,9 @@ const Header = (props: IHeaderProps) => {
                     <span>Help</span>
                 </Link>
                 {user ? (
-                    <>
-                        <Link
-                            className='me-5 flex items-center text-white'
-                            href={'/'}
-                        >
-                            <CircleAvatar
-                                className='ml-5 mr-3'
-                                src={user.avatar || avatarPlaceholder}
-                                alt={user.name}
-                                size={8}
-                            ></CircleAvatar>
-                            <span>{user.name}</span>
-                        </Link>
-                    </>
+                    <div className='pr-6'>
+                        <UserDropdown user={user}></UserDropdown>
+                    </div>
                 ) : (
                     <>
                         <Link className='btn me-1 text-white' href={'/login'}>

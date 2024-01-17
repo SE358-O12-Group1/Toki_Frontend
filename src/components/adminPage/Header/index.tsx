@@ -34,14 +34,14 @@ const Header = () => {
                     style={{ paddingLeft: 50 }}
                 >
                     <div className='offset-1'>
-                        <Link href={'/admin'}>
+                        <Link href={'/'}>
                             <img className='ms-5 ' src={Logo.src} />
                         </Link>
                     </div>
                 </div>
                 <div className='flex items-center justify-between '>
                     <div style={{ paddingTop: 20, paddingLeft: 15 }}>
-                        <Link href={'/admin'}>
+                        <Link href={'/'}>
                             <img className='ms-1' src={AdminCenter.src} />
                         </Link>
                     </div>

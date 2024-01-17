@@ -91,14 +91,14 @@ export default function LandingPage({ filterQuery }: ILandingPageProps) {
                     <div className='col offset-1 ms-5 mt-3 rounded-md border bg-white shadow-md'>
                         <button
                             type='button'
-                            className='btn'
+                            className='btn full-width-div'
                             style={{ minWidth: 280 }}
                             onClick={() => router.push('/seller')}
                         >
                             <div className='row my-1 ms-1'>
-                                <div className='d-flex'>
+                                <div className='d-flex full-width-div'>
                                     <img src={Bank.src} alt='' />
-                                    <div className='mt- ms-3 mt-1'>
+                                    <div className='ms-3 mt-1'>
                                         Start selling with Toki
                                     </div>
                                 </div>

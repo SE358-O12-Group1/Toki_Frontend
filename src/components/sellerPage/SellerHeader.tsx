@@ -35,14 +35,14 @@ const SellerHeader = () => {
                     style={{ paddingLeft: 50 }}
                 >
                     <div className='offset-1'>
-                        <Link href={'/seller'}>
+                        <Link href={'/'}>
                             <img alt='' className='ms-5 ' src={Logo.src} />
                         </Link>
                     </div>
                 </div>
                 <div className='flex items-center justify-between '>
                     <div style={{ paddingTop: 20, paddingLeft: 15 }}>
-                        <Link href={'/seller'}>
+                        <Link href={'/'}>
                             <img
                                 alt=''
                                 className='ms-1'
