@@ -1638,12 +1638,6 @@ a:focus {
     cursor: pointer;
 }
 
-/* Add this to your styles or import it from a stylesheet */
-.dropdown-container {
-    position: relative;
-    display: inline-block;
-}
-
 .dropdown-button {
     color: var(--gray500);
     border: none;
@@ -1683,10 +1677,11 @@ a:focus {
 }
 
 .dropdown-button {
-    background-color: #4caf50;
-    color: white;
+    /* background-color: #4caf50; */
+    color: var(--main-color);
     padding: 10px;
-    border: none;
+    border: 1px var(--main-color) solid;
+    border-radius: 8px;
     cursor: pointer;
 }
 
