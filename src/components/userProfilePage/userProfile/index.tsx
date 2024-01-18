@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import Link from 'next/link';
@@ -48,8 +49,6 @@ export default function UserProfilePage() {
             });
         }
     });
-
-    const profileData: UserType = data?.data.data;
 
     const { mutate: updateUserMutation } = useMutation({
         mutationKey: ['profile'],
@@ -130,6 +129,7 @@ export default function UserProfilePage() {
                             <img
                                 className='rounded-full'
                                 src={user?.avatar || Circle.src}
+                                alt='avatar'
                                 style={{
                                     maxWidth: '40px',
                                     maxHeight: '100%',
@@ -138,9 +138,14 @@ export default function UserProfilePage() {
                             />
                             <img
                                 src={profileIcon.src}
+                                alt=''
                                 style={{ paddingTop: 30 }}
                             />
-                            <img style={{ paddingTop: 80 }} src={order.src} />
+                            <img
+                                style={{ paddingTop: 80 }}
+                                src={order.src}
+                                alt=''
+                            />
                         </div>
                         <div className='col ms-3'>
                             <div
@@ -256,6 +261,7 @@ export default function UserProfilePage() {
                             >
                                 <img
                                     src={profileState.avatar || bigCircle.src}
+                                    alt='avatar'
                                     style={{
                                         scale: 1.2,
                                         maxWidth: '150px',

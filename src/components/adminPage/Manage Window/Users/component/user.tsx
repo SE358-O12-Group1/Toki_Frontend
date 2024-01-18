@@ -1,20 +1,41 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
+import { useMutation, useQueryClient } from 'react-query';
+
 import Circle from '/public/assets/images/Ellipse.png';
-import Link from 'next/link';
-import Bin from '/public/assets/images/Bin.png';
-import ConfirmationModal from '@/components/common/ConfirmationModal';
+import ConfirmationModal from '@/components/adminPage/Modal/ConfirmationModal';
+
 import UserType from '@/types/UserType';
+import userApi from '@/apis/user.api';
+import { toastOptions } from '@/constants/toast';
 
 export interface IUserItemProps {
     user: UserType;
 }
 
 export const User = ({ user }: IUserItemProps) => {
+    const queryClient = useQueryClient();
+
+    const { mutate: updateUserStatus } = useMutation({
+        mutationFn: ({ id, body }: { id: string; body: UserType }) =>
+            userApi.updateUser(id, body),
+        onSuccess: () => {
+            toast.success('Update user status successfully', toastOptions);
+            queryClient.invalidateQueries('users');
+        }
+    });
+
     const [isConfirmationOpen, setConfirmationOpen] = useState(false);
     const handleConfirm = () => {
-        handleDelete();
-        // Close the modal
+        updateUserStatus({
+            id: user._id,
+            body: {
+                ...user,
+                status: user.status === 1 ? 0 : 1
+            }
+        });
         setConfirmationOpen(false);
     };
 
@@ -25,9 +46,6 @@ export const User = ({ user }: IUserItemProps) => {
     const handleCloseModal = () => {
         setConfirmationOpen(false);
     };
-    function handleDelete(): void {
-        console.log(user._id);
-    }
 
     return (
         <div className=''>
@@ -36,6 +54,7 @@ export const User = ({ user }: IUserItemProps) => {
                     isOpen={isConfirmationOpen}
                     onClose={handleCloseModal}
                     onConfirm={handleConfirm}
+                    user={user}
                 />
             )}
             <div
@@ -57,24 +76,48 @@ export const User = ({ user }: IUserItemProps) => {
                     className='col-4 flex items-center'
                     style={{ fontWeight: 600 }}
                 >
-                    <div className='mr-4'>
-                        <img src={Circle.src} />
+                    <div className='mr-4 '>
+                        <img
+                            src={user.avatar || Circle.src}
+                            alt='avatar'
+                            style={{
+                                maxWidth: '40px',
+                                maxHeight: '100%',
+                                objectFit: 'contain'
+                            }}
+                        />
                     </div>
                     {user.name}
                 </div>
-                <div className='col-3'>{user.phone}</div>
-                <div className='col-2 text-center'>{user.role}</div>
-                <div className='col-2 text-center'>{user.verified}</div>
+                <div className='col-3 text-center'>
+                    {user.phone || 'No phone number'}
+                </div>
+                {/* <div className='col-2 text-center'>{
+                    user.role === 0 ? 'Admin' : 'User'
+                }</div> */}
+                <div className='col-3 text-center'>
+                    {user.verified ? 'Yes' : 'No'}
+                </div>
                 {/* <div className='col-2'>
                     <Link href='' style={{ textDecoration: 'underline' }}>
                         View activity history
                     </Link>
                 </div> */}
                 <div
-                    className='col-1 mx-auto cursor-pointer'
-                    onClick={handleOpenModal}
+                    className='col-2 mx-auto flex cursor-pointer items-center justify-center rounded text-center'
+                    // onClick={handleOpenModal}
                 >
-                    <img className='mx-auto' src={Bin.src} />
+                    {/* <img className='mx-auto' src={Bin.src} alt='' /> */}
+                    <div
+                        className={
+                            user.status === 1
+                                ? 'rounded-full bg-green-400 px-4 py-1 text-white hover:bg-green-500'
+                                : 'rounded-full bg-red-400 px-4 py-1 text-white hover:bg-red-500'
+                        }
+                        onClick={handleOpenModal}
+                    >
+                        {user.status === 1 ? 'Active' : 'Inactive'}
+                    </div>
                 </div>
             </div>
         </div>

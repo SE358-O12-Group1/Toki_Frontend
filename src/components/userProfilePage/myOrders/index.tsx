@@ -64,7 +64,7 @@ export default function MyOrdersPage() {
                     >
                         <img
                             alt=''
-                            className=' rounded-full'
+                            className='rounded-full'
                             src={profile.avatar || Circle.src}
                             style={{
                                 maxWidth: '40px',
