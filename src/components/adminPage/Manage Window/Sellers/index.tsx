@@ -1,11 +1,40 @@
-import TextBox from '@/components/common/TextBox';
+import { useMemo, useState } from 'react';
 import Button from '@mui/material/Button';
-import { Seller } from '@/components/adminPage/Manage Window/Sellers/component/seller';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-import { mockUser, mockUser2 } from '@/components/productPage/mockData';
+
+import TextBox from '@/components/common/TextBox';
+import { Seller } from '@/components/adminPage/Manage Window/Sellers/component/seller';
+import UserType from '@/types/UserType';
+import { useQuery } from 'react-query';
+import userApi from '@/apis/user.api';
+import { removeVietnamesePhonetics } from '@/utils/utils';
 
 export default function ManageSellers() {
+    const [sellers, setSellers] = useState<UserType[]>([]);
+
+    const {} = useQuery({
+        queryKey: 'sellers',
+        queryFn: () => userApi.getUsers(1),
+        onSuccess: (res) => {
+            setSellers(res.data.data);
+        }
+    });
+
+    const [searchInput, setSearchInput] = useState('');
+
+    const filteredSellers = useMemo(() => {
+        const filterString = removeVietnamesePhonetics(
+            searchInput.trim().toLowerCase()
+        );
+
+        return sellers.filter((seller) =>
+            removeVietnamesePhonetics(seller.name.toLowerCase()).includes(
+                filterString
+            )
+        );
+    }, [searchInput, sellers]);
+
     return (
         <>
             <div
@@ -15,9 +44,14 @@ export default function ManageSellers() {
                     marginTop: 30
                 }}
             >
-                <TextBox placeholder='Seller' type='Search'></TextBox>
+                <TextBox
+                    placeholder='Seller'
+                    type='Search'
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
+                ></TextBox>
             </div>
-            <div style={{ paddingTop: 20, paddingBottom: 20 }}>
+            {/* <div style={{ paddingTop: 20, paddingBottom: 20 }}>
                 <Button
                     size='small'
                     variant='outlined'
@@ -32,6 +66,19 @@ export default function ManageSellers() {
                 >
                     Search
                 </Button>
+            </div> */}
+            <div
+                style={{
+                    paddingTop: 15,
+                    marginLeft: 30,
+                    paddingBottom: 25,
+                    fontSize: 24,
+                    color: '#00ADB5',
+                    fontWeight: 500
+                }}
+            >
+                {filteredSellers.length}{' '}
+                {filteredSellers.length > 1 ? 'Sellers' : 'Seller'}
             </div>
             <div
                 className='col d-flex '
@@ -53,18 +100,18 @@ export default function ManageSellers() {
                     Seller Name
                 </div>
                 <div className='col-3 text-center'>Phone number</div>
-                <div className='col-2 text-center'>Role</div>
-                <div className='col-2 text-center'>Verified</div>
+                <div className='col-3 text-center'>Verified</div>
                 {/* <div className='col-3 text-center'>Comment</div> */}
-                <div className='col-1 text-center'>Option</div>
+                <div className='col-2 text-center'>Status</div>
             </div>
 
-            <div className='col'>
-                <Seller seller={mockUser}></Seller>
-                <Seller seller={mockUser2}></Seller>
+            <div className='col pb-5'>
+                {filteredSellers.map((seller) => (
+                    <Seller key={seller._id} seller={seller}></Seller>
+                ))}
             </div>
 
-            <Stack
+            {/* <Stack
                 spacing={2}
                 style={{
                     alignItems: 'center',
@@ -73,7 +120,7 @@ export default function ManageSellers() {
                 }}
             >
                 <Pagination count={11} defaultPage={2} siblingCount={0} />
-            </Stack>
+            </Stack> */}
         </>
     );
 }

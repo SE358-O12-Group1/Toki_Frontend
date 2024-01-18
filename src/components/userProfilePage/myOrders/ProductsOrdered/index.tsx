@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import ChatIcon from '/public/assets/images/chaticon.png';
 import Iphone from '/public/assets/images/Iphone.png';
 
@@ -88,6 +89,7 @@ const ProductsOrdered = ({}: IProps) => {
                         <div style={{ marginInlineStart: 15, marginTop: 10 }}>
                             <img
                                 src={ChatIcon.src}
+                                alt=''
                                 style={{
                                     flexShrink: 0,
                                     width: '100%'
@@ -106,7 +108,11 @@ const ProductsOrdered = ({}: IProps) => {
                         className='col-1'
                         style={{ marginTop: 15, marginInlineStart: 25 }}
                     >
-                        <img src={Iphone.src} style={{ width: '100%' }} />
+                        <img
+                            src={Iphone.src}
+                            style={{ width: '100%' }}
+                            alt=''
+                        />
                     </div>
                     <div
                         className='col-3'

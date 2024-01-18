@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 import { MouseEvent, useState } from 'react';
 import Link from 'next/link';
@@ -138,6 +139,7 @@ export default function ChangePasswordPage() {
                             <img
                                 className='rounded-full'
                                 src={profile.avatar || Circle.src}
+                                alt='avatar'
                                 style={{
                                     maxWidth: '40px',
                                     maxHeight: '100%',
@@ -146,9 +148,14 @@ export default function ChangePasswordPage() {
                             />
                             <img
                                 src={profileIcon.src}
+                                alt=''
                                 style={{ paddingTop: 30 }}
                             />
-                            <img style={{ paddingTop: 80 }} src={order.src} />
+                            <img
+                                style={{ paddingTop: 80 }}
+                                src={order.src}
+                                alt=''
+                            />
                         </div>
                         <div className='col ms-3'>
                             <div

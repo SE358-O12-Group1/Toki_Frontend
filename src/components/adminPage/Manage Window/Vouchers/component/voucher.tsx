@@ -1,39 +1,52 @@
 'use client';
 /* eslint-disable @next/next/no-img-element */
 import ConfirmationModal from '@/components/common/ConfirmationModal';
-import { mockVoucher } from '../mockVoucher';
+// import { mockVoucher } from '../mockVoucher';
 import VoucherStatus from './status';
 import { useState } from 'react';
+import VoucherType from '@/types/VoucherType';
+import { useMutation, useQueryClient } from 'react-query';
+import discountApi from '@/apis/discount.api';
+import { toast } from 'react-toastify';
+import { toastOptions } from '@/constants/toast';
+import { formatCurrency } from '@/utils/utils';
 
-export const Voucher = () => {
-    const handleEdit = (index: number) => {
+interface IProps {
+    voucher: VoucherType;
+}
+
+export const Voucher = ({ voucher }: IProps) => {
+    const queryClient = useQueryClient();
+
+    const { mutate: deleteDiscount } = useMutation({
+        mutationFn: (deleteId: string) => discountApi.deleteDiscount(deleteId),
+        onSuccess: (res) => {
+            toast.success(res.data.message, toastOptions);
+            queryClient.invalidateQueries('discounts');
+        }
+    });
+
+    const handleDelete = () => {
+        deleteDiscount(voucher._id);
+    };
+
+    const handleEdit = () => {
         return;
     };
 
-    const handleDelete = (index: number) => {
-        console.log(index);
-    };
-
-    const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
     const [isConfirmationOpen, setConfirmationOpen] = useState(false);
 
     const handleConfirm = () => {
-        if (selectedIndex !== null) {
-            handleDelete(selectedIndex);
-            setSelectedIndex(null);
-            // Close the modal
-            setConfirmationOpen(false);
-        }
+        handleDelete();
+        // Close the modal
+        setConfirmationOpen(false);
     };
 
-    const handleOpenModal = (index: number) => {
-        console.log(index);
-        setSelectedIndex(index);
+    const handleOpenModal = () => {
         setConfirmationOpen(true);
     };
 
     const handleCloseModal = () => {
-        setSelectedIndex(null);
         setConfirmationOpen(false);
     };
 
@@ -46,83 +59,89 @@ export const Voucher = () => {
                     onConfirm={handleConfirm}
                 />
             )}
-            {mockVoucher.map((voucher, index) => (
+
+            <div
+                className='grid grid-cols-12'
+                style={{
+                    borderLeft: '2px solid #EEEEEE',
+                    marginLeft: 30,
+                    marginRight: 30,
+                    paddingLeft: 20,
+                    paddingTop: 10,
+                    paddingBottom: 10,
+                    paddingRight: 20,
+                    alignItems: 'center',
+                    borderBottom: '2px solid #EEEEEE',
+                    borderRight: '2px solid #EEEEEE'
+                }}
+            >
                 <div
-                    key={index}
-                    className='grid grid-cols-12'
+                    className='col-span-1'
                     style={{
-                        borderLeft: '2px solid #EEEEEE',
-                        marginLeft: 30,
-                        marginRight: 30,
-                        paddingLeft: 20,
-                        paddingTop: 10,
-                        paddingBottom: 10,
-                        paddingRight: 20,
-                        alignItems: 'center',
-                        borderBottom: '2px solid #EEEEEE',
-                        borderRight: '2px solid #EEEEEE'
+                        display: 'flex',
+                        alignItems: 'center'
                     }}
                 >
-                    <div
-                        className='col-span-3'
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center'
-                        }}
-                    >
-                        <img
-                            src={voucher.image}
-                            alt=''
-                            style={{
-                                width: 60,
-                                height: 60,
-                                objectFit: 'cover',
-                                display: 'block'
-                            }}
-                        />
-                        <div style={{ paddingLeft: 10, fontWeight: 600 }}>
-                            {voucher.name}
-                        </div>
-                    </div>
-                    <div className='col-span-2 text-center'>
-                        {voucher.discount}
-                    </div>
-                    <div className='col-span-2 text-center'>
-                        {voucher.minimumprice}
-                    </div>
-                    <div className='col-span-2 text-center'>{voucher.used}</div>
-                    <div className='col-span-2 text-center'>
-                        <VoucherStatus status={voucher.status}></VoucherStatus>
-                        <div>
-                            {voucher.startdate}-{voucher.enddate}
-                        </div>
-                    </div>
-                    <div className='col-span-1 text-center'>
-                        <div
-                            onClick={() => handleEdit(parseInt(voucher._id))}
-                            style={{
-                                fontSize: 14,
-                                color: '#00ADB5',
-                                cursor: 'pointer'
-                            }}
-                        >
-                            Edit
-                        </div>
-                        <button
-                            onClick={() =>
-                                handleOpenModal(parseInt(voucher._id))
-                            }
-                            style={{
-                                fontSize: 14,
-                                color: '#00ADB5',
-                                cursor: 'pointer'
-                            }}
-                        >
-                            Delete
-                        </button>
+                    <div style={{ paddingLeft: 10, fontWeight: 600 }}>
+                        {voucher.is_active ? (
+                            <div style={{ color: '#00ADB5' }}>
+                                <p>Active</p>
+                            </div>
+                        ) : (
+                            <div style={{ color: '#F94144' }}>
+                                <p>Inactive</p>
+                            </div>
+                        )}
+                        {voucher.code}
                     </div>
                 </div>
-            ))}
+                <div className='col-span-2 text-center'>
+                    {formatCurrency(voucher.value)}
+                    {voucher.type === 0 ? ' VND' : '%'}
+                </div>
+                <div className='col-span-2 text-center'>
+                    {formatCurrency(voucher.min_order_value)} VND
+                </div>
+                <div className='col-span-1 text-center'>
+                    {voucher.uses_count}
+                </div>
+                <div className='col-span-2 text-center'>{voucher.max_uses}</div>
+                <div className='col-span-3 text-center'>
+                    {/* <VoucherStatus status={voucher.status}></VoucherStatus>
+                    <div>
+                        {voucher.startdate}-{voucher.enddate}
+                    </div> */}
+                    <p>start: {voucher.start_date.substring(0, 19)}</p>
+                    <p>end: {voucher.end_date.substring(0, 19)}</p>
+                </div>
+                <div className='col-span-1 text-center'>
+                    <div
+                        // onClick={() => handleEdit(parseInt(voucher._id))}
+                        style={{
+                            fontSize: 16,
+                            color: '#00ADB5',
+                            cursor: 'pointer',
+                            marginBottom: 10,
+                            backgroundColor: '#EEEEEE',
+                            borderRadius: 5
+                        }}
+                    >
+                        Edit
+                    </div>
+                    <div
+                        onClick={handleOpenModal}
+                        style={{
+                            fontSize: 16,
+                            color: '#00ADB5',
+                            cursor: 'pointer',
+                            backgroundColor: '#EEEEEE',
+                            borderRadius: 5
+                        }}
+                    >
+                        Delete
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };
