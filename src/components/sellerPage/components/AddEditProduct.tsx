@@ -59,7 +59,7 @@ export default function AddEditProduct({ product }: IAddEditProductProps) {
 
     const imagesField = useMemo(() => {
         return imageValues.map((image, index) => (
-            <div className='text-md mb-2 flex'>
+            <div className='text-md mb-2 flex' key={index}>
                 <TextBox
                     value={image}
                     placeholder='Image link'
