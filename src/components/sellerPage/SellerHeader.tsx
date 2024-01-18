@@ -83,7 +83,7 @@ const SellerHeader = () => {
                         <>
                             <Link
                                 className='me-5 flex items-center text-white'
-                                href={'/'}
+                                href={'/user/profile'}
                             >
                                 <CircleAvatar
                                     className='ml-5 mr-3'

@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import { User } from '@/components/adminPage/Manage Window/Users/component/user';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
+import { mockUser, mockUser2 } from '@/components/productPage/mockData';
 
 export default function ManageUsers() {
     return (
@@ -48,20 +49,19 @@ export default function ManageUsers() {
                     borderTopRightRadius: 5
                 }}
             >
-                <div className='col-3' style={{ paddingLeft: 10 }}>
-                    UserName
+                <div className='col-4' style={{ paddingLeft: 10 }}>
+                    User Name
                 </div>
                 <div className='col-3 text-center'>Phone number</div>
-                <div className='col-1 text-center'>Bought</div>
-                <div className='col-1 text-right'>Violation</div>
-                <div className='col-3 text-center'>Comment</div>
+                <div className='col-2 text-center'>Role</div>
+                <div className='col-2 text-center'>Verified</div>
+                {/* <div className='col-3 text-center'>Comment</div> */}
                 <div className='col-1 text-center'>Option</div>
             </div>
 
             <div className='col'>
-                <User></User>
-                <User></User>
-                <User></User>
+                <User user={mockUser}></User>
+                <User user={mockUser2}></User>
             </div>
 
             <Stack

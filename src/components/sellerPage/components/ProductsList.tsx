@@ -21,6 +21,7 @@ import productApi from '@/apis/product.api';
 
 // constants
 import { toastOptions } from '@/constants/toast';
+import ConfirmationModal from '@/components/common/ConfirmationModal';
 
 export default function SellerProductsList() {
     const [products, setProducts] = useState<ShopProductType[]>([]);
@@ -84,11 +85,41 @@ export default function SellerProductsList() {
         setEditProduct(product);
     };
 
+    const [selectedIndex, setSelectedIndex] = useState<string | null>(null);
+    const [isConfirmationOpen, setConfirmationOpen] = useState(false);
+
+    const handleConfirm = () => {
+        if (selectedIndex !== null) {
+            handleDelete(selectedIndex);
+            setSelectedIndex(null);
+            // Close the modal
+            setConfirmationOpen(false);
+        }
+    };
+
+    const handleOpenModal = (index: string) => {
+        console.log(index);
+        setSelectedIndex(index);
+        setConfirmationOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setSelectedIndex(null);
+        setConfirmationOpen(false);
+    };
+
     if (isLoading) return <div>Loading...</div>;
 
     if (!action)
         return (
             <div className='container p-4'>
+                {isConfirmationOpen && (
+                    <ConfirmationModal
+                        isOpen={isConfirmationOpen}
+                        onClose={handleCloseModal}
+                        onConfirm={handleConfirm}
+                    />
+                )}
                 <div className='grid grid-cols-3'>
                     <div className='col-span-2 flex'>
                         <TextBox
@@ -194,7 +225,7 @@ export default function SellerProductsList() {
                                                     backgroundColor='#FFFFFF'
                                                     textColor='#FF0000'
                                                     onClick={() => {
-                                                        handleDelete(
+                                                        handleOpenModal(
                                                             product._id
                                                         );
                                                     }}

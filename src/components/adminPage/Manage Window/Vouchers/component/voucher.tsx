@@ -10,37 +10,42 @@ export const Voucher = () => {
         return;
     };
 
-    const handleDelete = (index: number) => {};
+    const handleDelete = (index: number) => {
+        console.log(index);
+    };
 
+    const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
     const [isConfirmationOpen, setConfirmationOpen] = useState(false);
-    let selectedIndex = -1;
 
     const handleConfirm = () => {
-        handleDelete(selectedIndex);
-
-        // Close the modal
-        setConfirmationOpen(false);
+        if (selectedIndex !== null) {
+            handleDelete(selectedIndex);
+            setSelectedIndex(null);
+            // Close the modal
+            setConfirmationOpen(false);
+        }
     };
 
     const handleOpenModal = (index: number) => {
-        console.log('HEKKK');
+        console.log(index);
+        setSelectedIndex(index);
         setConfirmationOpen(true);
-        selectedIndex = index;
     };
 
     const handleCloseModal = () => {
+        setSelectedIndex(null);
         setConfirmationOpen(false);
     };
 
     return (
         <div>
-            <ConfirmationModal
-                isOpen={isConfirmationOpen}
-                onClose={handleCloseModal}
-                onConfirm={() => {
-                    handleConfirm();
-                }}
-            />
+            {isConfirmationOpen && (
+                <ConfirmationModal
+                    isOpen={isConfirmationOpen}
+                    onClose={handleCloseModal}
+                    onConfirm={handleConfirm}
+                />
+            )}
             {mockVoucher.map((voucher, index) => (
                 <div
                     key={index}
@@ -103,7 +108,7 @@ export const Voucher = () => {
                         >
                             Edit
                         </div>
-                        <div
+                        <button
                             onClick={() =>
                                 handleOpenModal(parseInt(voucher._id))
                             }
@@ -114,7 +119,7 @@ export const Voucher = () => {
                             }}
                         >
                             Delete
-                        </div>
+                        </button>
                     </div>
                 </div>
             ))}
