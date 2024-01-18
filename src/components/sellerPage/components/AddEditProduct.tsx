@@ -24,6 +24,7 @@ import { toastOptions } from '@/constants/toast';
 
 // types
 import { ShopProductType } from '@/types/ProductType';
+import { mockCategories } from '@/components/productPage/mockData';
 
 export interface IAddEditProductProps {
     product?: ShopProductType;
@@ -236,10 +237,10 @@ export default function AddEditProduct({
                                 Category
                             </span>
                         </div>
-                        <div className='col-span-8 flex'>
+                        <div className='col-span-2 flex items-center'>
                             {/* <TextBox required={true}></TextBox> */}
                             <DropdownButton
-                                className='text-md full-width-div'
+                                className='text-md full-width-div border-1 border-main mx-auto rounded-md px-4 py-2'
                                 value={
                                     categories.find(
                                         (e: any) =>

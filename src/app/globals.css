@@ -1671,13 +1671,12 @@ a:focus {
     border: none;
 }
 
-.dropdown-container {
+/* .dropdown-container {
     position: relative;
     display: inline-block;
 }
 
 .dropdown-button {
-    /* background-color: #4caf50; */
     color: var(--main-color);
     padding: 10px;
     border: 1px var(--main-color) solid;
@@ -1707,7 +1706,7 @@ a:focus {
 
 .dropdown-container:hover .dropdown-content {
     display: block;
-}
+} */
 
 .modal-overlay {
     position: fixed;
