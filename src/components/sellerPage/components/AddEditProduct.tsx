@@ -94,7 +94,11 @@ export default function AddEditProduct({
 
     const imagesField = useMemo(() => {
         return imageValues.map((image, index) => (
+<<<<<<< HEAD
             <div key={index} className='text-md mb-2 flex'>
+=======
+            <div className='text-md mb-2 flex' key={index}>
+>>>>>>> TOKI-85-Implement-UI-for-Admin-Page-Category-Management
                 <TextBox
                     value={image}
                     placeholder='Image link'

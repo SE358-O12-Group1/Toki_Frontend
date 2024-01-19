@@ -19,6 +19,10 @@ import { removeVietnamesePhonetics } from '@/utils/utils';
 
 export default function ManageCategories() {
     const [discounts, setDiscounts] = useState<VoucherType[]>([]);
+    const [searchInput, setSearchInput] = useState('');
+    const [isAddvoucher, setIsAddVoucher] = useState(false)
+    const [voucherEdit, setVoucherEdit] = useState<VoucherType>()
+    const [isEditVoucher, setIsEditVoucher] = useState(false)
 
     const { isSuccess } = useQuery({
         queryKey: 'discounts',
@@ -27,8 +31,6 @@ export default function ManageCategories() {
             setDiscounts(data.data.data);
         }
     });
-
-    const [searchInput, setSearchInput] = useState('');
 
     const filteredDiscounts = useMemo(() => {
         const filterString = removeVietnamesePhonetics(
@@ -42,8 +44,20 @@ export default function ManageCategories() {
         );
     }, [searchInput, discounts]);
 
-    if (isSuccess) {
-        return (
+    function handleAddVoucher() {
+        setIsAddVoucher(!isAddvoucher)
+        setIsEditVoucher(false);
+    }
+
+    function getVoucherEdit(data: VoucherType) {
+        setVoucherEdit(data)
+    }
+
+    function getIsEditVoucher(data: boolean) {
+        setIsEditVoucher(data)
+    }
+    
+    return (
             <>
                 <div
                     style={{
@@ -68,6 +82,7 @@ export default function ManageCategories() {
                     </div>
                     <div>
                         <Button
+                            onClick={handleAddVoucher}
                             size='small'
                             variant='outlined'
                             style={{
@@ -88,22 +103,6 @@ export default function ManageCategories() {
                         </Button>
                     </div>
                 </div>
-                {/* <div style={{ paddingTop: 20, paddingBottom: 20 }}>
-                    <Button
-                        size='small'
-                        variant='outlined'
-                        style={{
-                            background: '#00ADB5',
-                            color: 'white',
-                            minWidth: 150,
-                            textTransform: 'none',
-                            fontSize: 18,
-                            marginLeft: 30
-                        }}
-                    >
-                        Search
-                    </Button>
-                </div> */}
                 <div
                     style={{
                         paddingTop: 15,
@@ -148,7 +147,7 @@ export default function ManageCategories() {
 
                 <div className='col pb-5'>
                     {filteredDiscounts.map((discount) => (
-                        <Voucher key={discount._id} voucher={discount} />
+                        <Voucher key={discount._id} voucher={discount} onVoucherEdit={getVoucherEdit} onIsEdit={getIsEditVoucher}/>
                     ))}
                 </div>
 
@@ -164,5 +163,4 @@ export default function ManageCategories() {
                 </Stack> */}
             </>
         );
-    }
 }
