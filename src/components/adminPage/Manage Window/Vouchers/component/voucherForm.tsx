@@ -1,62 +1,152 @@
 import TextBox from '@/components/common/TextBox';
 import Button from '@mui/material/Button';
-import InputNumber from '@/components/productPage/components/InputNumber';
-import { ArrowBackIosNew } from '@mui/icons-material';
-import { useState, FocusEvent } from 'react';
+import { useState, FocusEvent, Dispatch, SetStateAction } from 'react';
 
-import VoucherType from '@/types/VoucherType';
+import VoucherType, { convertNumberToType } from '@/types/VoucherType';
+import DropdownButton from '@/components/common/DropdownButton';
+import { useMutation, useQueryClient } from 'react-query';
+import discountApi, { DiscountRequestType } from '@/apis/discount.api';
+import { toast } from 'react-toastify';
+import { toastOptions } from '@/constants/toast';
 
 export interface IsVoucherFormProps {
-    voucher?: VoucherType
+    voucher?: VoucherType;
+    action: string;
+    setAction: Dispatch<SetStateAction<string>>;
 }
 
-type AddEditVoucherType = {
-    code: string;
-    value: number;
-    minimum_order_price: number;
-    public_date: string;
-    expiration_date: string;
-};
+export default function AddVoucherForm({
+    voucher,
+    action,
+    setAction
+}: IsVoucherFormProps) {
+    const queryClient = useQueryClient();
 
-export default function AddVoucherForm({voucher} : IsVoucherFormProps) {
-    const init: AddEditVoucherType = {
+    const init: DiscountRequestType = {
         code: voucher ? voucher.code : '',
         value: voucher ? voucher.value : 0,
-        minimum_order_price: voucher ? voucher.min_order_value : 0,
-        public_date: voucher ? voucher.start_date : '',
-        expiration_date: voucher ? voucher.end_date : '',
-    }
+        type: voucher ? voucher.type : 0,
+        is_active: voucher ? voucher.is_active : false,
+        max_uses: voucher ? voucher.max_uses : 0,
+        min_order_value: voucher ? voucher.min_order_value : 0
+        // start_date: voucher ? voucher.start_date : '',
+        // end_date: voucher ? voucher.end_date : ''
+    };
 
     const [formValues, setFormValues] = useState(init);
-    const [isAddVoucher, setIsAddVoucher] = useState(false)
+
+    const { mutate: createDiscount } = useMutation({
+        mutationFn: (body: DiscountRequestType) =>
+            discountApi.createDiscount(body),
+        onSuccess: (res) => {
+            toast.success(res.data.message, toastOptions);
+            queryClient.invalidateQueries('discounts');
+            setAction('');
+        }
+    });
+
+    const { mutate: updateDiscount } = useMutation({
+        mutationFn: ({ id, body }: { id: string; body: DiscountRequestType }) =>
+            discountApi.updateDiscount(id, body),
+        onSuccess: (res) => {
+            toast.success(res.data.message, toastOptions);
+            queryClient.invalidateQueries('discounts');
+            setAction('');
+        }
+    });
 
     const handleSubmit = () => {
+        if (formValues.code === '') {
+            toast.error('Please fill in code field', toastOptions);
+            return;
+        }
 
-    }
+        if (formValues.value === 0) {
+            toast.error('Please fill in value field', toastOptions);
+            return;
+        }
 
-    const handleNameChange = (e: FocusEvent<HTMLInputElement, Element>) => {
-        setFormValues({...formValues, code: e.currentTarget.value})
-    }
+        if (formValues.is_active && formValues.max_uses === 0) {
+            toast.error('Please fill in max uses field', toastOptions);
+            return;
+        }
 
-    const handleDiscountChange = (e: FocusEvent<HTMLInputElement, Element>) => {
-        setFormValues({...formValues, value: parseInt(e.currentTarget.value)})
-    }
+        if (action === 'add') {
+            createDiscount(formValues);
+        }
 
-    const handleMinimumPriceChange = (e: FocusEvent<HTMLInputElement, Element>) => {
-        setFormValues({...formValues, minimum_order_price: parseInt(e.currentTarget.value)})
-    }
+        if (action === 'edit') {
+            updateDiscount({
+                id: (voucher as VoucherType)._id,
+                body: formValues
+            });
+        }
+    };
 
-    const handlePublicDateChange = (e: FocusEvent<HTMLInputElement, Element>) => {
-        setFormValues({...formValues, public_date: e.currentTarget.value})
-    }
+    const handleCodeChange = (e: FocusEvent<HTMLInputElement, Element>) => {
+        setFormValues({ ...formValues, code: e.currentTarget.value });
+    };
 
-    const handleExpirationDateChange = (e: FocusEvent<HTMLInputElement, Element>) => {
-        setFormValues({...formValues, expiration_date: e.currentTarget.value})
-    }
+    const handleTypeChange = (type: number) => {
+        setFormValues({ ...formValues, type, value: 0 });
+    };
+
+    const handleValueChange = (e: FocusEvent<HTMLInputElement, Element>) => {
+        if (formValues.type === 0 && parseInt(e.target.value) > 100) {
+            setFormValues({
+                ...formValues,
+                value: 100
+            });
+            return;
+        }
+
+        setFormValues({
+            ...formValues,
+            value: parseInt(e.target.value) || 0
+        });
+    };
+
+    const handleMinimumOrderValueChange = (
+        e: FocusEvent<HTMLInputElement, Element>
+    ) => {
+        setFormValues({
+            ...formValues,
+            min_order_value: parseInt(e.currentTarget.value) || 0
+        });
+    };
+
+    const handleMaximumUsesChange = (
+        e: FocusEvent<HTMLInputElement, Element>
+    ) => {
+        setFormValues({
+            ...formValues,
+            max_uses: parseInt(e.currentTarget.value) || 0
+        });
+    };
+
+    const handleStatusChange = (status: number) => {
+        setFormValues({
+            ...formValues,
+            is_active: status === 0 ? true : false
+        });
+    };
+
+    // const handleStartDateChange = (
+    //     e: FocusEvent<HTMLInputElement, Element>
+    // ) => {
+    //     setFormValues({ ...formValues, start_date: e.currentTarget.value });
+    // };
+
+    // const handleEndDateChange = (e: FocusEvent<HTMLInputElement, Element>) => {
+    //     setFormValues({
+    //         ...formValues,
+    //         end_date: e.currentTarget.value
+    //     });
+    // };
 
     return (
         <div className='container p-4'>
-            <span 
+            <span
                 className='text-main mb-2 flex text-lg'
                 style={{
                     fontWeight: 500
@@ -72,84 +162,154 @@ export default function AddVoucherForm({voucher} : IsVoucherFormProps) {
                     <div className='grid grid-cols-12'>
                         <div className='col-span-3 grid pr-4 '>
                             <span className='text-md flex items-center justify-end'>
-                                Voucher Name
+                                Voucher Code
                             </span>
                         </div>
                         <div className='col-span-8'>
                             <TextBox
                                 required={true}
-                                placeholder='Voucher name'
+                                placeholder='Enter voucher code'
                                 value={formValues.code}
-                                onChange={handleNameChange}
+                                onChange={handleCodeChange}
                             ></TextBox>
                         </div>
                     </div>
-                    <div className='grid grid-cols-12' style={{marginTop: 25}}>
+                    <div
+                        className='grid grid-cols-12'
+                        style={{ marginTop: 25 }}
+                    >
                         <div className='col-span-3 grid pr-4 '>
                             <span className='text-md flex items-center justify-end'>
-                                Discount
+                                Status
                             </span>
                         </div>
                         <div className='col-span-8'>
-                            <InputNumber
-                                required={true}
-                                placeholder='Input'
-                                value={formValues.value}
-                                onChange={handleDiscountChange}
-                            ></InputNumber>
+                            <DropdownButton
+                                className='nowrap border-main col-span-1 mr-4 rounded-md p-2'
+                                items={['Active', 'Inactive']}
+                                value={
+                                    formValues.is_active ? 'Active' : 'Inactive'
+                                }
+                                onSelect={handleStatusChange}
+                            />
                         </div>
                     </div>
-                    <div className='grid grid-cols-12' style={{marginTop: 25}}>
+                    <div
+                        className='grid grid-cols-12'
+                        style={{ marginTop: 25 }}
+                    >
+                        <div className='col-span-3 grid pr-4 '>
+                            <span className='text-md flex items-center justify-end'>
+                                Type
+                            </span>
+                        </div>
+                        <div className='col-span-8'>
+                            <DropdownButton
+                                className='nowrap border-main col-span-1 mr-4 rounded-md p-2'
+                                items={['Percentage', 'Fixed']}
+                                value={convertNumberToType(formValues.type)}
+                                onSelect={handleTypeChange}
+                            />
+                        </div>
+                    </div>
+                    <div
+                        className='grid grid-cols-12'
+                        style={{ marginTop: 25 }}
+                    >
+                        <div className='col-span-3 grid pr-4 '>
+                            <span className='text-md flex items-center justify-end'>
+                                Value
+                            </span>
+                        </div>
+                        <div className='col-span-8'>
+                            <TextBox
+                                required={true}
+                                placeholder='Input'
+                                value={formValues.value.toString()}
+                                onChange={handleValueChange}
+                            ></TextBox>
+                        </div>
+                    </div>
+                    <div
+                        className='grid grid-cols-12'
+                        style={{ marginTop: 25 }}
+                    >
                         <div className='col-span-3 grid pr-4 '>
                             <span className='text-md flex items-center justify-end'>
                                 Minimum Order Price
                             </span>
                         </div>
                         <div className='col-span-8'>
-                            <InputNumber
+                            <TextBox
                                 required={true}
-                                placeholder='Input'
-                                value={formValues.minimum_order_price}
-                                onChange={handleMinimumPriceChange}
-                            ></InputNumber>
+                                value={formValues.min_order_value.toString()}
+                                onChange={handleMinimumOrderValueChange}
+                            ></TextBox>
                         </div>
                     </div>
-                    <div className='grid grid-cols-12' style={{marginTop: 25}}>
+                    <div
+                        className='grid grid-cols-12'
+                        style={{ marginTop: 25 }}
+                    >
                         <div className='col-span-3 grid pr-4 '>
                             <span className='text-md flex items-center justify-end'>
-                                Public Date
+                                Max Uses
                             </span>
                         </div>
                         <div className='col-span-8'>
                             <TextBox
                                 required={true}
                                 placeholder='Input'
-                                value={formValues.public_date}
-                                onChange={handlePublicDateChange}
+                                value={formValues.max_uses.toString()}
+                                onChange={handleMaximumUsesChange}
                             ></TextBox>
                         </div>
                     </div>
-                    <div className='grid grid-cols-12' style={{marginTop: 25}}>
+
+                    {/* <div
+                        className='grid grid-cols-12'
+                        style={{ marginTop: 25 }}
+                    >
                         <div className='col-span-3 grid pr-4 '>
                             <span className='text-md flex items-center justify-end'>
-                                Expiration Date
+                                Start Date
                             </span>
                         </div>
                         <div className='col-span-8'>
                             <TextBox
                                 required={true}
-                                placeholder='Input'
-                                value={formValues.expiration_date}
-                                onChange={handleExpirationDateChange}
+                                placeholder='Example: 2023-12-31T17:00:00.00'
+                                value={formValues.start_date}
+                                onChange={handleStartDateChange}
+                                type=''
                             ></TextBox>
                         </div>
                     </div>
+                    <div
+                        className='grid grid-cols-12'
+                        style={{ marginTop: 25 }}
+                    >
+                        <div className='col-span-3 grid pr-4 '>
+                            <span className='text-md flex items-center justify-end'>
+                                End Date
+                            </span>
+                        </div>
+                        <div className='col-span-8'>
+                            <TextBox
+                                required={true}
+                                placeholder='Example: 2023-12-31T17:00:00.00'
+                                value={formValues.end_date}
+                                onChange={handleEndDateChange}
+                            ></TextBox>
+                        </div>
+                    </div> */}
                 </div>
 
-                <div className='grid grid-cols-3' style={{marginTop: 25}}>
+                <div className='grid grid-cols-3' style={{ marginTop: 25 }}>
                     <div className='col-span-2'></div>
-                    <div className='col-span-1 flex justify-content-end'>
-                        <Button className='text-md'
+                    <div className='justify-content-end col-span-1 flex'>
+                        <Button
+                            className='text-md'
                             style={{
                                 color: '#777',
                                 border: '1px solid #d9d9d9',
@@ -157,19 +317,22 @@ export default function AddVoucherForm({voucher} : IsVoucherFormProps) {
                                 paddingBottom: 10,
                                 paddingLeft: 22,
                                 paddingRight: 22,
-                                marginRight: 20,
+                                marginRight: 20
                             }}
+                            onClick={() => setAction('')}
                         >
                             Cancel
                         </Button>
-                        <Button className='text-md'
+                        <Button
+                            className='text-md'
+                            onClick={handleSubmit}
                             style={{
                                 color: 'white',
                                 backgroundColor: '#00ADB5',
                                 paddingTop: 10,
                                 paddingBottom: 10,
                                 paddingLeft: 22,
-                                paddingRight: 22,
+                                paddingRight: 22
                             }}
                         >
                             Save and Publish
@@ -178,5 +341,5 @@ export default function AddVoucherForm({voucher} : IsVoucherFormProps) {
                 </div>
             </form>
         </div>
-    )
+    );
 }
