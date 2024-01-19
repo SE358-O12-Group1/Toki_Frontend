@@ -9,12 +9,16 @@ const authApi = {
         return http.post(AUTH_API_ROUTES.register, body);
     },
 
-    login(body: { email: string; password: string }) {
+    login(body: { account: string; password: string }) {
         return http.post(AUTH_API_ROUTES.login, body);
     },
 
     changePassword(body: ChangePasswordType) {
         return http.post(AUTH_API_ROUTES.changePassword, body);
+    },
+
+    logout() {
+        return http.post(AUTH_API_ROUTES.logout);
     }
 };
 

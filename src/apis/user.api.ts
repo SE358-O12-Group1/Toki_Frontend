@@ -25,7 +25,10 @@ const userApi = {
         });
     },
 
-    updateUser(userId: string, data: ProfileType | UserType) {
+    updateUser(
+        userId: string,
+        data: ProfileType | UserType | { role: number }
+    ) {
         return http.put(API_ROUTES.users + userId, data);
     }
 };

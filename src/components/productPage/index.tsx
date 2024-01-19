@@ -20,7 +20,7 @@ import ProductRating from './components/ProductRatings';
 import ShopIcon from '/public/assets/images/shop_icon.png';
 
 // redux
-import { useAppDispatch } from '@/redux/hook';
+import { useAppDispatch, useAppSelector } from '@/redux/hook';
 import { addToCart } from '@/redux/slices/cart.slice';
 
 // types
@@ -35,6 +35,8 @@ export default function ProductDetailPage() {
 
     const [detailProduct, setDetailProduct] =
         useState<ProductType>(initialProduct);
+
+    const { user } = useAppSelector((state) => state.auth);
 
     const { isLoading } = useQuery({
         queryKey: ['product', id],
@@ -112,6 +114,11 @@ export default function ProductDetailPage() {
     };
 
     const handleAddToCart = () => {
+        if (user._id === '') {
+            toast.info('Please login to add to cart', toastOptions);
+            router.push('/login');
+            return;
+        }
         dispatch(
             addToCart({
                 product: detailProduct,
@@ -123,6 +130,11 @@ export default function ProductDetailPage() {
     };
 
     const buyNow = async () => {
+        if (user._id === '') {
+            toast.info('Please login to add to cart', toastOptions);
+            router.push('/login');
+            return;
+        }
         dispatch(
             addToCart({
                 product: detailProduct,
