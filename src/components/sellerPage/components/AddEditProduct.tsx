@@ -101,10 +101,6 @@ export default function AddEditProduct({
                     onChange={(e) => {
                         imageValues[index] = e.currentTarget.value;
                         setImageValues([...imageValues]);
-                        setFormValues({
-                            ...formValues,
-                            images: imageValues
-                        });
                     }}
                 ></TextBox>
             </div>
@@ -114,6 +110,7 @@ export default function AddEditProduct({
     function handleDescriptionChange(
         e: ChangeEvent<HTMLTextAreaElement>
     ): void {
+        console.log(formValues);
         setFormValues({ ...formValues, description: e.currentTarget.value });
     }
 
@@ -139,6 +136,11 @@ export default function AddEditProduct({
     }
 
     const handleSave = () => {
+        console.log(formValues);
+        setFormValues({
+            ...formValues,
+            images: imageValues
+        });
         if (
             formValues.name === '' ||
             formValues.categoryId === '' ||
