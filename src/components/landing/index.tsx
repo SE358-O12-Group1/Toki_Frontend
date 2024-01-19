@@ -25,6 +25,7 @@ import UserType from '@/types/UserType';
 import { updateUser } from '@/redux/slices/auth.slice';
 import { toast } from 'react-toastify';
 import { toastOptions } from '@/constants/toast';
+import ConfirmationModal from './modals/ConfirmationModal';
 
 export interface ILandingPageProps {
     filterQuery?: string;
@@ -42,6 +43,8 @@ export default function LandingPage({ filterQuery }: ILandingPageProps) {
     const router = useRouter();
 
     const [categoryFilter, setCategoryFilter] = useState<String>();
+
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
     const [
         { data: categoryData },
@@ -117,7 +120,16 @@ export default function LandingPage({ filterQuery }: ILandingPageProps) {
         );
     }
 
-    const handleUpdateToSeller = () => {
+    const handleOpenModal = () => {
+        if (auth._id === '') {
+            router.push('/login');
+            toast.info('Please login first', {
+                ...toastOptions,
+                autoClose: 5000
+            });
+            return;
+        }
+
         if (profile.verified === false) {
             router.push('/user/profile');
             toast.info(
@@ -126,7 +138,14 @@ export default function LandingPage({ filterQuery }: ILandingPageProps) {
             );
             return;
         }
+        setIsModalOpen(true);
+    };
 
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
+
+    const handleUpdateToSeller = () => {
         updateToSeller({
             id: auth._id,
             body: {
@@ -145,7 +164,7 @@ export default function LandingPage({ filterQuery }: ILandingPageProps) {
                                 type='button'
                                 className='btn full-width-div'
                                 style={{ minWidth: 280 }}
-                                onClick={handleUpdateToSeller}
+                                onClick={handleOpenModal}
                             >
                                 <div className='row my-1 ms-1'>
                                     <div className='d-flex full-width-div'>
@@ -190,6 +209,12 @@ export default function LandingPage({ filterQuery }: ILandingPageProps) {
                     </div>
                 )}
             </div>
+
+            <ConfirmationModal
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                onConfirm={handleUpdateToSeller}
+            />
         </>
     );
 }
