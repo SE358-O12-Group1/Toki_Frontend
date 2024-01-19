@@ -3,7 +3,7 @@
 
 import ConfirmationModal from '@/components/common/ConfirmationModal';
 // import { mockVoucher } from '../mockVoucher';
-import VoucherStatus from './status';
+// import VoucherStatus from './status';
 import { useState } from 'react';
 import VoucherType from '@/types/VoucherType';
 import { useMutation, useQueryClient } from 'react-query';
@@ -14,11 +14,10 @@ import { formatCurrency } from '@/utils/utils';
 
 export interface IProps {
     voucher: VoucherType;
-    onVoucherEdit: Function;
-    onIsEdit: Function;
+    handleEdit: (voucher: VoucherType) => void;
 }
 
-export const Voucher = ({ voucher, onVoucherEdit, onIsEdit }: IProps) => {
+export const Voucher = ({ voucher, handleEdit }: IProps) => {
     const queryClient = useQueryClient();
 
     const { mutate: deleteDiscount } = useMutation({
@@ -33,9 +32,8 @@ export const Voucher = ({ voucher, onVoucherEdit, onIsEdit }: IProps) => {
         deleteDiscount(voucher._id);
     };
 
-    const handleEdit = () => {
-        onVoucherEdit(voucher)
-        onIsEdit(true)
+    const handleEditVoucher = () => {
+        handleEdit(voucher);
     };
 
     const [isConfirmationOpen, setConfirmationOpen] = useState(false);
@@ -80,7 +78,7 @@ export const Voucher = ({ voucher, onVoucherEdit, onIsEdit }: IProps) => {
                 }}
             >
                 <div
-                    className='col-span-1'
+                    className='col-span-2'
                     style={{
                         display: 'flex',
                         alignItems: 'center'
@@ -101,33 +99,30 @@ export const Voucher = ({ voucher, onVoucherEdit, onIsEdit }: IProps) => {
                 </div>
                 <div className='col-span-2 text-center'>
                     {formatCurrency(voucher.value)}
-                    {voucher.type === 0 ? ' VND' : '%'}
+                    {voucher.type === 0 ? '%' : ' VND'}
                 </div>
-                <div className='col-span-2 text-center'>
+                <div className='col-span-3 text-center'>
                     {formatCurrency(voucher.min_order_value)} VND
                 </div>
                 <div className='col-span-1 text-center'>
                     {voucher.uses_count}
                 </div>
                 <div className='col-span-2 text-center'>{voucher.max_uses}</div>
-                <div className='col-span-3 text-center'>
-                    {/* <VoucherStatus status={voucher.status}></VoucherStatus>
-                    <div>
-                        {voucher.startdate}-{voucher.enddate}
-                    </div> */}
+                {/* <div className='col-span-3 text-center'>
                     <p>start: {voucher.start_date.substring(0, 19)}</p>
                     <p>end: {voucher.end_date.substring(0, 19)}</p>
-                </div>
-                <div className='col-span-1 text-center'>
+                </div> */}
+                <div className='col-span-2 flex flex-col items-center text-center'>
                     <div
-                        onClick={handleEdit}
+                        onClick={handleEditVoucher}
                         style={{
                             fontSize: 16,
                             color: '#00ADB5',
                             cursor: 'pointer',
                             marginBottom: 10,
                             backgroundColor: '#EEEEEE',
-                            borderRadius: 5
+                            borderRadius: 5,
+                            width: 80
                         }}
                     >
                         Edit
@@ -136,6 +131,7 @@ export const Voucher = ({ voucher, onVoucherEdit, onIsEdit }: IProps) => {
                         onClick={handleOpenModal}
                         style={{
                             fontSize: 16,
+                            width: 80,
                             color: '#00ADB5',
                             cursor: 'pointer',
                             backgroundColor: '#EEEEEE',
@@ -147,5 +143,5 @@ export const Voucher = ({ voucher, onVoucherEdit, onIsEdit }: IProps) => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};

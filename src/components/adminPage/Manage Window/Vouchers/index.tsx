@@ -16,15 +16,17 @@ import VoucherType from '@/types/VoucherType';
 
 // utils
 import { removeVietnamesePhonetics } from '@/utils/utils';
+import AddVoucherForm from './component/voucherForm';
 
 export default function ManageCategories() {
     const [discounts, setDiscounts] = useState<VoucherType[]>([]);
     const [searchInput, setSearchInput] = useState('');
-    const [isAddvoucher, setIsAddVoucher] = useState(false)
-    const [voucherEdit, setVoucherEdit] = useState<VoucherType>()
-    const [isEditVoucher, setIsEditVoucher] = useState(false)
 
-    const { isSuccess } = useQuery({
+    const [action, setAction] = useState<string>('');
+
+    const [editVoucher, setEditVoucher] = useState<VoucherType>();
+
+    const {} = useQuery({
         queryKey: 'discounts',
         queryFn: () => discountApi.getAllDiscounts(),
         onSuccess: (data) => {
@@ -44,20 +46,17 @@ export default function ManageCategories() {
         );
     }, [searchInput, discounts]);
 
-    function handleAddVoucher() {
-        setIsAddVoucher(!isAddvoucher)
-        setIsEditVoucher(false);
-    }
+    const handleAddVoucher = () => {
+        setAction('add');
+    };
 
-    function getVoucherEdit(data: VoucherType) {
-        setVoucherEdit(data)
-    }
+    const handleEditVoucher = (voucher: VoucherType) => {
+        setAction('edit');
+        setEditVoucher(voucher);
+    };
 
-    function getIsEditVoucher(data: boolean) {
-        setIsEditVoucher(data)
-    }
-    
-    return (
+    if (!action) {
+        return (
             <>
                 <div
                     style={{
@@ -132,22 +131,25 @@ export default function ManageCategories() {
                         borderTopRightRadius: 5
                     }}
                 >
-                    <div className='col-span-1' style={{ paddingLeft: 10 }}>
+                    <div className='col-span-2' style={{ paddingLeft: 10 }}>
                         Code
                     </div>
                     <div className='col-span-2 text-center'>Value</div>
-                    <div className='col-span-2 text-center'>
+                    <div className='col-span-3 text-center'>
                         Min Order Value
                     </div>
                     <div className='col-span-1 text-center'>Uses</div>
                     <div className='col-span-2 text-center'>Max Uses</div>
-                    <div className='col-span-3 text-center'>Date</div>
-                    <div className='col-span-1 text-center'>Options</div>
+                    <div className='col-span-2 text-center'>Options</div>
                 </div>
 
                 <div className='col pb-5'>
                     {filteredDiscounts.map((discount) => (
-                        <Voucher key={discount._id} voucher={discount} onVoucherEdit={getVoucherEdit} onIsEdit={getIsEditVoucher}/>
+                        <Voucher
+                            key={discount._id}
+                            voucher={discount}
+                            handleEdit={handleEditVoucher}
+                        />
                     ))}
                 </div>
 
@@ -163,4 +165,15 @@ export default function ManageCategories() {
                 </Stack> */}
             </>
         );
+    } else if (action === 'add') {
+        return <AddVoucherForm action={action} setAction={setAction} />;
+    } else if (action === 'edit') {
+        return (
+            <AddVoucherForm
+                voucher={editVoucher}
+                action={action}
+                setAction={setAction}
+            />
+        );
+    }
 }
