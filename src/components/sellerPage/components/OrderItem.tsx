@@ -68,9 +68,11 @@ export default function OrderItem({ order, isEditable }: IOrderItemProps) {
                         <p className='text-main flex items-center font-semibold'>
                             <span className='mr-2'>Total:</span>
                             {formatCurrency(order.total)} đ
-                            <div className='ml-3 text-sm font-light text-gray-400 line-through'>
-                                {formatCurrency(order.sub_total!)} ₫
-                            </div>
+                            {order.total !== order.sub_total && (
+                                <div className='ml-3 text-sm font-light text-gray-400 line-through'>
+                                    {formatCurrency(order.sub_total!)} ₫
+                                </div>
+                            )}
                         </p>
                     </div>
 
@@ -272,14 +274,16 @@ export default function OrderItem({ order, isEditable }: IOrderItemProps) {
                         ))}
                     </div>
                 )}
-                <button
-                    className='text-md full-width-div flex justify-center bg-gray-200 p-2 text-center'
-                    onClick={() => {
-                        setIsExpanded(!isExpanded);
-                    }}
-                >
-                    {isExpanded ? 'Hide ⋀' : 'See more ⋁'}
-                </button>
+                {order.order_lines.length > 1 && (
+                    <button
+                        className='text-md full-width-div flex justify-center bg-gray-200 p-2 text-center'
+                        onClick={() => {
+                            setIsExpanded(!isExpanded);
+                        }}
+                    >
+                        {isExpanded ? 'Hide ⋀' : 'See more ⋁'}
+                    </button>
+                )}
             </div>
         </div>
     );

@@ -135,11 +135,15 @@ export default function ChangePasswordPage() {
     return (
         <>
             <div
-                className='row mx-0 mt-3'
+                className='mx-0 mt-3 flex'
                 style={{ backgroundColor: '#E2E2E2' }}
             >
-                <div className='row' style={{ marginTop: 30 }}>
-                    <div className='col d-flex ' style={{ paddingLeft: 180 }}>
+                <div
+                    className='flex grid grid-cols-12'
+                    style={{ marginTop: 30 }}
+                >
+                    <div className='col-span-1'></div>
+                    <div className='d-flex col-span-2'>
                         <div
                             className='col-2 '
                             style={{
@@ -234,7 +238,7 @@ export default function ChangePasswordPage() {
                     </div>
 
                     <div
-                        className='col-8'
+                        className='col-span-9 mb-4'
                         style={{
                             marginInlineEnd: 110,
                             backgroundColor: '#ffffff',

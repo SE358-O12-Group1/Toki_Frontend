@@ -77,9 +77,10 @@ export default function MyOrdersPage() {
     }
 
     return (
-        <div className='row mx-0 mt-3' style={{ backgroundColor: '#E2E2E2' }}>
-            <div className='row' style={{ marginTop: 30 }}>
-                <div className='col d-flex ' style={{ paddingLeft: 180 }}>
+        <div className='mx-0 mt-3 flex' style={{ backgroundColor: '#E2E2E2' }}>
+            <div className='flex grid grid-cols-12' style={{ marginTop: 30 }}>
+                <div className='col-span-1'></div>
+                <div className='d-flex col-span-2'>
                     <div
                         className='col-2 '
                         style={{
@@ -173,57 +174,49 @@ export default function MyOrdersPage() {
                         </div>
                     </div>
                 </div>
-                <div className='col-8' style={{ marginInlineEnd: 110 }}>
-                    {orders ? (
-                        <div className='container rounded-lg bg-white p-4'>
-                            <span className='text-main mt-4 flex text-xl'>
-                                {orders.length}{' '}
-                                {orders.length <= 1 ? 'Order' : 'Orders'}
-                            </span>
-                            <div className='mt-4 grid grid-cols-6'>
-                                <div className='flex'>
-                                    {chips.map((chip) => (
-                                        <div
-                                            key={chip}
-                                            className={`hover:bg-main/5 text-md text-nowrap mr-2 flex h-12 items-center justify-center rounded-md px-4 capitalize
+                <div
+                    className='col-span-9 mb-4 min-h-[64vh]'
+                    style={{ marginInlineEnd: 110 }}
+                >
+                    <div className='container rounded-lg bg-white p-4'>
+                        <span className='text-main mt-4 flex text-xl'>
+                            {orders.length}{' '}
+                            {orders.length <= 1 ? 'Order' : 'Orders'}
+                        </span>
+                        <div className='mt-4 grid grid-cols-6'>
+                            <div className='flex'>
+                                {chips.map((chip) => (
+                                    <div
+                                        key={chip}
+                                        className={`hover:bg-main/5 text-md text-nowrap mr-2 flex h-12 items-center justify-center rounded-md px-4 capitalize
                                             ${
                                                 selectedStatus === chip
                                                     ? 'border-main'
                                                     : 'border'
                                             }`}
-                                            onClick={() =>
-                                                handleChipClick(chip)
-                                            }
-                                        >
-                                            {chip}
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                            <div className='container mt-6 px-0'>
-                                <div className='rounded-sm bg-white '>
-                                    {orders.map(
-                                        (order: OrderType, index: number) => (
-                                            <OrderItem
-                                                order={order}
-                                                key={index}
-                                                isEditable={false}
-                                            ></OrderItem>
-                                        )
-                                    )}
-                                </div>
+                                        onClick={() => handleChipClick(chip)}
+                                    >
+                                        {chip}
+                                    </div>
+                                ))}
                             </div>
                         </div>
-                    ) : (
-                        <div className='container min-h-[60vh] p-4 text-center'>
-                            <span className='text-grey-500 mx-auto rounded-lg bg-white p-4 text-lg'>
-                                Empty purchase history
-                            </span>
+                        <div className='container mt-6 px-0'>
+                            <div className='rounded-sm bg-white '>
+                                {orders.map(
+                                    (order: OrderType, index: number) => (
+                                        <OrderItem
+                                            order={order}
+                                            key={index}
+                                            isEditable={false}
+                                        ></OrderItem>
+                                    )
+                                )}
+                            </div>
                         </div>
-                    )}
+                    </div>
                 </div>
             </div>
-            <div className='row' style={{ minHeight: 74 }}></div>
         </div>
     );
 }
