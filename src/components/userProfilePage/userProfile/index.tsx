@@ -15,9 +15,10 @@ import bigCircle from '/public/assets/images/bigprofilecircle.png';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import userApi from '@/apis/user.api';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
-import UserType, { ProfileType } from '@/types/UserType';
+import { ProfileType } from '@/types/UserType';
 import { toastOptions } from '@/constants/toast';
 import { setProfile } from '@/redux/slices/user.slice';
+import { useRouter } from 'next/navigation';
 
 const initialProfileState: ProfileType = {
     name: '',
@@ -29,6 +30,8 @@ const initialProfileState: ProfileType = {
 
 export default function UserProfilePage() {
     const dispatch = useAppDispatch();
+
+    const router = useRouter();
 
     const queryClient = useQueryClient();
 
@@ -98,6 +101,14 @@ export default function UserProfilePage() {
             },
             {
                 onSuccess: (res) => {
+                    if (data?.data.data.verified === false) {
+                        toast.success('Your account is verified', {
+                            ...toastOptions,
+                            autoClose: 3000
+                        });
+                        router.push('/');
+                        return;
+                    }
                     toast.success(res.data.message, toastOptions);
                 },
                 onError: (err: any) => {

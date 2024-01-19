@@ -17,7 +17,7 @@ export const initialAuth: AuthType = {
         name: '',
         email: '',
         avatar: '',
-        role: ''
+        role: 2
     },
     accessToken: '',
     refreshToken: ''

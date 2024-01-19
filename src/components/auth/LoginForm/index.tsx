@@ -17,15 +17,14 @@ import { login } from '@/redux/slices/auth.slice';
 
 // constants
 import { toastMessages, toastOptions } from '@/constants/toast';
-import userApi from '@/apis/user.api';
 
 type FormLoginType = {
-    email: string;
+    account: string;
     password: string;
 };
 
 const intitalFormLogin: FormLoginType = {
-    email: '',
+    account: '',
     password: ''
 };
 
@@ -36,7 +35,7 @@ export default function LoginForm() {
 
     const [formLogin, setFormLogin] = useState<FormLoginType>(intitalFormLogin);
 
-    const { email, password } = formLogin;
+    const { account, password } = formLogin;
 
     const loginMutation = useMutation({
         mutationFn: (body: FormLoginType) => authApi.login(body)
@@ -45,8 +44,8 @@ export default function LoginForm() {
     const { isError, error, isSuccess, isLoading } = loginMutation;
 
     // Handle change
-    const handleChangeEmail = (e: FocusEvent<HTMLInputElement, Element>) => {
-        setFormLogin({ ...formLogin, email: e.currentTarget.value });
+    const handleChangeAccount = (e: FocusEvent<HTMLInputElement, Element>) => {
+        setFormLogin({ ...formLogin, account: e.currentTarget.value });
     };
 
     const handleChangePassword = (e: FocusEvent<HTMLInputElement, Element>) => {
@@ -73,6 +72,16 @@ export default function LoginForm() {
                         refreshToken
                     })
                 );
+
+                if (user.role === 1) {
+                    router.push('/seller');
+                    return;
+                }
+
+                if (user.role === 0) {
+                    router.push('/admin');
+                    return;
+                }
 
                 router.push('/');
             },
@@ -102,9 +111,9 @@ export default function LoginForm() {
                         </h2>
                         <div className='mb-3'>
                             <TextBox
-                                value={email}
+                                value={account}
                                 required
-                                onChange={handleChangeEmail}
+                                onChange={handleChangeAccount}
                                 placeholder='Email/ Phone number/ User name'
                             ></TextBox>
                             <div className='valid-feedback'>Looks good!</div>

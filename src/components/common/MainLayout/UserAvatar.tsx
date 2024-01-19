@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import classNames from 'classnames';
 
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
@@ -7,26 +8,38 @@ import { BrowserRouter, Link, NavLink } from 'react-router-dom';
 import UserType from '@/types/UserType';
 import { UserAuthType } from '@/types/AuthType';
 import Popover from '../Popover';
-// import { useMutation } from 'react-query/types/react/useMutation';
 import authApi from '@/apis/auth.api';
+import { useMutation } from 'react-query';
+import { useAppDispatch } from '@/redux/hook';
+import { resetCart } from '@/redux/slices/cart.slice';
+import { logout } from '@/redux/slices/auth.slice';
+import { clearProfile } from '@/redux/slices/user.slice';
+import { usePathname, useRouter } from 'next/navigation';
 
 export interface IUserDropdownProps {
     user: UserAuthType;
 }
 
 export default function UserDropdown({ user }: IUserDropdownProps) {
-    // const logoutMutation = useMutation({
-    // TODO
-    // mutationFn: authApi.logout,
-    // onSuccess: () => {
-    //     setIsAuthenticated(false);
-    //     setProfile(null);
-    //     queryClient.removeQueries({ queryKey: ['purchases', { status: purchasesStatus.inCart }] });
-    // }
-    // });
+    const pathname = usePathname();
+
+    const dispatch = useAppDispatch();
+
+    const router = useRouter();
+
+    const { mutate: logoutMutation } = useMutation({
+        mutationFn: authApi.logout,
+        onSuccess: () => {
+            dispatch(resetCart());
+            dispatch(clearProfile());
+            dispatch(logout());
+            localStorage.clear();
+            router.push('/');
+        }
+    });
 
     const handleLogout = () => {
-        // logoutMutation.mutate();
+        logoutMutation();
     };
 
     return (
@@ -59,16 +72,25 @@ export default function UserDropdown({ user }: IUserDropdownProps) {
         >
             <a
                 href={'/user/profile'}
-                className='flex items-center overflow-hidden text-white'
+                className='overflow flex items-center text-white'
             >
                 <div className='mr-2 h-6 w-6 flex-shrink-0'>
                     <img
-                        src={user?.avatar}
+                        src={
+                            user?.avatar ||
+                            'https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg'
+                        }
                         alt='avatar'
                         className='white h-full w-full rounded-full object-cover'
                     />
                 </div>
-                <div>{user?.name}</div>
+                <div
+                    className={
+                        pathname.includes('/seller') ? 'text-cyan-500' : ''
+                    }
+                >
+                    {user.name}
+                </div>
             </a>
         </Popover>
     );

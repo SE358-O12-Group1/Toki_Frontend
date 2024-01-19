@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import Link from 'next/link';
@@ -21,30 +22,28 @@ import { useAppSelector } from '@/redux/hook';
 const CartHeader = () => {
     const { user } = useAppSelector((state) => state.auth);
 
-    const isSeller = user?.role === 'seller';
-
     return (
         <>
             <div className='d-flex main-colored p-1'>
-                {isSeller && (
+                {user.role === 1 && (
                     <Link className='offset-1 my-auto text-white' href={''}>
                         Seller Center
                     </Link>
                 )}
                 <Link
-                    className='me-1 me-5 ms-auto  flex items-center text-white'
+                    className='me-5 ms-auto  flex items-center text-white'
                     href={''}
                 >
-                    <img src={Notification.src} /> Notification
+                    <img src={Notification.src} alt='' /> Notification
                 </Link>
                 <Link className='me-2 flex items-center text-white' href={'/'}>
-                    <img src={Question.src} className='me-1' />
+                    <img src={Question.src} className='me-1' alt='' />
                     <span>Help</span>
                 </Link>
                 <Link className='me-5 flex items-center text-white' href={'/'}>
                     <CircleAvatar
                         className='ml-5 mr-3'
-                        src={user?.avatar ?? avatarPlaceholder}
+                        src={user?.avatar || avatarPlaceholder}
                         alt={user?.name || ''}
                         size={8}
                     ></CircleAvatar>
@@ -55,7 +54,7 @@ const CartHeader = () => {
             <div className='flex items-center justify-between px-5 py-3'>
                 <div className='offset-1 mr-10'>
                     <Link href={'/'} className='flex items-end'>
-                        <img className='ms-5 ' src={Logo.src} />
+                        <img className='ms-5 ' src={Logo.src} alt='' />
                         <span className='text-main text-3xl font-semibold'>
                             CART
                         </span>
@@ -64,7 +63,7 @@ const CartHeader = () => {
                 <div className='mx-10 flex w-[40%] items-center'>
                     <TextBox placeholder='Search' className='mb-0'></TextBox>
                     <button type='button' className='btn btn-xxl ml-5'>
-                        <img src={Search.src} />
+                        <img src={Search.src} alt='' />
                     </button>
                 </div>
             </div>
