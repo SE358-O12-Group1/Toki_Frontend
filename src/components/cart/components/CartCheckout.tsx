@@ -2,7 +2,7 @@
 'use client';
 import { useQuery } from 'react-query';
 import { FocusEvent, useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 // Icons
 import locationIcon from '/public/assets/images/LocationMarker.png';
@@ -17,11 +17,11 @@ import Bill from './Bill';
 import Voucher from './Voucher';
 
 // Types
-import { CheckoutItemType } from '@/types/CartType';
 import ProductType from '@/types/ProductType';
 
 // Api
 import userApi from '@/apis/user.api';
+import { useAppSelector } from '@/redux/hook';
 
 export default function CartCheckout() {
     const [voucher, setVoucher] = useState(0);
@@ -32,6 +32,8 @@ export default function CartCheckout() {
         phone: '',
         address: ''
     });
+
+    const { cart } = useAppSelector((state) => state.cart);
 
     const { isLoading } = useQuery({
         queryKey: 'profile',
@@ -52,11 +54,7 @@ export default function CartCheckout() {
         document.title = 'TOKI | Checkout';
     }, []);
 
-    const params = useSearchParams();
-
-    const productList: CheckoutItemType[] = params
-        ? JSON.parse(params.get('data') || '')
-        : null;
+    const productList = cart.filter((item) => item.checked);
 
     const totalPrice = productList.reduce(
         (result, p) => (result += p.product.price * p.quantity),

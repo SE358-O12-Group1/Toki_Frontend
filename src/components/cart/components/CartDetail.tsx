@@ -153,7 +153,8 @@ export default function CartDetail() {
             })
         );
         const encodedObject = encodeURIComponent(JSON.stringify(checkoutList));
-        router.push(`/cart/checkout?data=${encodedObject}`);
+        // router.push(`/cart/checkout?data=${encodedObject}`);
+        router.push('/cart/checkout');
     };
 
     return (
