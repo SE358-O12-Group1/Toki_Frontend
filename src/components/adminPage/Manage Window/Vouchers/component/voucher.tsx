@@ -1,5 +1,6 @@
 'use client';
 /* eslint-disable @next/next/no-img-element */
+
 import ConfirmationModal from '@/components/common/ConfirmationModal';
 // import { mockVoucher } from '../mockVoucher';
 import VoucherStatus from './status';
@@ -11,11 +12,13 @@ import { toast } from 'react-toastify';
 import { toastOptions } from '@/constants/toast';
 import { formatCurrency } from '@/utils/utils';
 
-interface IProps {
+export interface IProps {
     voucher: VoucherType;
+    onVoucherEdit: Function;
+    onIsEdit: Function;
 }
 
-export const Voucher = ({ voucher }: IProps) => {
+export const Voucher = ({ voucher, onVoucherEdit, onIsEdit }: IProps) => {
     const queryClient = useQueryClient();
 
     const { mutate: deleteDiscount } = useMutation({
@@ -31,7 +34,8 @@ export const Voucher = ({ voucher }: IProps) => {
     };
 
     const handleEdit = () => {
-        return;
+        onVoucherEdit(voucher)
+        onIsEdit(true)
     };
 
     const [isConfirmationOpen, setConfirmationOpen] = useState(false);
@@ -116,7 +120,7 @@ export const Voucher = ({ voucher }: IProps) => {
                 </div>
                 <div className='col-span-1 text-center'>
                     <div
-                        // onClick={() => handleEdit(parseInt(voucher._id))}
+                        onClick={handleEdit}
                         style={{
                             fontSize: 16,
                             color: '#00ADB5',

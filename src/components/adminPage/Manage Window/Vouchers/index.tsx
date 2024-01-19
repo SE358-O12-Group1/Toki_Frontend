@@ -44,6 +44,11 @@ export default function ManageCategories() {
         );
     }, [searchInput, discounts]);
 
+    function handleAddVoucher() {
+        setIsAddVoucher(!isAddvoucher)
+        setIsEditVoucher(false);
+    }
+
     function getVoucherEdit(data: VoucherType) {
         setVoucherEdit(data)
     }
@@ -51,9 +56,8 @@ export default function ManageCategories() {
     function getIsEditVoucher(data: boolean) {
         setIsEditVoucher(data)
     }
-
-    if (isSuccess) {
-        return (
+    
+    return (
             <>
                 <div
                     style={{
@@ -78,6 +82,7 @@ export default function ManageCategories() {
                     </div>
                     <div>
                         <Button
+                            onClick={handleAddVoucher}
                             size='small'
                             variant='outlined'
                             style={{
@@ -98,22 +103,6 @@ export default function ManageCategories() {
                         </Button>
                     </div>
                 </div>
-                {/* <div style={{ paddingTop: 20, paddingBottom: 20 }}>
-                    <Button
-                        size='small'
-                        variant='outlined'
-                        style={{
-                            background: '#00ADB5',
-                            color: 'white',
-                            minWidth: 150,
-                            textTransform: 'none',
-                            fontSize: 18,
-                            marginLeft: 30
-                        }}
-                    >
-                        Search
-                    </Button>
-                </div> */}
                 <div
                     style={{
                         paddingTop: 15,
@@ -174,5 +163,4 @@ export default function ManageCategories() {
                 </Stack> */}
             </>
         );
-    }
 }

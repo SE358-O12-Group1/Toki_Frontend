@@ -11,22 +11,20 @@ export interface IsVoucherFormProps {
 }
 
 type AddEditVoucherType = {
-    name: string;
-    discount: number;
+    code: string;
+    value: number;
     minimum_order_price: number;
     public_date: string;
     expiration_date: string;
-    image_url: string;
 };
 
 export default function AddVoucherForm({voucher} : IsVoucherFormProps) {
     const init: AddEditVoucherType = {
-        name: voucher ? voucher.name : '',
-        discount: voucher ? voucher.discount : 0,
-        minimum_order_price: voucher ? voucher.minimumprice : 0,
-        public_date: voucher ? voucher.startdate : '',
-        expiration_date: voucher ? voucher.enddate : '',
-        image_url: voucher ? voucher.image : '',
+        code: voucher ? voucher.code : '',
+        value: voucher ? voucher.value : 0,
+        minimum_order_price: voucher ? voucher.min_order_value : 0,
+        public_date: voucher ? voucher.start_date : '',
+        expiration_date: voucher ? voucher.end_date : '',
     }
 
     const [formValues, setFormValues] = useState(init);
@@ -37,11 +35,11 @@ export default function AddVoucherForm({voucher} : IsVoucherFormProps) {
     }
 
     const handleNameChange = (e: FocusEvent<HTMLInputElement, Element>) => {
-        setFormValues({...formValues, name: e.currentTarget.value})
+        setFormValues({...formValues, code: e.currentTarget.value})
     }
 
     const handleDiscountChange = (e: FocusEvent<HTMLInputElement, Element>) => {
-        setFormValues({...formValues, discount: parseInt(e.currentTarget.value)})
+        setFormValues({...formValues, value: parseInt(e.currentTarget.value)})
     }
 
     const handleMinimumPriceChange = (e: FocusEvent<HTMLInputElement, Element>) => {
@@ -55,11 +53,6 @@ export default function AddVoucherForm({voucher} : IsVoucherFormProps) {
     const handleExpirationDateChange = (e: FocusEvent<HTMLInputElement, Element>) => {
         setFormValues({...formValues, expiration_date: e.currentTarget.value})
     }
-
-    const handleImageChange = (e: FocusEvent<HTMLInputElement, Element>) => {
-        setFormValues({...formValues, image_url: e.currentTarget.value})
-    }
-
 
     return (
         <div className='container p-4'>
@@ -86,7 +79,7 @@ export default function AddVoucherForm({voucher} : IsVoucherFormProps) {
                             <TextBox
                                 required={true}
                                 placeholder='Voucher name'
-                                value={formValues.name}
+                                value={formValues.code}
                                 onChange={handleNameChange}
                             ></TextBox>
                         </div>
@@ -101,7 +94,7 @@ export default function AddVoucherForm({voucher} : IsVoucherFormProps) {
                             <InputNumber
                                 required={true}
                                 placeholder='Input'
-                                value={formValues.discount}
+                                value={formValues.value}
                                 onChange={handleDiscountChange}
                             ></InputNumber>
                         </div>
@@ -148,21 +141,6 @@ export default function AddVoucherForm({voucher} : IsVoucherFormProps) {
                                 placeholder='Input'
                                 value={formValues.expiration_date}
                                 onChange={handleExpirationDateChange}
-                            ></TextBox>
-                        </div>
-                    </div>
-                    <div className='grid grid-cols-12' style={{marginTop: 25}}>
-                        <div className='col-span-3 grid pr-4 '>
-                            <span className='text-md flex items-center justify-end'>
-                                Voucher Image
-                            </span>
-                        </div>
-                        <div className='col-span-8'>
-                            <TextBox
-                                required={true}
-                                placeholder='Image url'
-                                value={formValues.image_url}
-                                onChange={handleImageChange}
                             ></TextBox>
                         </div>
                     </div>
