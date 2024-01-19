@@ -484,7 +484,11 @@ export default function CartDetail() {
                                     }}
                                 >
                                     {'Item(s): '}
-                                    {checkedPurchases.length}
+                                    {checkedPurchases.reduce(
+                                        (acc, product) =>
+                                            acc + product.quantity,
+                                        0
+                                    )}
                                 </div>
                                 <div className='ml-10 mr-4'>{'Total:'}</div>
                                 <div className='text-main mr-4 text-xl'>

@@ -25,7 +25,7 @@ export default function ProductCard({ product, minHeight }: IProductCardProps) {
     return (
         <button onClick={handleClick}>
             <div
-                className='text-normal rounded-md border bg-white '
+                className='text-normal rounded-md border bg-white shadow-md '
                 style={{ minHeight: minHeight }}
             >
                 <img

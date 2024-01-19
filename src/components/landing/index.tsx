@@ -26,6 +26,8 @@ import { updateUser } from '@/redux/slices/auth.slice';
 import { toast } from 'react-toastify';
 import { toastOptions } from '@/constants/toast';
 import ConfirmationModal from './modals/ConfirmationModal';
+import DropdownButton from '../common/DropdownButton';
+import Button from '../common/Button';
 
 export interface ILandingPageProps {
     filterQuery?: string;
@@ -33,6 +35,14 @@ export interface ILandingPageProps {
 
 export default function LandingPage({ filterQuery }: ILandingPageProps) {
     const dispatch = useAppDispatch();
+
+    const priceFilterOptions = [
+        'None',
+        'Price: Ascending',
+        'Price: Descending'
+    ];
+    const [priceFilter, setPriceFilter] = useState('None');
+    const [isFilterPopular, setFilterPopular] = useState(false);
 
     const {
         user: auth,
@@ -119,6 +129,14 @@ export default function LandingPage({ filterQuery }: ILandingPageProps) {
             product.category.name.includes(categoryFilter.trim())
         );
     }
+    if (priceFilter !== 'None')
+        filteredProducts.sort((a, b) =>
+            priceFilter === priceFilterOptions[1]
+                ? a.price - b.price
+                : -(a.price - b.price)
+        );
+    if (isFilterPopular)
+        filteredProducts.sort((a, b) => a.sold_quantity - b.sold_quantity);
 
     const handleOpenModal = () => {
         if (auth._id === '') {
@@ -224,6 +242,43 @@ export default function LandingPage({ filterQuery }: ILandingPageProps) {
                 </div>
                 {products && products.length > 0 ? (
                     <div className='col-span-9 mb-5 me-5 px-5'>
+                        <div className='container mb-2 flex items-center justify-end rounded-md bg-white p-4 shadow-md'>
+                            <div className=' mr-4'>Filter:</div>
+                            <div className='mr-4'>
+                                <Button
+                                    className='border-main'
+                                    textColor={
+                                        isFilterPopular ? '#FFFFFF' : '#00adb5'
+                                    }
+                                    backgroundColor={
+                                        isFilterPopular ? '#00adb5' : '#FFFFFF'
+                                    }
+                                    onClick={() => {
+                                        setPriceFilter(priceFilterOptions[0]);
+                                        setFilterPopular(!isFilterPopular);
+                                    }}
+                                >
+                                    Most popular
+                                </Button>
+                            </div>
+                            <div className=''>
+                                {isFilterPopular || (
+                                    <DropdownButton
+                                        className='border-1 text-main border-main rounded-lg p-2'
+                                        items={priceFilterOptions}
+                                        value={priceFilter}
+                                        onSelect={function (
+                                            selectedItem: number
+                                        ): void {
+                                            setPriceFilter(
+                                                priceFilterOptions[selectedItem]
+                                            );
+                                            setFilterPopular(false);
+                                        }}
+                                    ></DropdownButton>
+                                )}
+                            </div>
+                        </div>
                         {getProductGrid(filteredProducts)}
                     </div>
                 ) : (

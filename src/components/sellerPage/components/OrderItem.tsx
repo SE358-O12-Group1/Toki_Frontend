@@ -63,7 +63,9 @@ export default function OrderItem({ order, isEditable }: IOrderItemProps) {
                     <div className='text-md col-span-1'>
                         <p>
                             <span className='font-semibold'>Name:</span>{' '}
-                            <span className=''>{order.user.name}</span>
+                            <span className=''>
+                                {order.user.name || 'No name'}
+                            </span>
                         </p>
                         <p className='text-main flex items-center font-semibold'>
                             <span className='mr-2'>Total:</span>
