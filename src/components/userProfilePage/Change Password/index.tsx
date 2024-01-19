@@ -12,12 +12,14 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { useAppSelector } from '@/redux/hook';
-import { useMutation } from 'react-query';
+import { useAppDispatch, useAppSelector } from '@/redux/hook';
+import { useMutation, useQuery } from 'react-query';
 import authApi from '@/apis/auth.api';
 import ChangePasswordType from '@/types/ChangePasswordType';
 import { toast } from 'react-toastify';
 import { toastOptions } from '@/constants/toast';
+import userApi from '@/apis/user.api';
+import { setProfile } from '@/redux/slices/user.slice';
 
 const initialChangePasswordState: ChangePasswordType = {
     oldPassword: '',
@@ -30,6 +32,17 @@ export default function ChangePasswordPage() {
     const [changePasswordState, setChangePasswordState] = useState(
         initialChangePasswordState
     );
+
+    const dispatch = useAppDispatch();
+
+    useQuery({
+        queryKey: 'profile',
+        queryFn: () => userApi.getProfile(),
+        onSuccess: (res) => {
+            const { data } = res.data;
+            dispatch(setProfile(data));
+        }
+    });
 
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);

@@ -35,10 +35,10 @@ export default function UserProfilePage() {
 
     const queryClient = useQueryClient();
 
-    const { user } = useAppSelector((state) => state.auth);
+    const { profile } = useAppSelector((state) => state.user);
 
     const { data, isLoading } = useQuery({
-        queryKey: ['profile'],
+        queryKey: 'profile',
         queryFn: () => userApi.getProfile(),
         onSuccess: (res) => {
             const { data } = res.data;
@@ -54,7 +54,7 @@ export default function UserProfilePage() {
     });
 
     const { mutate: updateUserMutation } = useMutation({
-        mutationKey: ['profile'],
+        mutationKey: 'profile',
         mutationFn: ({ userId, body }: { userId: string; body: ProfileType }) =>
             userApi.updateUser(userId, body),
         onSuccess: () => {
@@ -96,7 +96,7 @@ export default function UserProfilePage() {
     const handleSaveProfile = () => {
         updateUserMutation(
             {
-                userId: user._id,
+                userId: profile._id,
                 body: profileState
             },
             {
@@ -139,7 +139,7 @@ export default function UserProfilePage() {
                         >
                             <img
                                 className='rounded-full'
-                                src={user?.avatar || Circle.src}
+                                src={profile?.avatar || Circle.src}
                                 alt='avatar'
                                 style={{
                                     maxWidth: '40px',
@@ -177,7 +177,7 @@ export default function UserProfilePage() {
                                         textOverflow: 'ellipsis'
                                     }}
                                 >
-                                    {user?.name}
+                                    {profile.name}
                                 </div>
                             </div>
                             <div

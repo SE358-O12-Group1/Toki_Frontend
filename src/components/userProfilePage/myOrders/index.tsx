@@ -1,8 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
-import React, { useState } from 'react';
 import Link from 'next/link';
+import { useState } from 'react';
+import { useAppDispatch, useAppSelector } from '@/redux/hook';
+import { useMutation, useQuery } from 'react-query';
 
 // images
 import Circle from '/public/assets/images/userprofilecircle.png';
@@ -10,18 +12,13 @@ import profileIcon from '/public/assets/images/profile.png';
 import order from '/public/assets/images/orderbutton.png';
 
 // components
-import ProductsOrdered from '@/components/userProfilePage/myOrders/ProductsOrdered';
-import { useMutation, useQuery } from 'react-query';
+import OrderItem from '@/components/sellerPage/components/OrderItem';
 
 // api
 import userApi from '@/apis/user.api';
-import { useAppSelector } from '@/redux/hook';
-import TextBox from '@/components/common/TextBox';
 import { OrderType } from '@/types/OrderType';
-import OrderItem from '@/components/sellerPage/components/OrderItem';
 import { ORDER_STATUS, convertStatusToValue } from '@/constants/orderStatus';
-import orderApi from '@/apis/order.api';
-import { mockOrder1, mockOrders } from '@/components/productPage/mockData';
+import { setProfile } from '@/redux/slices/user.slice';
 
 const chips = [
     'ALL',
@@ -33,20 +30,50 @@ export default function MyOrdersPage() {
     const initialChip = chips[0];
     const [selectedStatus, setSelectedStatus] = useState<string>(initialChip);
 
-    const { data, isLoading } = useQuery({
+    const [orders, setOrders] = useState<OrderType[]>([]);
+
+    const dispatch = useAppDispatch();
+
+    useQuery({
         queryKey: 'myOrders',
-        queryFn: () => userApi.getMyOrders(convertStatusToValue(selectedStatus))
+        queryFn: () => userApi.getMyOrders(),
+        onSuccess: (res) => {
+            setOrders(res.data.data);
+        }
     });
 
-    const orders = data?.data.data;
-    // const orders = mockOrders;
+    useQuery({
+        queryKey: 'profile',
+        queryFn: () => userApi.getProfile(),
+        onSuccess: (res) => {
+            const { data } = res.data;
+            dispatch(setProfile(data));
+        }
+    });
 
-    console.log(orders);
-
-    if (isLoading) return <div>Loading...</div>;
+    const { mutate } = useMutation({
+        mutationKey: 'myOrders',
+        mutationFn: (status?: number) => userApi.getMyOrders(status),
+        onSuccess: (res) => {
+            setOrders(res.data.data);
+        }
+    });
 
     function handleChipClick(chipValue: string): void {
         setSelectedStatus(chipValue);
+        if (chipValue === 'ALL') {
+            mutate(undefined, {
+                onSuccess: (res) => {
+                    setOrders(res.data.data);
+                }
+            });
+            return;
+        }
+        mutate(convertStatusToValue(chipValue), {
+            onSuccess: (res) => {
+                setOrders(res.data.data);
+            }
+        });
     }
 
     return (
