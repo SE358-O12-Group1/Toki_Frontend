@@ -1,24 +1,48 @@
-import TextBox from '@/components/common/TextBox';
+import { useMemo, useState } from 'react';
+import { useQuery } from 'react-query';
 import Button from '@mui/material/Button';
-import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-import { Voucher } from '@/components/adminPage/Manage Window/Vouchers/component/voucher'
-import { useState } from 'react';
+import Pagination from '@mui/material/Pagination';
 
-import AddVoucherForm from './component/voucherForm'
-import { mockVoucher } from './mockVoucher';
-import { ArrowBackIosNew } from '@mui/icons-material';
+// components
+import TextBox from '@/components/common/TextBox';
+import { Voucher } from '@/components/adminPage/Manage Window/Vouchers/component/voucher';
+
+// apis
+import discountApi from '@/apis/discount.api';
+
+// types
 import VoucherType from '@/types/VoucherType';
 
+// utils
+import { removeVietnamesePhonetics } from '@/utils/utils';
+
 export default function ManageCategories() {
-    const [isAddVoucher, setIsAddVoucher] = useState(false)
+    const [discounts, setDiscounts] = useState<VoucherType[]>([]);
+    const [searchInput, setSearchInput] = useState('');
+    const [isAddvoucher, setIsAddVoucher] = useState(false)
     const [voucherEdit, setVoucherEdit] = useState<VoucherType>()
     const [isEditVoucher, setIsEditVoucher] = useState(false)
 
-    function handleAddVoucher() {
-        setIsAddVoucher(!isAddVoucher)
-        setIsEditVoucher(false)
-    }
+    const { isSuccess } = useQuery({
+        queryKey: 'discounts',
+        queryFn: () => discountApi.getAllDiscounts(),
+        onSuccess: (data) => {
+            setDiscounts(data.data.data);
+        }
+    });
+
+    const filteredDiscounts = useMemo(() => {
+        const filterString = removeVietnamesePhonetics(
+            searchInput.trim().toLowerCase()
+        );
+
+        return discounts.filter((discount) =>
+            removeVietnamesePhonetics(discount.code.toLowerCase()).includes(
+                filterString
+            )
+        );
+    }, [searchInput, discounts]);
 
     function getVoucherEdit(data: VoucherType) {
         setVoucherEdit(data)
@@ -28,33 +52,15 @@ export default function ManageCategories() {
         setIsEditVoucher(data)
     }
 
-    if(isAddVoucher || isEditVoucher) {
+    if (isSuccess) {
         return (
-            <div>
+            <>
                 <div
-                    onClick={() => handleAddVoucher()}
                     style={{
-                        cursor: 'pointer',
-                        fontSize: 14,
-                        color: '#777777',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        marginTop: 20,
-                        marginLeft: 24,
+                        display: 'flex',
+                        alignItems: 'center'
                     }}
                 >
-                    <ArrowBackIosNew style={{width: 15, height: 15}}></ArrowBackIosNew>
-                    <span style={{marginLeft: 5}}>Back</span>
-                </div>
-                <AddVoucherForm voucher={voucherEdit}></AddVoucherForm>
-            </div>
-        )
-    } else return ( 
-            <div>
-                <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                }}>
                     <div
                         className='col-5'
                         style={{
@@ -63,11 +69,15 @@ export default function ManageCategories() {
                             marginTop: 30
                         }}
                     >
-                        <TextBox placeholder='Voucher' type='Search'></TextBox>
+                        <TextBox
+                            placeholder='Voucher'
+                            type='Search'
+                            value={searchInput}
+                            onChange={(e) => setSearchInput(e.target.value)}
+                        ></TextBox>
                     </div>
                     <div>
                         <Button
-                            onClick={() => handleAddVoucher()}
                             size='small'
                             variant='outlined'
                             style={{
@@ -81,14 +91,14 @@ export default function ManageCategories() {
                                 paddingTop: 8,
                                 paddingBottom: 8,
                                 paddingLeft: 20,
-                                paddingRight: 20,
+                                paddingRight: 20
                             }}
                         >
                             Add New Voucher
                         </Button>
                     </div>
                 </div>
-                <div style={{ paddingTop: 20, paddingBottom: 20 }}>
+                {/* <div style={{ paddingTop: 20, paddingBottom: 20 }}>
                     <Button
                         size='small'
                         variant='outlined'
@@ -103,7 +113,7 @@ export default function ManageCategories() {
                     >
                         Search
                     </Button>
-                </div>
+                </div> */}
                 <div
                     style={{
                         paddingTop: 15,
@@ -111,9 +121,12 @@ export default function ManageCategories() {
                         paddingBottom: 25,
                         fontSize: 24,
                         color: '#00ADB5',
-                        fontWeight: 500,
+                        fontWeight: 500
                     }}
-                >{mockVoucher.length} Vouchers</div>
+                >
+                    {filteredDiscounts.length}{' '}
+                    {filteredDiscounts.length <= 1 ? 'Voucher' : 'Vouchers'}
+                </div>
                 <div
                     className='grid grid-cols-12'
                     style={{
@@ -130,27 +143,26 @@ export default function ManageCategories() {
                         borderTopRightRadius: 5
                     }}
                 >
-                    <div className='col-span-3' style={{ paddingLeft: 10 }}>
-                        Vouchers Name
+                    <div className='col-span-1' style={{ paddingLeft: 10 }}>
+                        Code
                     </div>
-                    <div className='col-span-2 text-center'>Discount</div>
-                    <div className='col-span-2 text-center'>Minimum Order Price</div>
-                    <div className='col-span-2 text-center'>Used</div>
-                    <div className='col-span-2 text-center'>Status/Date</div>
+                    <div className='col-span-2 text-center'>Value</div>
+                    <div className='col-span-2 text-center'>
+                        Min Order Value
+                    </div>
+                    <div className='col-span-1 text-center'>Uses</div>
+                    <div className='col-span-2 text-center'>Max Uses</div>
+                    <div className='col-span-3 text-center'>Date</div>
                     <div className='col-span-1 text-center'>Options</div>
                 </div>
-    
-                <div className='col'>
-                    {
-                        mockVoucher.map((voucher, index) => (
-                            <div key={index}>
-                                <Voucher voucher={voucher} onVoucherEdit={getVoucherEdit} onIsEdit={getIsEditVoucher}></Voucher>
-                            </div>
-                        ))
-                    }
+
+                <div className='col pb-5'>
+                    {filteredDiscounts.map((discount) => (
+                        <Voucher key={discount._id} voucher={discount} onVoucherEdit={getVoucherEdit} onIsEdit={getIsEditVoucher}/>
+                    ))}
                 </div>
-    
-                <Stack
+
+                {/* <Stack
                     spacing={2}
                     style={{
                         alignItems: 'center',
@@ -159,7 +171,8 @@ export default function ManageCategories() {
                     }}
                 >
                     <Pagination count={11} defaultPage={2} siblingCount={0} />
-                </Stack>
-            </div>
-        )
+                </Stack> */}
+            </>
+        );
+    }
 }

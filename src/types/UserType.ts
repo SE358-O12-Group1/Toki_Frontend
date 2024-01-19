@@ -6,9 +6,9 @@ type UserType = {
     phone: string;
     address: string;
     avatar: string;
-    status: string;
+    status: number;
     verified: boolean;
-    role: string;
+    role: number;
 };
 
 export type ProfileType = Pick<
@@ -24,9 +24,9 @@ export const initialUser = {
     phone: '',
     address: '',
     avatar: '',
-    status: '',
+    status: 1,
     verified: false,
-    role: ''
+    role: 2
 } as UserType;
 
 export default UserType;
