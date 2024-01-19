@@ -54,7 +54,10 @@ const DropdownButton = (props: IDropdownButtonProps) => {
                 <FaAngleDown />
             </button>
             {isOpen && (
-                <div className='dropdown-content'>
+                <div
+                    className='dropdown-content'
+                    style={{ maxHeight: '200px', overflowY: 'auto' }}
+                >
                     {items.map((e, index) => (
                         <p key={index} onClick={() => onChanged(index)}>
                             {e}

@@ -246,7 +246,6 @@ export default function AddEditProduct({
                                         (e: any) =>
                                             e._id === formValues.categoryId
                                     )?.name || 'Select category'
-                                    // formValues.categoryId || 'Select category'
                                 }
                                 items={categories.map((e: any) => e.name)}
                                 onSelect={function (
@@ -319,10 +318,10 @@ export default function AddEditProduct({
                     <div className='grid grid-cols-12'>
                         <div className='col-span-3 grid pr-4 '>
                             <span className='text-md flex items-center justify-end'>
-                                Normal price
+                                Product price
                             </span>
                         </div>
-                        <div className='col-span-4 flex'>
+                        <div className='col-span-4 flex items-center'>
                             <InputNumber
                                 placeholder='Product Price'
                                 className='text-md p-0 '
@@ -340,7 +339,7 @@ export default function AddEditProduct({
                     <div className='mt-2 grid grid-cols-12'>
                         <div className='col-span-3 grid pr-4 '>
                             <span className='text-md flex items-center justify-end'>
-                                Price
+                                Sale Price
                             </span>
                         </div>
                         <div className='col-span-4 flex'>

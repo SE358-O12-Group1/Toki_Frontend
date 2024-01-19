@@ -180,6 +180,29 @@ export default function LandingPage({ filterQuery }: ILandingPageProps) {
                     ) : (
                         <></>
                     )}
+                    {auth.role === 1 ? (
+                        <div className='col offset-1 mb-2 ms-5 rounded-md border bg-white shadow-md'>
+                            <button
+                                type='button'
+                                className='btn full-width-div'
+                                onClick={() => {
+                                    router.push('/seller');
+                                }}
+                            >
+                                <div className='row my-1 ms-1'>
+                                    <div className='d-flex full-width-div'>
+                                        <img src={Bank.src} alt='' />
+                                        <div className='text-main mx-auto ms-3 mt-1'>
+                                            Seller Center
+                                        </div>
+                                    </div>
+                                </div>
+                            </button>
+                            <div />
+                        </div>
+                    ) : (
+                        <></>
+                    )}
 
                     <div className='col offset-1 ms-5 rounded-md border bg-white shadow-md'>
                         <div className=' font-weight-bold mt-3  text-center'>
@@ -220,6 +243,12 @@ export default function LandingPage({ filterQuery }: ILandingPageProps) {
 }
 
 function getProductGrid(products: ProductType[]) {
+    if (products.length <= 0)
+        return (
+            <div className='container col-span-9 mb-5 me-5 px-5 text-center'>
+                Danh sách sản phẩm trống
+            </div>
+        );
     let result: ReactNode[] = [];
     let index = 0;
     const len = products.length;

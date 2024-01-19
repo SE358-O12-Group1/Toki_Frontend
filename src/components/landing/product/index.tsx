@@ -25,7 +25,7 @@ export default function ProductCard({ product, minHeight }: IProductCardProps) {
     return (
         <button onClick={handleClick}>
             <div
-                className='text-normal rounded-md border bg-white p-4'
+                className='text-normal rounded-md border bg-white '
                 style={{ minHeight: minHeight }}
             >
                 <img
@@ -36,8 +36,8 @@ export default function ProductCard({ product, minHeight }: IProductCardProps) {
                     }
                     alt={product.name}
                 />
-                <div className='text-left'>
-                    <div className='text-lg'>{product.name}</div>
+                <div className='p-4 text-left'>
+                    <div className='line-scramp-2'>{product.name}</div>
                     <div className='flex items-center'>
                         <div className='flex items-center'>
                             <ProductRating
@@ -56,20 +56,24 @@ export default function ProductCard({ product, minHeight }: IProductCardProps) {
                             </span>
                         </div>
                     </div>
-                    <div className='text-main text-xl font-medium'>
+                    <div className='text-main text-lg font-medium'>
                         {formatCurrency(product.price)} ₫
                     </div>
-                    {product.normalPrice && (
-                        <div className='flex items-center'>
-                            <div className='bg-main text-yellow rounded-sm px-1 py-[2px] text-xs font-semibold uppercase'>
-                                {'-'}
-                                {rateSale(product.normalPrice, product.price)}
+                    {product.normalPrice &&
+                        product.normalPrice !== product.price && (
+                            <div className='flex items-center'>
+                                <div className='bg-main text-yellow rounded-sm px-1 py-[2px] text-xs font-semibold uppercase'>
+                                    {'-'}
+                                    {rateSale(
+                                        product.normalPrice,
+                                        product.price
+                                    )}
+                                </div>
+                                <div className='ml-3 text-sm font-light text-gray-400 line-through'>
+                                    {formatCurrency(product.normalPrice!)} ₫
+                                </div>
                             </div>
-                            <div className='ml-3 font-light text-gray-400 line-through'>
-                                {formatCurrency(product.normalPrice!)} ₫
-                            </div>
-                        </div>
-                    )}
+                        )}
                     <div className='me-2 text-end text-sm font-light text-gray-400'>
                         {product.seller.name}
                     </div>

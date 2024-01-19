@@ -327,6 +327,9 @@ export default function ProductDetailPage() {
                                         value={buyCount}
                                         max={detailProduct.quantity}
                                     />
+                                    <div className='ml-4'>
+                                        {detailProduct.quantity} in stock
+                                    </div>
                                 </div>
 
                                 {/* Buttons */}
@@ -405,8 +408,12 @@ export default function ProductDetailPage() {
                             <div className='p-4 text-lg font-medium capitalize text-slate-700'>
                                 {'Description'}
                             </div>
-                            <div className='mx-4 mb-4 text-sm leading-loose'>
-                                <div
+                            <div className='mx-4 mb-4 text-justify text-sm leading-loose'>
+                                <pre
+                                    style={{
+                                        font: 'inherit'
+                                    }}
+                                    className=''
                                     dangerouslySetInnerHTML={{
                                         __html: DOMPurify.sanitize(
                                             detailProduct.description
