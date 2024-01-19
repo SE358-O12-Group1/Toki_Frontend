@@ -10,16 +10,34 @@ import AdminCenter from '/public/assets/images/ADMIN CENTER.png';
 
 import Logo from '/public/assets/images/Logo.png';
 
-// components
-import { avatarPlaceholder } from '@/constants/common';
-
 // redux
-import { useAppSelector } from '@/redux/hook';
-import CircleAvatar from '@/components/landing/components/CircleAvatar';
+import { useAppDispatch, useAppSelector } from '@/redux/hook';
+import { useMutation } from 'react-query';
+import authApi from '@/apis/auth.api';
+import { resetCart } from '@/redux/slices/cart.slice';
+import { clearProfile } from '@/redux/slices/user.slice';
+import { logout } from '@/redux/slices/auth.slice';
+import { useRouter } from 'next/navigation';
 
 const Header = () => {
     const { user } = useAppSelector((state) => state.auth);
+    const dispatch = useAppDispatch();
+    const router = useRouter();
 
+    const { mutate: logoutMutation } = useMutation({
+        mutationFn: authApi.logout,
+        onSuccess: () => {
+            dispatch(resetCart());
+            dispatch(clearProfile());
+            dispatch(logout());
+            localStorage.clear();
+            router.push('/');
+        }
+    });
+
+    const handleLogout = () => {
+        logoutMutation();
+    };
     return (
         <>
             <div className='d-flex' style={{ paddingBottom: 5 }}>
@@ -28,20 +46,12 @@ const Header = () => {
                     style={{ paddingLeft: 50 }}
                 >
                     <div className='offset-1'>
-                        <Link href={'/'}>
-                            <img className='ms-5 ' src={Logo.src} alt='' />
-                        </Link>
+                        <img className='ms-5 ' src={Logo.src} alt='' />
                     </div>
                 </div>
                 <div className='flex items-center justify-between '>
                     <div style={{ paddingTop: 20, paddingLeft: 15 }}>
-                        <Link href={'/'}>
-                            <img
-                                className='ms-1'
-                                src={AdminCenter.src}
-                                alt=''
-                            />
-                        </Link>
+                        <img className='ms-1' src={AdminCenter.src} alt='' />
                     </div>
                 </div>
                 <div
@@ -73,17 +83,13 @@ const Header = () => {
                         </div>
                     </Link>
 
-                    <div
-                        className='me-5 flex items-center text-white'
-                        // href={'/user/profile'}
-                    >
-                        <CircleAvatar
-                            className='ml-5 mr-3'
-                            src={user.avatar || avatarPlaceholder}
-                            alt={user.name}
-                            size={8}
-                        ></CircleAvatar>
-                        <span className='text-[#00ADB5]'>{user.name}</span>
+                    <div className='mr-28'>
+                        <button
+                            onClick={handleLogout}
+                            className='border-1 block bg-white px-3 py-2 text-left hover:bg-slate-100 hover:text-cyan-500'
+                        >
+                            {'Log out'}
+                        </button>
                     </div>
                 </div>
             </div>

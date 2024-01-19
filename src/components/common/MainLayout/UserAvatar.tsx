@@ -1,11 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-import classNames from 'classnames';
-
-import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
-import LockResetOutlinedIcon from '@mui/icons-material/LockResetOutlined';
-import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
-import { BrowserRouter, Link, NavLink } from 'react-router-dom';
-import UserType from '@/types/UserType';
 import { UserAuthType } from '@/types/AuthType';
 import Popover from '../Popover';
 import authApi from '@/apis/auth.api';
