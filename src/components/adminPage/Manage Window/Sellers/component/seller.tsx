@@ -79,7 +79,10 @@ export const Seller = ({ seller }: IUserItemProps) => {
                 >
                     <div className='mr-4 '>
                         <img
-                            src={seller.avatar || Circle.src}
+                            src={
+                                seller.avatar ||
+                                'https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg'
+                            }
                             alt='avatar'
                             style={{
                                 maxWidth: '40px',
