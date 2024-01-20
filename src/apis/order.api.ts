@@ -23,10 +23,8 @@ const orderApi = {
         });
     },
 
-    updateOrderStatus(orderId: string, status: number) {
-        return http.put(`${API_ROUTES.orders}/${orderId}`, {
-            status
-        });
+    updateOrderStatus(body: { orderLineIds: string[]; status: number }) {
+        return http.put(ORDER_API_ROUTES.update, body);
     }
 };
 

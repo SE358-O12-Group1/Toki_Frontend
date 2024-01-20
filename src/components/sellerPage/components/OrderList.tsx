@@ -125,6 +125,7 @@ export default function SellerOrderList() {
                             order={order}
                             key={index}
                             isEditable={true}
+                            selectedStatus={selectedStatus}
                         ></OrderItem>
                     ))}
                 </div>

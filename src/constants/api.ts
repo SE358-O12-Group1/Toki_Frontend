@@ -26,5 +26,6 @@ export const PRODUCT_API_ROUTES = {
 };
 
 export const ORDER_API_ROUTES = {
-    shop: API_ROUTES.orders + 'shop'
+    shop: API_ROUTES.orders + 'shop',
+    update: API_ROUTES.orders + 'update'
 };

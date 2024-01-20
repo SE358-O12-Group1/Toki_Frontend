@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // import { useRouter } from 'next/navigation';
 
 // components
@@ -26,32 +26,43 @@ import { toastOptions } from '@/constants/toast';
 export interface IOrderItemProps {
     order: OrderType;
     isEditable: boolean;
+    selectedStatus: string;
 }
 export default function OrderItem({ order, isEditable }: IOrderItemProps) {
-    // const [status, setStatus] = useState(order.status);
-
     const queryClient = useQueryClient();
 
+    const [status, setStatus] = useState<number>(order.order_lines[0]?.status);
+
     const { mutate: updateOrderStatus } = useMutation({
-        mutationFn: (status: number) =>
-            orderApi.updateOrderStatus(order._id, status),
+        mutationFn: ({
+            orderLineIds,
+            status
+        }: {
+            orderLineIds: string[];
+            status: number;
+        }) => orderApi.updateOrderStatus({ orderLineIds, status }),
         onSuccess: () => {
             queryClient.invalidateQueries('shopOrders');
         }
     });
 
-    // const handleUpdate = () => {
-    //     updateOrderStatus(status, {
-    //         onSuccess: (res) => {
-    //             toast.success(res.data.message, toastOptions);
-    //         }
-    //     });
-    // };
+    const handleUpdate = () => {
+        const orderLineIds = order.order_lines.map(
+            (orderLine) => orderLine._id
+        );
+
+        updateOrderStatus({
+            orderLineIds,
+            status
+        });
+
+        toast.success('Update order status successfully', toastOptions);
+    };
 
     const [isExpanded, setIsExpanded] = useState(false);
 
     const handleChangeStatus = (status: number) => {
-        // setStatus(status);
+        setStatus(status);
     };
 
     // const handleClickProduct = (product: ProductType) => {
@@ -60,7 +71,8 @@ export default function OrderItem({ order, isEditable }: IOrderItemProps) {
     //     router.push(`/products/${product._id}`);
     // };
 
-    if (order.order_lines.length === 0) return <div>No order!</div>;
+    if (order.order_lines.length === 0)
+        return <div className='text-base'>Empty</div>;
 
     return (
         <div className='mb-4 rounded-md border'>
@@ -97,15 +109,15 @@ export default function OrderItem({ order, isEditable }: IOrderItemProps) {
                     </div>
                     {isEditable ? (
                         <div className='text-md col-span-1 grid grid-cols-2 items-center pr-4 text-gray-600'>
-                            {/* <DropdownButton
+                            <DropdownButton
                                 className='nowrap border-main col-span-1 mr-4 rounded-md p-2'
-                                items={getStatusOpstions(order.status)}
+                                items={getStatusOpstions(status)}
                                 value={covertStatusToName(status)}
                                 onSelect={handleChangeStatus}
-                            /> */}
+                            />
                             <Button
                                 className='col-span-1 ml-4'
-                                // onClick={handleUpdate}
+                                onClick={handleUpdate}
                                 // disable={order.status === status}
                             >
                                 Update
@@ -299,28 +311,28 @@ export default function OrderItem({ order, isEditable }: IOrderItemProps) {
 }
 
 function getStatusOpstions(currentStatus: number): string[] {
-    const current = covertStatusToName(currentStatus);
-    if (currentStatus == ORDER_STATUS.BEING_PREPARED.value) {
-        return [
-            current,
-            ORDER_STATUS.TO_SHIP.name,
-            ORDER_STATUS.CANCELLED.name
-        ];
-    }
-    switch (currentStatus) {
-        case ORDER_STATUS.BEING_PREPARED.value:
-            return [
-                current,
-                ORDER_STATUS.TO_SHIP.name,
-                ORDER_STATUS.CANCELLED.name
-            ];
-        case ORDER_STATUS.TO_SHIP.value:
-            return [current, ORDER_STATUS.TO_RECEIVE.name];
-        case ORDER_STATUS.TO_RECEIVE.value:
-            return [current, ORDER_STATUS.COMPLETED.name];
-        default:
-            return [current];
-    }
+    // const current = covertStatusToName(currentStatus);
+    // if (currentStatus == ORDER_STATUS.BEING_PREPARED.value) {
+    //     return [
+    //         current,
+    //         ORDER_STATUS.TO_SHIP.name,
+    //         ORDER_STATUS.CANCELLED.name
+    //     ];
+    // }
+    // switch (currentStatus) {
+    //     case ORDER_STATUS.BEING_PREPARED.value:
+    //         return [
+    //             current,
+    //             ORDER_STATUS.TO_SHIP.name,
+    //             ORDER_STATUS.CANCELLED.name
+    //         ];
+    //     case ORDER_STATUS.TO_SHIP.value:
+    //         return [current, ORDER_STATUS.TO_RECEIVE.name];
+    //     case ORDER_STATUS.TO_RECEIVE.value:
+    //         return [current, ORDER_STATUS.COMPLETED.name];
+    //     default:
+    //         return [current];
+    // }
 
     return Object.values(ORDER_STATUS).map((status) => status.name);
 }
