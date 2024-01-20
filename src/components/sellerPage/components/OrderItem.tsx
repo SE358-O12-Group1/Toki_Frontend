@@ -100,6 +100,7 @@ export default function OrderItem({ order, isEditable }: IOrderItemProps) {
                             <Button
                                 className='col-span-1 ml-4'
                                 onClick={handleUpdate}
+                                disable={order.status === status}
                             >
                                 Update
                             </Button>
@@ -292,19 +293,19 @@ export default function OrderItem({ order, isEditable }: IOrderItemProps) {
 }
 
 function getStatusOpstions(currentStatus: number): string[] {
-    // if (currentStatus == ORDER_STATUS.BEING_PREPARED.value) {
-    //     return [ORDER_STATUS.TO_SHIP.name, ORDER_STATUS.CANCELLED.name];
-    // }
-    // switch (currentStatus) {
-    //     case ORDER_STATUS.BEING_PREPARED.value:
-    //         return [ORDER_STATUS.TO_SHIP.name, ORDER_STATUS.CANCELLED.name];
-    //     case ORDER_STATUS.TO_SHIP.value:
-    //         return [ORDER_STATUS.TO_RECEIVE.name];
-    //     case ORDER_STATUS.TO_RECEIVE.value:
-    //         return [ORDER_STATUS.COMPLETED.name];
-    //     default:
-    //         return [];
-    // }
+    if (currentStatus == ORDER_STATUS.BEING_PREPARED.value) {
+        return [ORDER_STATUS.TO_SHIP.name, ORDER_STATUS.CANCELLED.name];
+    }
+    switch (currentStatus) {
+        case ORDER_STATUS.BEING_PREPARED.value:
+            return [ORDER_STATUS.TO_SHIP.name, ORDER_STATUS.CANCELLED.name];
+        case ORDER_STATUS.TO_SHIP.value:
+            return [ORDER_STATUS.TO_RECEIVE.name];
+        case ORDER_STATUS.TO_RECEIVE.value:
+            return [ORDER_STATUS.COMPLETED.name];
+        default:
+            return [];
+    }
 
     return Object.values(ORDER_STATUS).map((status) => status.name);
 }
