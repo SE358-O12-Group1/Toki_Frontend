@@ -11,13 +11,13 @@ type OrderLineType = {
     };
     quantity: number;
     sub_total: number;
+    status: number;
 };
 
 type OrderType = {
     _id: string;
     delivery_address: string;
     order_lines: OrderLineType[];
-    status: number;
     sub_total: number;
     total: number;
     discount: string;

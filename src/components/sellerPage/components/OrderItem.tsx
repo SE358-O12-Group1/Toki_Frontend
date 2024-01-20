@@ -24,7 +24,7 @@ export interface IOrderItemProps {
     isEditable: boolean;
 }
 export default function OrderItem({ order, isEditable }: IOrderItemProps) {
-    const [status, setStatus] = useState(order.status);
+    // const [status, setStatus] = useState(order.status);
 
     const queryClient = useQueryClient();
 
@@ -36,18 +36,18 @@ export default function OrderItem({ order, isEditable }: IOrderItemProps) {
         }
     });
 
-    const handleUpdate = () => {
-        updateOrderStatus(status, {
-            onSuccess: (res) => {
-                toast.success(res.data.message, toastOptions);
-            }
-        });
-    };
+    // const handleUpdate = () => {
+    //     updateOrderStatus(status, {
+    //         onSuccess: (res) => {
+    //             toast.success(res.data.message, toastOptions);
+    //         }
+    //     });
+    // };
 
     const [isExpanded, setIsExpanded] = useState(false);
 
     const handleChangeStatus = (status: number) => {
-        setStatus(status);
+        // setStatus(status);
     };
 
     // const handleClickProduct = (product: ProductType) => {
@@ -55,6 +55,8 @@ export default function OrderItem({ order, isEditable }: IOrderItemProps) {
     //     dispatch(getRelatedProducts(product.category._id));
     //     router.push(`/products/${product._id}`);
     // };
+
+    if (order.order_lines.length === 0) return <div>No order!</div>;
 
     return (
         <div className='mb-4 rounded-md border'>
@@ -90,24 +92,24 @@ export default function OrderItem({ order, isEditable }: IOrderItemProps) {
                     </div>
                     {isEditable ? (
                         <div className='text-md col-span-1 grid grid-cols-2 items-center pr-4 text-gray-600'>
-                            <DropdownButton
+                            {/* <DropdownButton
                                 className='nowrap border-main col-span-1 mr-4 rounded-md p-2'
                                 items={getStatusOpstions(status)}
                                 value={covertStatusToName(status)}
                                 onSelect={handleChangeStatus}
-                            />
+                            /> */}
 
                             <Button
                                 className='col-span-1 ml-4'
-                                onClick={handleUpdate}
-                                disable={order.status === status}
+                                // onClick={handleUpdate}
+                                // disable={order.status === status}
                             >
                                 Update
                             </Button>
                         </div>
                     ) : (
                         <div className='bg-main col-span-1 rounded-md px-4 pr-4 text-center text-lg text-white'>
-                            {covertStatusToName(status)}
+                            {/* {covertStatusToName(status)} */}
                         </div>
                     )}
                 </div>
