@@ -145,7 +145,10 @@ export default function MyOrdersPage() {
                         <img
                             alt=''
                             className='rounded-full'
-                            src={profile.avatar || Circle.src}
+                            src={
+                                profile.avatar ||
+                                'https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg'
+                            }
                             style={{
                                 maxWidth: '40px',
                                 maxHeight: '100%',
