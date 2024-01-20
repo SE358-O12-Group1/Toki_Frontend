@@ -39,6 +39,7 @@ export default function MyOrdersPage() {
         queryFn: () => userApi.getMyOrders(),
         onSuccess: (res) => {
             setOrders(res.data.data);
+            console.log(res.data.data);
         }
     });
 

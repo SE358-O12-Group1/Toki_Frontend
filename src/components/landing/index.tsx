@@ -136,7 +136,7 @@ export default function LandingPage({ filterQuery }: ILandingPageProps) {
                 : -(a.price - b.price)
         );
     if (isFilterPopular)
-        filteredProducts.sort((a, b) => a.sold_quantity - b.sold_quantity);
+        filteredProducts.sort((a, b) => -(a.sold_quantity - b.sold_quantity));
 
     const handleOpenModal = () => {
         if (auth._id === '') {

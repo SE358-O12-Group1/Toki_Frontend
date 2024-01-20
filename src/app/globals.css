@@ -95,6 +95,22 @@ body {
     line-height: inherit;
     /* 2 */
 }
+.image-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 75%;
+    /* Adjust the percentage to your desired aspect ratio */
+    overflow: hidden;
+}
+
+.image-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
 
 /*
 1. Add the correct height in Firefox.
