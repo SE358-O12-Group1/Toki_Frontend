@@ -26,8 +26,13 @@ import { toastOptions } from '@/constants/toast';
 export interface IOrderItemProps {
     order: OrderType;
     isEditable: boolean;
+    isUserOrder?: boolean;
 }
-export default function OrderItem({ order, isEditable }: IOrderItemProps) {
+export default function OrderItem({
+    order,
+    isEditable,
+    isUserOrder
+}: IOrderItemProps) {
     // const [status, setStatus] = useState(order.status);
 
     const queryClient = useQueryClient();
@@ -67,12 +72,21 @@ export default function OrderItem({ order, isEditable }: IOrderItemProps) {
             <div className='container rounded-md bg-gray-100 px-4 py-2 capitalize text-gray-500'>
                 <div className='mt-2 grid grid-cols-4 items-center'>
                     <div className='text-md col-span-1'>
-                        <p>
-                            <span className='font-semibold'>Name:</span>{' '}
-                            <span className=''>
-                                {order.user.name || 'No name'}
-                            </span>
-                        </p>
+                        {isUserOrder ? (
+                            <p>
+                                <span className='font-semibold'>Shop:</span>{' '}
+                                <span className=''>
+                                    {order.seller?.name || 'No name'}
+                                </span>
+                            </p>
+                        ) : (
+                            <p>
+                                <span className='font-semibold'>Name:</span>{' '}
+                                <span className=''>
+                                    {order.user.name || 'No name'}
+                                </span>
+                            </p>
+                        )}
                         <p className='text-main flex items-center font-semibold'>
                             <span className='mr-2'>Total:</span>
                             {formatCurrency(
@@ -300,13 +314,6 @@ export default function OrderItem({ order, isEditable }: IOrderItemProps) {
 
 function getStatusOpstions(currentStatus: number): string[] {
     const current = covertStatusToName(currentStatus);
-    if (currentStatus == ORDER_STATUS.BEING_PREPARED.value) {
-        return [
-            current,
-            ORDER_STATUS.TO_SHIP.name,
-            ORDER_STATUS.CANCELLED.name
-        ];
-    }
     switch (currentStatus) {
         case ORDER_STATUS.BEING_PREPARED.value:
             return [

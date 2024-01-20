@@ -1,4 +1,4 @@
-import ProductType from './ProductType';
+import ProductType, { SellerType } from './ProductType';
 import UserType from './UserType';
 
 type OrderLineType = {
@@ -8,6 +8,7 @@ type OrderLineType = {
             _id: string;
             name: string;
         };
+        seller: Pick<SellerType, '_id' | 'name'>;
     };
     quantity: number;
     sub_total: number;
@@ -23,6 +24,7 @@ type OrderType = {
     discount: string;
     discount_value: number;
     user: Pick<UserType, '_id' | 'name' | 'phone'>;
+    seller?: Pick<SellerType, '_id' | 'name'>;
 };
 
 export type { OrderType, OrderLineType };
