@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { toast } from 'react-toastify';
 import { useMutation } from 'react-query';
 import { Dispatch, FocusEvent, SetStateAction, useState } from 'react';
@@ -59,10 +60,10 @@ export default function Voucher({
                     toast.success(res.data.message, toastOptions);
                     const { type, value } = res.data.data;
                     switch (type) {
-                        case 'percentage':
+                        case 0:
                             setVoucher((totalPrice * value) / 100);
                             break;
-                        case 'fixed':
+                        case 1:
                             setVoucher(value);
                             break;
                     }
