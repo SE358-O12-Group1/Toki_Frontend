@@ -13,7 +13,11 @@ import { OrderType } from '@/types/OrderType';
 
 // utils
 import { formatCurrency } from '@/utils/utils';
-import { ORDER_STATUS, covertStatusToName } from '@/constants/orderStatus';
+import {
+    ORDER_STATUS,
+    convertStatusToValue,
+    covertStatusToName
+} from '@/constants/orderStatus';
 import { useMutation, useQueryClient } from 'react-query';
 import orderApi from '@/apis/order.api';
 import { toast } from 'react-toastify';
@@ -69,12 +73,13 @@ export default function OrderItem({ order, isEditable }: IOrderItemProps) {
                         </p>
                         <p className='text-main flex items-center font-semibold'>
                             <span className='mr-2'>Total:</span>
-                            {formatCurrency(order.total)} đ
-                            {order.total !== order.sub_total && (
-                                <div className='ml-3 text-sm font-light text-gray-400 line-through'>
-                                    {formatCurrency(order.sub_total!)} ₫
-                                </div>
-                            )}
+                            {formatCurrency(
+                                order.order_lines.reduce(
+                                    (acc, order) => acc + order.sub_total,
+                                    0
+                                )
+                            )}{' '}
+                            đ
                         </p>
                     </div>
 
@@ -92,15 +97,13 @@ export default function OrderItem({ order, isEditable }: IOrderItemProps) {
                         <div className='text-md col-span-1 grid grid-cols-2 items-center pr-4 text-gray-600'>
                             <DropdownButton
                                 className='nowrap border-main col-span-1 mr-4 rounded-md p-2'
-                                items={getStatusOpstions(status)}
+                                items={getStatusOpstions(order.status)}
                                 value={covertStatusToName(status)}
                                 onSelect={handleChangeStatus}
                             />
-
                             <Button
                                 className='col-span-1 ml-4'
                                 onClick={handleUpdate}
-                                disable={order.status === status}
                             >
                                 Update
                             </Button>
@@ -293,18 +296,27 @@ export default function OrderItem({ order, isEditable }: IOrderItemProps) {
 }
 
 function getStatusOpstions(currentStatus: number): string[] {
+    const current = covertStatusToName(currentStatus);
     if (currentStatus == ORDER_STATUS.BEING_PREPARED.value) {
-        return [ORDER_STATUS.TO_SHIP.name, ORDER_STATUS.CANCELLED.name];
+        return [
+            current,
+            ORDER_STATUS.TO_SHIP.name,
+            ORDER_STATUS.CANCELLED.name
+        ];
     }
     switch (currentStatus) {
         case ORDER_STATUS.BEING_PREPARED.value:
-            return [ORDER_STATUS.TO_SHIP.name, ORDER_STATUS.CANCELLED.name];
+            return [
+                current,
+                ORDER_STATUS.TO_SHIP.name,
+                ORDER_STATUS.CANCELLED.name
+            ];
         case ORDER_STATUS.TO_SHIP.value:
-            return [ORDER_STATUS.TO_RECEIVE.name];
+            return [current, ORDER_STATUS.TO_RECEIVE.name];
         case ORDER_STATUS.TO_RECEIVE.value:
-            return [ORDER_STATUS.COMPLETED.name];
+            return [current, ORDER_STATUS.COMPLETED.name];
         default:
-            return [];
+            return [current];
     }
 
     return Object.values(ORDER_STATUS).map((status) => status.name);

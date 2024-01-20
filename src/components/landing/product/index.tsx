@@ -29,7 +29,10 @@ export default function ProductCard({ product, minHeight }: IProductCardProps) {
                 style={{ minHeight: minHeight }}
             >
                 <img
-                    style={{ scale: 0.8 }}
+                    style={{
+                        scale: 0.9
+                    }}
+                    className='w-full rounded-md object-contain'
                     src={
                         product.images[0] ||
                         'https://sieuthikhan.com/images/thumbs/default-image_450.png'
