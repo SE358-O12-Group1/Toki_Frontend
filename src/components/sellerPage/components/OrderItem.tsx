@@ -100,6 +100,7 @@ export default function OrderItem({ order, isEditable }: IOrderItemProps) {
                             <Button
                                 className='col-span-1 ml-4'
                                 onClick={handleUpdate}
+                                disable={order.status === status}
                             >
                                 Update
                             </Button>
