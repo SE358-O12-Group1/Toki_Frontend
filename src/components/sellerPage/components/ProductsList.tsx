@@ -178,6 +178,11 @@ export default function SellerProductsList() {
                                                         // href={`/products/${product._id}`}
                                                     >
                                                         <img
+                                                            style={{
+                                                                width: 80,
+                                                                height: 80,
+                                                                objectFit: 'scale-down',
+                                                            }}
                                                             alt={product.name}
                                                             src={
                                                                 product

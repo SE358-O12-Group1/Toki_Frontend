@@ -63,18 +63,32 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
     // );
     return (
         <div className='modal-overlay' onClick={onClose}>
-            <div className='modal'>
-                <div className='modal-header'>
-                    <h5 className='modal-title'>Delete item</h5>
-                    <span className='close' onClick={onClose}>
-                        &times;
-                    </span>
+            <div
+                style={{
+                    width: 700,
+                    backgroundColor: '#fff',
+                    borderRadius: 5,
+                    padding: 30,
+                }}
+            >
+                <div className='modal-header'>  
+                    <h5 style={{
+                        fontSize: 20,
+                        fontWeight: 'bold',
+                    }}>Delete item</h5>
                 </div>
                 <div className='modal-body'>
-                    <p>Delete items? This action cannot be reverted.</p>
+                    <p style={{
+                        fontSize: 16,
+
+                    }}>Delete items? This action cannot be reverted.</p>
                 </div>
-                <div className='modal-footer'>
-                    <button className='btn btn-secondary' onClick={onClose}>
+                <div className='modal-footer'
+                    style={{
+                        marginTop: 50,
+                    }}
+                >
+                    <button className='btn btn-secondary' style={{marginRight: 20}} onClick={onClose}>
                         Close
                     </button>
                     <button className='btn btn-danger' onClick={onConfirm}>
