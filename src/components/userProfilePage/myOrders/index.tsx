@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
 import { useMutation, useQuery } from 'react-query';
 
@@ -16,7 +16,7 @@ import OrderItem from '@/components/sellerPage/components/OrderItem';
 
 // api
 import userApi from '@/apis/user.api';
-import { OrderType } from '@/types/OrderType';
+import { OrderLineType, OrderType } from '@/types/OrderType';
 import { ORDER_STATUS, convertStatusToValue } from '@/constants/orderStatus';
 import { setProfile } from '@/redux/slices/user.slice';
 
@@ -25,12 +25,63 @@ const chips = [
     ...Object.values(ORDER_STATUS).map((status) => status.name)
 ];
 
+interface OrderByShop {
+    shopId: string;
+    orderLines: OrderLineType[];
+}
+
 export default function MyOrdersPage() {
     const { profile } = useAppSelector((state) => state.user);
     const initialChip = chips[0];
     const [selectedStatus, setSelectedStatus] = useState<string>(initialChip);
 
     const [orders, setOrders] = useState<OrderType[]>([]);
+
+    function checkShopExists(orders: OrderByShop[], orderLine: OrderLineType) {
+        orders.forEach((order, index) => {
+            if (order.shopId === orderLine.product.seller._id) return index;
+        });
+        return -1;
+    }
+
+    const ordersByShop = useMemo(() => {
+        const result: OrderType[] = [];
+        orders.forEach((order) => {
+            const orderByShops: OrderByShop[] = [];
+            order.order_lines.forEach((ol) => {
+                const temp = checkShopExists(orderByShops, ol);
+                if (temp !== -1) {
+                    orderByShops[temp].orderLines.push(ol);
+                } else {
+                    orderByShops.push({
+                        shopId: ol.product.seller._id,
+                        orderLines: [ol]
+                    });
+                }
+            });
+            orderByShops.forEach((shop) => {
+                const orderShop: OrderType = {
+                    _id: order._id,
+                    delivery_address: order.delivery_address,
+                    order_lines: shop.orderLines,
+                    sub_total: shop.orderLines.reduce(
+                        (total, ol) => total + ol.sub_total,
+                        0
+                    ),
+                    total: shop.orderLines.reduce(
+                        (total, ol) => total + ol.sub_total,
+                        0
+                    ),
+                    discount: order.discount,
+                    discount_value: order.discount_value,
+                    user: order.user,
+                    seller: shop.orderLines[0].product.seller
+                };
+                result.push(orderShop);
+            });
+        });
+        return result;
+    }, [orders]);
 
     const dispatch = useAppDispatch();
 
@@ -204,12 +255,13 @@ export default function MyOrdersPage() {
                         </div>
                         <div className='container mt-6 px-0'>
                             <div className='rounded-sm bg-white '>
-                                {orders.map(
+                                {ordersByShop.map(
                                     (order: OrderType, index: number) => (
                                         <OrderItem
                                             order={order}
                                             key={index}
                                             isEditable={false}
+                                            isUserOrder={true}
                                         ></OrderItem>
                                     )
                                 )}
