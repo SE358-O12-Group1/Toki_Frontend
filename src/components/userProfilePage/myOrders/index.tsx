@@ -130,7 +130,7 @@ export default function MyOrdersPage() {
 
     return (
         <div className='mx-0 mt-3 flex' style={{ backgroundColor: '#E2E2E2' }}>
-            <div className='flex grid grid-cols-12' style={{ marginTop: 30 }}>
+            <div className='grid grid-cols-12' style={{ marginTop: 30 }}>
                 <div className='col-span-1'></div>
                 <div className='d-flex col-span-2'>
                     <div
