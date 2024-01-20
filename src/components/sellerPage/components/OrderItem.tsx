@@ -67,8 +67,9 @@ export default function OrderItem({
 
     const [isExpanded, setIsExpanded] = useState(false);
 
-    const handleChangeStatus = (status: number) => {
-        setStatus(status);
+    const handleChangeStatus = (index: number) => {
+        const temp = getStatusOpstions(status);
+        setStatus(convertStatusToValue(temp[index]));
     };
 
     // const handleClickProduct = (product: ProductType) => {
