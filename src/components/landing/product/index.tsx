@@ -30,18 +30,22 @@ export default function ProductCard({ product, minHeight }: IProductCardProps) {
             >
                 <img
                     style={{
-                        scale: 0.9
+                        width: '100%',
+                        height: 200,
+                        objectFit: 'scale-down',
+                        display: 'block',
+                        paddingTop: 5,  
                     }}
                     className='w-full rounded-md object-contain'
                     src={
                         product.images[0] ||
                         'https://sieuthikhan.com/images/thumbs/default-image_450.png'
-                    }
+                    }   
                     alt={product.name}
                 />
-                <div className='p-4 text-left'>
+                <div className='text-left' style={{padding: 20}}>
                     <div className='line-scramp-2'>{product.name}</div>
-                    <div className='flex items-center'>
+                    <div className='flex items-center' style={{marginTop: 10, marginBottom: 10}}>
                         <div className='flex items-center'>
                             <ProductRating
                                 rating={product.rating || 0}
@@ -55,7 +59,7 @@ export default function ProductCard({ product, minHeight }: IProductCardProps) {
                                 {formatNumberToSocialStyle(
                                     product.sold_quantity
                                 )}{' '}
-                                sold
+                                sold    
                             </span>
                         </div>
                     </div>
@@ -64,7 +68,7 @@ export default function ProductCard({ product, minHeight }: IProductCardProps) {
                     </div>
                     {product.normalPrice &&
                         product.normalPrice !== product.price && (
-                            <div className='flex items-center'>
+                            <div className='flex items-center' style={{marginBottom: 10, marginTop: 10}}>
                                 <div className='bg-main text-yellow rounded-sm px-1 py-[2px] text-xs font-semibold uppercase'>
                                     {'-'}
                                     {rateSale(
